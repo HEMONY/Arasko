@@ -1,0 +1,6 @@
+{
+  "name": "Arasko",
+  "description": "Professional personal task management and health & fitness routine app with daily, monthly, and yearly planning, offline smart assistant, and reminders.",
+  "requestFramePermissions": ["notifications"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

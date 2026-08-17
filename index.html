@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Safeguard against iframe/sandbox environments where window.fetch is getter-only
+      (function() {
+        try {
+          const originalFetch = window.fetch ? window.fetch.bind(window) : undefined;
+          let currentFetch = originalFetch;
+          Object.defineProperty(window, 'fetch', {
+            get() {
+              return currentFetch;
+            },
+            set(fn) {
+              currentFetch = fn;
+            },
+            configurable: true,
+            enumerable: true,
+          });
+        } catch (e) {
+          // In case Object.defineProperty fails silently or throws
+        }
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Arasko - Smart Task & Wellness Management</title>
+    <meta name="description" content="Arasko is a smart, simple task and time management app designed to help you organize your day, month, and year professionally and effortlessly. Developed by Team Fallt." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#4338CA" />
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
