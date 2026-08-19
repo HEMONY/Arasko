@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Plus,
   CheckCircle2,
@@ -542,21 +543,41 @@ export const TodayView: React.FC<TodayViewProps> = ({
               </h3>
             </div>
             <div className="space-y-2.5">
-              {pendingTasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  category={categories.find((c) => c.id === task.categoryId)}
-                  language={language}
-                  onToggleComplete={onToggleComplete}
-                  onEdit={onEditTask}
-                  onDelete={onDeleteTask}
-                  onStartPomodoro={onStartPomodoro}
-                  isSelectMode={isSelectMode}
-                  isSelected={selectedTaskIds.includes(task.id)}
-                  onToggleSelect={handleToggleSelectTask}
-                />
-              ))}
+              <AnimatePresence mode="popLayout" initial={false}>
+                {pendingTasks.map((task) => (
+                  <motion.div
+                    key={task.id}
+                    layout
+                    initial={{ opacity: 0, y: -16, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0.94,
+                      y: 10,
+                      transition: { duration: 0.22, ease: 'easeInOut' },
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 420,
+                      damping: 30,
+                      mass: 0.8,
+                    }}
+                  >
+                    <TaskCard
+                      task={task}
+                      category={categories.find((c) => c.id === task.categoryId)}
+                      language={language}
+                      onToggleComplete={onToggleComplete}
+                      onEdit={onEditTask}
+                      onDelete={onDeleteTask}
+                      onStartPomodoro={onStartPomodoro}
+                      isSelectMode={isSelectMode}
+                      isSelected={selectedTaskIds.includes(task.id)}
+                      onToggleSelect={handleToggleSelectTask}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           </div>
         )}
@@ -571,81 +592,110 @@ export const TodayView: React.FC<TodayViewProps> = ({
               </span>
             </h3>
             <div className="space-y-2">
-              {completedTasksList.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  category={categories.find((c) => c.id === task.categoryId)}
-                  language={language}
-                  onToggleComplete={onToggleComplete}
-                  onEdit={onEditTask}
-                  onDelete={onDeleteTask}
-                  onStartPomodoro={onStartPomodoro}
-                  isSelectMode={isSelectMode}
-                  isSelected={selectedTaskIds.includes(task.id)}
-                  onToggleSelect={handleToggleSelectTask}
-                />
-              ))}
+              <AnimatePresence mode="popLayout" initial={false}>
+                {completedTasksList.map((task) => (
+                  <motion.div
+                    key={task.id}
+                    layout
+                    initial={{ opacity: 0, y: -12, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0.94,
+                      y: 8,
+                      transition: { duration: 0.2, ease: 'easeInOut' },
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 420,
+                      damping: 30,
+                      mass: 0.8,
+                    }}
+                  >
+                    <TaskCard
+                      task={task}
+                      category={categories.find((c) => c.id === task.categoryId)}
+                      language={language}
+                      onToggleComplete={onToggleComplete}
+                      onEdit={onEditTask}
+                      onDelete={onDeleteTask}
+                      onStartPomodoro={onStartPomodoro}
+                      isSelectMode={isSelectMode}
+                      isSelected={selectedTaskIds.includes(task.id)}
+                      onToggleSelect={handleToggleSelectTask}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           </div>
         )}
 
         {/* Empty State */}
-        {filteredTasks.length === 0 && (
-          <div className="text-center py-12 px-4 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30">
-            <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-              {isFocusMode ? <Zap size={24} className="text-amber-500" /> : <AraskoMark size={26} variant="gradient" />}
-            </div>
-            <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">
-              {isFocusMode
-                ? t.focusModeEmpty
-                : searchQuery
-                ? t.noTasksFound
-                : selectedCategory !== 'all'
-                ? language === 'ar'
-                  ? 'لا توجد مهام في هذا التصنيف اليوم'
-                  : 'No tasks in this category today'
-                : t.noTasksToday}
-            </h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs mx-auto">
-              {isFocusMode
-                ? language === 'ar'
-                  ? 'يمكنك إيقاف وضع التركيز أو إضافة مهمة جديدة ذات أولوية عاجلة.'
-                  : 'You can exit Focus Mode or add a new urgent task.'
-                : searchQuery
-                ? ''
-                : t.appTagline}
-            </p>
-            <div className="flex items-center justify-center gap-2 mt-4">
-              {isFocusMode && (
+        <AnimatePresence mode="wait">
+          {filteredTasks.length === 0 && (
+            <motion.div
+              key="today-empty-state"
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -12 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="text-center py-12 px-4 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30"
+            >
+              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                {isFocusMode ? <Zap size={24} className="text-amber-500" /> : <AraskoMark size={26} variant="gradient" />}
+              </div>
+              <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">
+                {isFocusMode
+                  ? t.focusModeEmpty
+                  : searchQuery
+                  ? t.noTasksFound
+                  : selectedCategory !== 'all'
+                  ? language === 'ar'
+                    ? 'لا توجد مهام في هذا التصنيف اليوم'
+                    : 'No tasks in this category today'
+                  : t.noTasksToday}
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs mx-auto">
+                {isFocusMode
+                  ? language === 'ar'
+                    ? 'يمكنك إيقاف وضع التركيز أو إضافة مهمة جديدة ذات أولوية عاجلة.'
+                    : 'You can exit Focus Mode or add a new urgent task.'
+                  : searchQuery
+                  ? ''
+                  : t.appTagline}
+              </p>
+              <div className="flex items-center justify-center gap-2 mt-4">
+                {isFocusMode && (
+                  <button
+                    type="button"
+                    onClick={handleToggleFocusMode}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all active:scale-95"
+                  >
+                    {t.exitFocusMode}
+                  </button>
+                )}
+                {selectedCategory !== 'all' && (
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySelect('all')}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all active:scale-95"
+                  >
+                    {language === 'ar' ? 'عرض كافة التصنيفات' : 'View All Categories'}
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={handleToggleFocusMode}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all active:scale-95"
+                  onClick={onAddTask}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition-all active:scale-95"
+                  id="today-empty-add-btn"
                 >
-                  {t.exitFocusMode}
+                  <Plus size={15} /> {t.addNewTask}
                 </button>
-              )}
-              {selectedCategory !== 'all' && (
-                <button
-                  type="button"
-                  onClick={() => handleCategorySelect('all')}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all active:scale-95"
-                >
-                  {language === 'ar' ? 'عرض كافة التصنيفات' : 'View All Categories'}
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={onAddTask}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition-all active:scale-95"
-                id="today-empty-add-btn"
-              >
-                <Plus size={15} /> {t.addNewTask}
-              </button>
-            </div>
-          </div>
-        )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Pinned Floating Quick Add Button (FAB) & Rapid Task Input */}
