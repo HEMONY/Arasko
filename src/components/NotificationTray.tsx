@@ -59,7 +59,7 @@ export const NotificationTray: React.FC<NotificationTrayProps> = ({
       }}
     >
       <div
-        className="w-full max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden mt-12 flex flex-col max-h-[80vh]"
+        className="w-full max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-floating-4k card-floating-4k overflow-hidden mt-12 flex flex-col max-h-[80vh]"
         id="notification-tray-panel"
       >
         {/* Header */}

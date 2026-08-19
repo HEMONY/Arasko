@@ -5,6 +5,7 @@ import {
   HabitEntry,
   LanguageCode,
   LocalNotificationAlert,
+  PriorityLevel,
   SleepLog,
   TaskCategory,
   TaskItem,
@@ -18,11 +19,13 @@ import { TodayView } from './components/TodayView';
 import { CalendarView } from './components/CalendarView';
 import { SmartAssistantView } from './components/SmartAssistantView';
 import { HealthModuleView } from './components/HealthModuleView';
+import { SpiritualRoutineView } from './components/SpiritualRoutineView';
 import { SettingsView } from './components/SettingsView';
 import { ArchiveView } from './components/ArchiveView';
 import { TaskModal } from './components/TaskModal';
 import { OnboardingModal } from './components/OnboardingModal';
 import { NotificationTray } from './components/NotificationTray';
+import { PomodoroTimer } from './components/PomodoroTimer';
 import { TaskBreakdownTemplate } from './services/smartAssistant';
 import {
   playAlertSound,
@@ -58,10 +61,31 @@ export default function App() {
     () => !settings.hasCompletedOnboarding
   );
 
-  // 3. Task Modal State
+  // 3. Task & Focus Modal State
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskItem | null>(null);
   const [selectedCalendarDateStr, setSelectedCalendarDateStr] = useState<string | undefined>();
+  const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);
+  const [pomodoroTaskId, setPomodoroTaskId] = useState<string | undefined>();
+
+  const handleStartPomodoro = (task?: TaskItem) => {
+    setPomodoroTaskId(task?.id);
+    setIsPomodoroOpen(true);
+  };
+
+  const handlePomodoroNotify = (title: string, body: string) => {
+    const alert: LocalNotificationAlert = {
+      id: `pomodoro_${Date.now()}`,
+      title,
+      body,
+      timestamp: new Date().toISOString(),
+      isRead: false,
+      type: 'pomodoro',
+    };
+    const updated = [alert, ...notifications];
+    setNotifications(updated);
+    StorageService.saveNotifications(updated);
+  };
 
   // 4. System & State-Driven Theme Resolution
   const [systemPrefersDark, setSystemPrefersDark] = useState<boolean>(() => {
@@ -200,6 +224,105 @@ export default function App() {
         }
       }
 
+      // 3. Check Spiritual Quran Wards & Daily Athkar Reminders
+      if (curSettings.spiritualRemindersEnabled !== false && curSettings.notificationsEnabled) {
+        const nowDate = new Date();
+        const currentHH = nowDate.getHours().toString().padStart(2, '0');
+        const currentMM = nowDate.getMinutes().toString().padStart(2, '0');
+        const currentTimeStr = `${currentHH}:${currentMM}`;
+        const todayDateKey = nowDate.toISOString().split('T')[0];
+
+        const spiritualSchedule = [
+          {
+            id: 'ward_fajr_yasin',
+            titleAr: 'ورد سورة يس (بعد صلاة الصبح)',
+            titleEn: 'Surah Yasin Ward (After Fajr Prayer)',
+            defaultTime: '05:30',
+          },
+          {
+            id: 'ward_dhuhr_waqiah',
+            titleAr: 'ورد سورة الواقعة (بعد صلاة الظهر)',
+            titleEn: 'Surah Al-Waqiah Ward (After Dhuhr Prayer)',
+            defaultTime: '12:45',
+          },
+          {
+            id: 'ward_asr_rahman',
+            titleAr: 'ورد سورة الرحمن (بعد صلاة العصر)',
+            titleEn: 'Surah Ar-Rahman Ward (After Asr Prayer)',
+            defaultTime: '16:00',
+          },
+          {
+            id: 'ward_maghrib_dukhan',
+            titleAr: 'ورد سورة الدخان (بعد صلاة المغرب)',
+            titleEn: 'Surah Ad-Dukhan Ward (After Maghrib Prayer)',
+            defaultTime: '18:30',
+          },
+          {
+            id: 'ward_isha_mulk',
+            titleAr: 'ورد سورة الملك (بعد صلاة العشاء)',
+            titleEn: 'Surah Al-Mulk Ward (After Isha Prayer)',
+            defaultTime: '20:15',
+          },
+          {
+            id: 'athkar_waking',
+            titleAr: 'أذكار الاستيقاظ المباركة',
+            titleEn: 'Waking Up Athkar',
+            defaultTime: '06:00',
+          },
+          {
+            id: 'athkar_morning',
+            titleAr: 'أذكار الصباح وحصن المسلم',
+            titleEn: 'Morning Athkar',
+            defaultTime: '07:00',
+          },
+          {
+            id: 'athkar_evening',
+            titleAr: 'أذكار المساء وحفظ اليوم',
+            titleEn: 'Evening Athkar',
+            defaultTime: '17:00',
+          },
+          {
+            id: 'athkar_sleeping',
+            titleAr: 'أذكار النوم وسور التحصين',
+            titleEn: 'Bedtime & Sleep Athkar',
+            defaultTime: '22:00',
+          },
+        ];
+
+        const itemReminders = curSettings.spiritualItemReminders || {};
+        const customTimes = curSettings.spiritualReminderTimes || {};
+
+        for (const item of spiritualSchedule) {
+          const isItemActive = itemReminders[item.id] !== false;
+          if (!isItemActive) continue;
+
+          const scheduledTime = customTimes[item.id] || item.defaultTime;
+          // Trigger within the active minute if not already notified today
+          if (currentTimeStr === scheduledTime) {
+            const notifKey = `spiritual_${item.id}_${todayDateKey}`;
+            const alreadyFired = newNotifs.some((n) => n.id.startsWith(`notif_${notifKey}`));
+
+            if (!alreadyFired) {
+              playAlertSound('chime');
+              triggerVibration(curSettings.vibrationEnabled, [120, 60, 120]);
+
+              newNotifs.unshift({
+                id: `notif_${notifKey}_${Date.now()}`,
+                title: curLang === 'ar' ? `🕌 ${item.titleAr}` : `🕌 ${item.titleEn}`,
+                body:
+                  curLang === 'ar'
+                    ? 'حان موعد وردك اليومي المبارك. لا تنسَ ذكر الله وقراءة السورة.'
+                    : 'Time for your blessed daily Quran/Dhikr routine.',
+                timestamp: new Date().toISOString(),
+                isRead: false,
+                type: 'spiritual',
+              });
+              hasNotifsUpdated = true;
+            }
+          }
+        }
+      }
+
       if (hasTasksUpdated) {
         stateRef.current.tasks = updatedTasks;
         setTasks(updatedTasks);
@@ -300,7 +423,7 @@ export default function App() {
     handleUpdateTasks(updated);
   };
 
-  const handleToggleComplete = (task: TaskItem, e: React.MouseEvent) => {
+  const handleToggleComplete = (task: TaskItem, e?: React.MouseEvent) => {
     const isNowCompleted = task.status !== 'completed';
 
     // When marking as completed, immediately halt any playing sad overdue alerts or custom audio
@@ -325,7 +448,8 @@ export default function App() {
     handleUpdateTasks(updatedTasks);
 
     if (isNowCompleted) {
-      fireTaskDoneConfetti({ x: e.clientX, y: e.clientY });
+      const coords = e ? { x: e.clientX, y: e.clientY } : undefined;
+      fireTaskDoneConfetti(coords);
       playAlertSound('chime');
       triggerVibration(settings.vibrationEnabled, [80, 40, 80]);
     }
@@ -411,11 +535,9 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  // Import JSON Backup file
-  const handleImportBackup = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
+  // Import JSON Backup file or raw string
+  const handleImportBackup = (fileOrString: File | string) => {
+    const processContent = (content: string) => {
       const success = StorageService.importBackup(content);
       if (success) {
         setSettings(StorageService.getSettings());
@@ -424,18 +546,87 @@ export default function App() {
         setWaterLogs(StorageService.getWaterLogs());
         setSleepLogs(StorageService.getSleepLogs());
         setHabitLogs(StorageService.getHabitLogs());
-        alert(t.importSuccess);
+        setNotifications(StorageService.getNotifications());
+        playAlertSound('bell');
+        return true;
       } else {
-        alert(t.importError);
+        return false;
       }
     };
-    reader.readAsText(file);
+
+    if (typeof fileOrString === 'string') {
+      return processContent(fileOrString);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        const ok = processContent(content);
+        if (ok) {
+          alert(t.importSuccess);
+        } else {
+          alert(t.importError);
+        }
+      };
+      reader.readAsText(fileOrString);
+    }
   };
 
   // Factory Reset
   const handleResetAllData = () => {
     StorageService.resetAllData();
     window.location.reload();
+  };
+
+  // Add bulk tasks (e.g. from Spiritual Routine or Personalized Profile Templates)
+  const handleAddBulkTasks = (tasksToAdd: Partial<TaskItem>[]) => {
+    try {
+      const newItems: TaskItem[] = tasksToAdd.map((t, idx) => ({
+        id: `task_${Date.now()}_${idx}_${Math.random().toString(36).substring(2, 6)}`,
+        title: t.title || 'Untitled Task',
+        description: t.description || '',
+        priority: t.priority || 'normal',
+        status: t.status || 'not_started',
+        dueDate: t.dueDate || new Date().toISOString().split('T')[0],
+        categoryId: t.categoryId || categories[0]?.id || 'cat_personal',
+        recurrence: t.recurrence || 'none',
+        subTasks: t.subTasks || [],
+        reminders: t.reminders || [],
+        createdAt: new Date().toISOString(),
+      }));
+      handleUpdateTasks([...newItems, ...tasks]);
+    } catch (err) {
+      console.error('Error adding bulk tasks:', err);
+    }
+  };
+
+  // Batch Update Tasks (e.g. from Select Multiple mode)
+  const handleBatchUpdateTasks = (taskIds: string[], update: Partial<TaskItem>) => {
+    const updated = tasks.map((t) => (taskIds.includes(t.id) ? { ...t, ...update } : t));
+    handleUpdateTasks(updated);
+  };
+
+  // Batch Delete Tasks
+  const handleBatchDeleteTasks = (taskIds: string[]) => {
+    const updated = tasks.filter((t) => !taskIds.includes(t.id));
+    handleUpdateTasks(updated);
+  };
+
+  // Quick Add Task from Pinned Floating Button
+  const handleQuickAddTask = (title: string, categoryId?: string, priority?: PriorityLevel) => {
+    const newTask: TaskItem = {
+      id: `task_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      title,
+      description: '',
+      priority: priority || 'normal',
+      status: 'not_started',
+      dueDate: new Date().toISOString().split('T')[0],
+      categoryId: categoryId || categories[0]?.id || 'cat_work',
+      recurrence: 'none',
+      subTasks: [],
+      reminders: [],
+      createdAt: new Date().toISOString(),
+    };
+    handleUpdateTasks([newTask, ...tasks]);
   };
 
   // Unread notifications count
@@ -470,6 +661,7 @@ export default function App() {
           setIsTaskModalOpen(true);
         }}
         onOpenNotifications={() => setIsNotificationTrayOpen(true)}
+        onOpenPomodoro={() => handleStartPomodoro()}
         unreadNotificationsCount={unreadCount}
       />
 
@@ -506,6 +698,14 @@ export default function App() {
                   setIsTaskModalOpen(true);
                 }}
                 onToggleComplete={handleToggleComplete}
+                onDeleteTask={handleDeleteTask}
+                onStartPomodoro={handleStartPomodoro}
+                onBatchUpdateTasks={handleBatchUpdateTasks}
+                onBatchDeleteTasks={handleBatchDeleteTasks}
+                onQuickAddTask={handleQuickAddTask}
+                userName={settings.userName}
+                userProfession={settings.userProfessionCustom || settings.userProfessionId}
+                userStudyTrack={settings.userStudentTrackCustom || settings.userStudentTrackId}
                 streakCount={5}
               />
             )}
@@ -525,6 +725,15 @@ export default function App() {
                   setIsTaskModalOpen(true);
                 }}
                 onToggleComplete={handleToggleComplete}
+              />
+            )}
+
+            {activeTab === 'spiritual' && (
+              <SpiritualRoutineView
+                settings={settings}
+                language={language}
+                onUpdateSettings={handleUpdateSettings}
+                onAddTasksToToday={handleAddBulkTasks}
               />
             )}
 
@@ -571,6 +780,7 @@ export default function App() {
                 onResetAllData={handleResetAllData}
                 onReopenOnboarding={() => setIsOnboardingOpen(true)}
                 onOpenArchive={() => setIsArchiveOpen(true)}
+                onApplyTemplateToTasks={handleAddBulkTasks}
               />
             )}
           </>
@@ -607,6 +817,22 @@ export default function App() {
           handleUpdateSettings({ ...settings, hasCompletedOnboarding: true });
         }}
         language={language}
+      />
+
+      {/* Pomodoro Focus Timer Modal / Float */}
+      <PomodoroTimer
+        isOpen={isPomodoroOpen}
+        onClose={() => setIsPomodoroOpen(false)}
+        language={language}
+        tasks={tasks}
+        initialTaskId={pomodoroTaskId}
+        onTaskComplete={(taskId) => {
+          const task = tasks.find((t) => t.id === taskId);
+          if (task) {
+            handleToggleComplete(task);
+          }
+        }}
+        onNotify={handlePomodoroNotify}
       />
 
       {/* Notification Center Tray */}

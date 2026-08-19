@@ -199,7 +199,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       }}
     >
       <div
-        className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col"
+        className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-floating-4k card-floating-4k overflow-hidden my-auto max-h-[92vh] flex flex-col"
         id="task-modal-content"
       >
         {/* Header */}

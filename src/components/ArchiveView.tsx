@@ -50,7 +50,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
           <button
             type="button"
             onClick={onBack}
-            className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-floating-4k"
           >
             <ArrowLeft size={16} className="rtl:rotate-180" />
           </button>
@@ -76,7 +76,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t.searchPlaceholder}
-          className="w-full py-2.5 px-9 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs focus:outline-hidden"
+          className="w-full py-2.5 px-9 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs focus:outline-hidden shadow-floating-4k"
         />
       </div>
 
@@ -84,10 +84,17 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
       <div className="space-y-2.5">
         {filtered.map((task) => {
           const category = categories.find((c) => c.id === task.categoryId);
+          const priorityBorder =
+            task.priority === 'urgent'
+              ? 'border-s-4 border-s-rose-500'
+              : task.priority === 'important'
+              ? 'border-s-4 border-s-amber-500'
+              : 'border-s-4 border-s-indigo-400/80 dark:border-s-indigo-500/60';
+
           return (
             <div
               key={task.id}
-              className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 shadow-xs"
+              className={`p-4 rounded-2xl bg-white dark:bg-slate-900 border ${priorityBorder} border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 shadow-floating-4k card-floating-4k`}
             >
               <div className="flex-1 min-w-0">
                 <h4 className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 line-through">

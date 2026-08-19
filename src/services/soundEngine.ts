@@ -390,6 +390,106 @@ export function playSadOverdueSound(choice: SadSoundChoice, customAudioUrl?: str
         });
       });
       setTimeout(() => notifyAudioState(false), 5100);
+    } else if (choice === 'sad_oud_lament') {
+      // "تقاسيم عود أندلسية حزينة" - Sorrowful Oriental Oud Pluck & Drone Strings
+      const oudNotes = [
+        { freq: 220.0, start: 0.0, dur: 0.8, vol: 0.3 }, // A3
+        { freq: 246.94, start: 0.5, dur: 0.7, vol: 0.28 }, // B3
+        { freq: 261.63, start: 1.0, dur: 0.8, vol: 0.32 }, // C4
+        { freq: 293.66, start: 1.6, dur: 0.9, vol: 0.3 }, // D4
+        { freq: 277.18, start: 2.3, dur: 0.8, vol: 0.26 }, // C#4 (Bayati/Hijaz flavor)
+        { freq: 220.0, start: 2.9, dur: 1.6, vol: 0.35 }, // A3 Final linger
+      ];
+
+      // Drone base string (A2)
+      const droneOsc = ctx.createOscillator();
+      const droneGain = ctx.createGain();
+      const droneFilter = ctx.createBiquadFilter();
+      activeOscillators.push(droneOsc);
+      droneOsc.type = 'sawtooth';
+      droneOsc.frequency.setValueAtTime(110.0, now);
+      droneFilter.type = 'lowpass';
+      droneFilter.frequency.setValueAtTime(280, now);
+      droneGain.gain.setValueAtTime(0, now);
+      droneGain.gain.linearRampToValueAtTime(0.12, now + 0.3);
+      droneGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.2);
+      droneOsc.connect(droneFilter);
+      droneFilter.connect(droneGain);
+      droneGain.connect(ctx.destination);
+      droneOsc.start(now);
+      droneOsc.stop(now + 4.3);
+
+      oudNotes.forEach((n) => {
+        const osc = ctx.createOscillator();
+        const bodyOsc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        activeOscillators.push(osc, bodyOsc);
+
+        osc.type = 'triangle';
+        bodyOsc.type = 'sine';
+
+        osc.frequency.setValueAtTime(n.freq, now + n.start);
+        bodyOsc.frequency.setValueAtTime(n.freq * 2, now + n.start);
+
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(n.freq * 1.8, now + n.start);
+        filter.Q.setValueAtTime(3.0, now + n.start);
+
+        // Acoustic pluck attack
+        gain.gain.setValueAtTime(0, now + n.start);
+        gain.gain.linearRampToValueAtTime(n.vol, now + n.start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + n.start + n.dur);
+
+        osc.connect(filter);
+        bodyOsc.connect(gain);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now + n.start);
+        bodyOsc.start(now + n.start);
+        osc.stop(now + n.start + n.dur + 0.05);
+        bodyOsc.stop(now + n.start + n.dur + 0.05);
+      });
+      setTimeout(() => notifyAudioState(false), 4600);
+    } else if (choice === 'sad_qanun_sigh') {
+      // "شجن القانون والكمان الحزين" - Shimmering Oriental Qanun Tremolos & Weeping Strings
+      const qanunNotes = [
+        { freq: 440.0, time: 0.0, dur: 0.3, vol: 0.2 },
+        { freq: 440.0, time: 0.12, dur: 0.3, vol: 0.18 },
+        { freq: 415.3, time: 0.4, dur: 0.4, vol: 0.22 }, // G#4
+        { freq: 370.0, time: 0.8, dur: 0.5, vol: 0.24 }, // F#4
+        { freq: 329.63, time: 1.3, dur: 0.6, vol: 0.25 }, // E4
+        { freq: 293.66, time: 1.9, dur: 0.8, vol: 0.26 }, // D4
+        { freq: 261.63, time: 2.6, dur: 1.5, vol: 0.28 }, // C4 lingering
+      ];
+
+      qanunNotes.forEach((n) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        activeOscillators.push(osc);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(n.freq, now + n.time);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1400, now + n.time);
+        filter.Q.setValueAtTime(2.0, now + n.time);
+
+        gain.gain.setValueAtTime(0, now + n.time);
+        gain.gain.linearRampToValueAtTime(n.vol, now + n.time + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + n.time + n.dur);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now + n.time);
+        osc.stop(now + n.time + n.dur + 0.05);
+      });
+      setTimeout(() => notifyAudioState(false), 4200);
     } else if (choice === 'sad_violin') {
       // Sorrowful slow weeping violin minor phrase (D4 -> F4 -> E4 -> D4 with rich vibrato)
       const phrase = [
@@ -610,10 +710,19 @@ export function playWorkoutBeep(type: 'countdown' | 'complete') {
   }
 }
 
-export function triggerVibration(vibrationEnabled: boolean, pattern: number[] = [80, 40, 80]) {
-  if (!vibrationEnabled || typeof window === 'undefined' || !('vibrate' in navigator)) return;
+export function triggerVibration(patternOrEnabled?: boolean | number | number[], maybePattern?: number[]) {
+  if (typeof window === 'undefined' || !('vibrate' in navigator)) return;
   try {
-    navigator.vibrate(pattern);
+    if (typeof patternOrEnabled === 'boolean') {
+      if (!patternOrEnabled) return;
+      navigator.vibrate(maybePattern || [80, 40, 80]);
+    } else if (typeof patternOrEnabled === 'number') {
+      navigator.vibrate(patternOrEnabled);
+    } else if (Array.isArray(patternOrEnabled)) {
+      navigator.vibrate(patternOrEnabled);
+    } else {
+      navigator.vibrate([80, 40, 80]);
+    }
   } catch {
     // Ignore unsupported browser sandbox errors
   }

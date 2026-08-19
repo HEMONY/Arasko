@@ -13,6 +13,8 @@ export type SoundChoice = 'chime' | 'bell' | 'ping' | 'zen' | 'harp' | 'none' | 
 export type SadSoundChoice =
   | 'arasko_sad_1'
   | 'arasko_sad_2'
+  | 'sad_oud_lament'
+  | 'sad_qanun_sigh'
   | 'sad_violin'
   | 'sad_piano'
   | 'sad_sigh'
@@ -140,6 +142,14 @@ export interface HabitEntry {
   stepCount: number;
 }
 
+export interface SpiritualDailyLog {
+  date?: string;
+  completedSurahs?: string[];
+  completedAthkar?: string[];
+  overallCompleted?: boolean;
+  [key: string]: unknown;
+}
+
 export interface AppSettings {
   language: LanguageCode;
   theme: ThemeMode;
@@ -155,6 +165,33 @@ export interface AppSettings {
   sleepGoalHours: number;
   stepGoal: number;
   hasCompletedOnboarding: boolean;
+  // User Profile Personalization
+  userName?: string;
+  userRoleType?: 'professional' | 'student' | 'other';
+  userProfession?: string;
+  userProfessionId?: string;
+  userStudyTrack?: string;
+  userStudentTrackId?: string;
+  userCustomField?: string;
+  // Spiritual / Islamic Routine Tracking
+  spiritualTrackingEnabled?: boolean;
+  spiritualRemindersEnabled?: boolean;
+  spiritualItemReminders?: Record<string, boolean>; // ward/dhikr ID -> boolean
+  spiritualReminderTimes?: Record<string, string>; // ward/dhikr ID -> "HH:mm"
+  spiritualDailyLogs?: Record<string, SpiritualDailyLog>; // date -> daily log
+  spiritualTasbihCounters?: Record<string, number>;
+}
+
+export type PomodoroMode = 'focus' | 'shortBreak' | 'longBreak';
+
+export interface PomodoroSession {
+  taskId?: string;
+  taskTitle?: string;
+  mode: PomodoroMode;
+  durationSeconds: number;
+  remainingSeconds: number;
+  isRunning: boolean;
+  completedCycles: number;
 }
 
 export interface LocalNotificationAlert {
@@ -164,9 +201,9 @@ export interface LocalNotificationAlert {
   body: string;
   timestamp: string;
   isRead: boolean;
-  type: 'task' | 'water' | 'sleep' | 'workout' | 'assistant' | 'overdue';
+  type: 'task' | 'water' | 'sleep' | 'workout' | 'assistant' | 'overdue' | 'spiritual' | 'pomodoro';
 }
 
-export type ActiveTab = 'today' | 'calendar' | 'assistant' | 'health' | 'settings';
+export type ActiveTab = 'today' | 'calendar' | 'spiritual' | 'assistant' | 'health' | 'settings';
 export type CalendarSubView = 'monthly' | 'yearly';
 

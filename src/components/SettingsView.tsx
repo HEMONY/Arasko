@@ -1,13 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  AlertCircle,
   Bell,
   Check,
+  CheckCheck,
+  CheckCircle2,
   Compass,
+  Copy,
+  Database,
   Download,
   Droplet,
+  FileJson,
+  FileText,
   Footprints,
   Frown,
   Globe,
+  HardDrive,
   Heart,
   Laptop,
   Moon,
@@ -33,11 +41,13 @@ import {
   SadSoundChoice,
   SoundChoice,
   TaskCategory,
+  TaskItem,
   ThemeMode,
 } from '../types';
 import { translations } from '../i18n/translations';
 import { Logo } from './Logo';
 import { AVAILABLE_CATEGORY_ICONS, CategoryIcon } from './CategoryIcon';
+import { UserProfileSection } from './UserProfileSection';
 import {
   getCurrentPlayingSoundId,
   playAlertSound,
@@ -48,6 +58,7 @@ import {
   triggerVibration,
 } from '../services/soundEngine';
 import { AudioStorageService } from '../services/audioStorage';
+import { StorageService } from '../services/storage';
 
 interface SettingsViewProps {
   settings: AppSettings;
@@ -56,10 +67,11 @@ interface SettingsViewProps {
   onUpdateSettings: (newSettings: AppSettings) => void;
   onUpdateCategories: (newCats: TaskCategory[]) => void;
   onExportBackup: () => void;
-  onImportBackup: (file: File) => void;
+  onImportBackup: (fileOrString: File | string) => void;
   onResetAllData: () => void;
   onReopenOnboarding: () => void;
   onOpenArchive: () => void;
+  onApplyTemplateToTasks?: (tasks: Partial<TaskItem>[]) => void;
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
@@ -73,11 +85,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onResetAllData,
   onReopenOnboarding,
   onOpenArchive,
+  onApplyTemplateToTasks,
 }) => {
   const t = translations[language];
 
   // Active audio playback state
   const [playingSoundId, setPlayingSoundId] = useState<string | null>(getCurrentPlayingSoundId());
+
+  // Data management export/import states
+  const [copiedBackup, setCopiedBackup] = useState(false);
+  const [showPasteModal, setShowPasteModal] = useState(false);
+  const [pastedJson, setPastedJson] = useState('');
+  const [backupFeedback, setBackupFeedback] = useState<{ text: string; isError?: boolean } | null>(null);
 
   // Custom audio files loaded from IndexedDB
   const [customTones, setCustomTones] = useState<CustomToneItem[]>([]);
@@ -301,8 +320,71 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     }
   };
 
+  // Copy full backup JSON payload to clipboard
+  const handleCopyBackupJson = () => {
+    try {
+      const jsonStr = StorageService.exportFullBackup();
+      navigator.clipboard.writeText(jsonStr);
+      setCopiedBackup(true);
+      triggerVibration(settings.vibrationEnabled, [40]);
+      setBackupFeedback({ text: t.copiedToClipboard, isError: false });
+      setTimeout(() => {
+        setCopiedBackup(false);
+        setBackupFeedback(null);
+      }, 3500);
+    } catch {
+      setBackupFeedback({ text: t.importError, isError: true });
+    }
+  };
+
+  // Direct paste JSON submit
+  const handleDirectPasteSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pastedJson.trim()) return;
+
+    try {
+      const parsed = JSON.parse(pastedJson.trim());
+      if (!parsed || typeof parsed !== 'object') {
+        setBackupFeedback({ text: t.importError, isError: true });
+        return;
+      }
+      onImportBackup(pastedJson.trim());
+      setPastedJson('');
+      setShowPasteModal(false);
+      setBackupFeedback({ text: t.importSuccess, isError: false });
+      setTimeout(() => setBackupFeedback(null), 3500);
+    } catch {
+      setBackupFeedback({ text: t.importError, isError: true });
+    }
+  };
+
+  // Local Storage Usage diagnostics
+  const storageInfo = useMemo(() => {
+    let sizeBytes = 0;
+    try {
+      for (const k in localStorage) {
+        if (k.startsWith('arasko_')) {
+          sizeBytes += (localStorage.getItem(k)?.length || 0) * 2;
+        }
+      }
+    } catch {
+      sizeBytes = 1024 * 6;
+    }
+    const kb = Math.max(1, Math.round(sizeBytes / 1024));
+    const tasksCount = StorageService.getTasks().length;
+    return { kb, tasksCount };
+  }, [categories]);
+
   return (
     <div className="space-y-6 pb-28 animate-fade-in" id="settings-view-container">
+      {/* 0. Personal User Profile & Custom Domain Guidance */}
+      <UserProfileSection
+        settings={settings}
+        language={language}
+        onUpdateSettings={onUpdateSettings}
+        onApplyTemplateToTasks={onApplyTemplateToTasks}
+      />
+
       {/* 1. Language Selection */}
       <div className="glass-panel bg-white/90 dark:bg-slate-900/90 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3.5">
         <div className="flex items-center gap-2.5">
@@ -439,6 +521,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <optgroup label={language === 'ar' ? 'نغمات اراسكو الحزينة (المميزة)' : 'Arasko Masterpieces'}>
                 <option value="arasko_sad_1">Arasko Sad 1 ({language === 'ar' ? 'الافتراضية - ناي وكمان' : 'Default - Ney & Violin'})</option>
                 <option value="arasko_sad_2">Arasko Sad 2 ({language === 'ar' ? 'تشيلو وأوتار' : 'Cello & Strings'})</option>
+                <option value="sad_oud_lament">{t.sadOudLament}</option>
+                <option value="sad_qanun_sigh">{t.sadQanunSigh}</option>
               </optgroup>
               <optgroup label={language === 'ar' ? 'النغمات القياسية' : 'Standard Tones'}>
                 <option value="chime">{t.soundChime}</option>
@@ -522,6 +606,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               {[
                 { id: 'arasko_sad_1', label: t.araskoSad1, isDefault: true },
                 { id: 'arasko_sad_2', label: t.araskoSad2, isDefault: false },
+                { id: 'sad_oud_lament', label: t.sadOudLament, isDefault: false },
+                { id: 'sad_qanun_sigh', label: t.sadQanunSigh, isDefault: false },
                 { id: 'sad_violin', label: t.sadViolin },
                 { id: 'sad_piano', label: t.sadPiano },
                 { id: 'sad_sigh', label: t.sadSigh },
@@ -624,6 +710,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <optgroup label={language === 'ar' ? 'نغمات اراسكو الحزينة (الموصى بها)' : 'Arasko Masterpieces'}>
               <option value="arasko_sad_1">Arasko Sad 1 ★ ({language === 'ar' ? 'الافتراضية - ناي وكمان' : 'Default - Ney & Violin'})</option>
               <option value="arasko_sad_2">Arasko Sad 2 ({language === 'ar' ? 'تشيلو وأوتار' : 'Cello & Strings'})</option>
+              <option value="sad_oud_lament">{t.sadOudLament}</option>
+              <option value="sad_qanun_sigh">{t.sadQanunSigh}</option>
             </optgroup>
             <optgroup label={language === 'ar' ? 'نغمات حزينة ومؤثرة' : 'Emotional Melancholy'}>
               <option value="sad_violin">{t.sadViolin}</option>
@@ -685,6 +773,24 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   language === 'ar'
                     ? 'مرثية الأوتار والتشيلو العميقة الحزينة'
                     : 'Deep somber cello elegy and descending bowed strings',
+                isDefault: false,
+              },
+              {
+                id: 'sad_oud_lament',
+                label: t.sadOudLament,
+                desc:
+                  language === 'ar'
+                    ? 'تقاسيم عود أندلسية مع وتر الأساس العميق'
+                    : 'Acoustic oriental oud pluck with resonant drone base',
+                isDefault: false,
+              },
+              {
+                id: 'sad_qanun_sigh',
+                label: t.sadQanunSigh,
+                desc:
+                  language === 'ar'
+                    ? 'شجن القانون والكمان وأصداء المطر الحزينة'
+                    : 'Melancholic qanun tremolos & soft weeping violin echoes',
                 isDefault: false,
               },
               { id: 'sad_violin', label: t.sadViolin, desc: 'Violin phrase (D Minor)' },
@@ -1112,30 +1218,59 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* 8. Local Backup & Storage (JSON Export / Import) */}
-      <div className="glass-panel bg-white/90 dark:bg-slate-900/90 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3.5">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-            <Shield size={18} />
+      <div className="glass-panel bg-white/90 dark:bg-slate-900/90 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-xs">
+              <Shield size={18} />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                {t.dataManagementTitle}
+              </h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                100% {t.offlineNotice}
+              </p>
+            </div>
           </div>
-          <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
-            {t.dataManagementTitle}
-          </h3>
+
+          <div className="flex items-center gap-2 text-[11px] font-semibold text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/60 self-start sm:self-auto">
+            <HardDrive size={13} className="text-emerald-500" />
+            <span>
+              {storageInfo.tasksCount} {t.filterAll} • ~{storageInfo.kb} KB
+            </span>
+          </div>
         </div>
 
+        {/* Feedback Alert Notice */}
+        {backupFeedback && (
+          <div
+            className={`p-3 rounded-2xl border text-xs font-semibold flex items-center gap-2 animate-fade-in ${
+              backupFeedback.isError
+                ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-300'
+                : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/60 text-emerald-700 dark:text-emerald-300'
+            }`}
+          >
+            {backupFeedback.isError ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
+            <span>{backupFeedback.text}</span>
+          </div>
+        )}
+
+        {/* Primary Export & Import Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {/* Export */}
+          {/* 1. Export JSON File */}
           <button
             type="button"
             onClick={onExportBackup}
-            className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-indigo-400 text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+            className="p-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
             id="export-backup-btn"
           >
-            <Download size={15} /> {t.exportData}
+            <Download size={16} /> {t.exportData}
           </button>
 
-          {/* Import */}
-          <label className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-indigo-400 text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer">
-            <Upload size={15} /> {t.importData}
+          {/* 2. Import JSON File */}
+          <label className="p-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer">
+            <Upload size={16} /> {t.importData}
             <input
               type="file"
               accept=".json"
@@ -1145,6 +1280,90 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             />
           </label>
         </div>
+
+        {/* Secondary Actions (Copy & Direct Paste Text) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {/* Copy Backup JSON */}
+          <button
+            type="button"
+            onClick={handleCopyBackupJson}
+            className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-indigo-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+            id="copy-backup-btn"
+          >
+            {copiedBackup ? (
+              <>
+                <CheckCheck size={15} className="text-emerald-500" />
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                  {t.copiedToClipboard}
+                </span>
+              </>
+            ) : (
+              <>
+                <Copy size={15} />
+                <span>{t.copyBackupJson}</span>
+              </>
+            )}
+          </button>
+
+          {/* Direct Paste JSON Text */}
+          <button
+            type="button"
+            onClick={() => setShowPasteModal(true)}
+            className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-indigo-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+            id="paste-backup-btn"
+          >
+            <FileText size={15} />
+            <span>{t.pasteBackupJson}</span>
+          </button>
+        </div>
+
+        {/* Paste JSON Modal Form */}
+        {showPasteModal && (
+          <form
+            onSubmit={handleDirectPasteSubmit}
+            className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-800/80 border border-indigo-200 dark:border-indigo-900/60 space-y-3 animate-fade-in"
+          >
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <FileJson size={15} className="text-indigo-600 dark:text-indigo-400" />
+                {t.pasteBackupJson}
+              </h4>
+              <span className="text-[10px] text-slate-400">JSON Format</span>
+            </div>
+
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              {t.importConfirmWarning}
+            </p>
+
+            <textarea
+              rows={4}
+              value={pastedJson}
+              onChange={(e) => setPastedJson(e.target.value)}
+              placeholder={t.pasteJsonPlaceholder}
+              className="w-full p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white font-mono focus:outline-hidden resize-none"
+              required
+            />
+
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPasteModal(false);
+                  setPastedJson('');
+                }}
+                className="px-3.5 py-1.5 rounded-xl text-xs text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
+              >
+                {t.cancel}
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors"
+              >
+                {t.importData}
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Quick Archive & Onboarding links */}
         <div className="pt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800 text-xs">

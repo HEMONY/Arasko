@@ -31,13 +31,30 @@ export interface Translations {
   todayProgress: string;
   tasksCompleted: string;
 
-  // Focus Mode
+  // Focus Mode & Pomodoro
   focusMode: string;
   focusModeActive: string;
   focusModeDesc: string;
   focusModeHint: string;
   exitFocusMode: string;
   focusModeEmpty: string;
+  pomodoro: string;
+  pomodoroTitle: string;
+  pomodoroDesc: string;
+  focusSession: string;
+  shortBreak: string;
+  longBreak: string;
+  startFocus: string;
+  pauseFocus: string;
+  resumeFocus: string;
+  resetFocus: string;
+  pomodoroCompleted: string;
+  pomodoroCompletedDesc: string;
+  selectTaskForPomodoro: string;
+  focusTimeRemaining: string;
+  completedCyclesCount: string;
+  startPomodoroForTask: string;
+  minimizeTimer: string;
 
   // Priority & Status
   urgent: string;
@@ -206,6 +223,8 @@ export interface Translations {
   selectSadTone: string;
   araskoSad1: string;
   araskoSad2: string;
+  sadOudLament: string;
+  sadQanunSigh: string;
   defaultSadToneBadge: string;
   sadViolin: string;
   sadPiano: string;
@@ -244,6 +263,12 @@ export interface Translations {
   exportSuccess: string;
   importSuccess: string;
   importError: string;
+  copyBackupJson: string;
+  copiedToClipboard: string;
+  pasteBackupJson: string;
+  backupStatsInfo: string;
+  pasteJsonPlaceholder: string;
+  importConfirmWarning: string;
   resetAllData: string;
   resetConfirm: string;
   aboutTitle: string;
@@ -285,6 +310,65 @@ export interface Translations {
   tplCleaning: string;
   tplMealPrep: string;
   tplCoding: string;
+
+  // Gestures & Swiping
+  swipeComplete: string;
+  swipeDelete: string;
+  swipeHint: string;
+
+  // Spiritual / Islamic Routine
+  spiritual: string;
+  spiritualTitle: string;
+  spiritualDesc: string;
+  quranWardsTitle: string;
+  quranWardsSubtitle: string;
+  athkarTitle: string;
+  wakingAthkar: string;
+  morningAthkar: string;
+  eveningAthkar: string;
+  sleepingAthkar: string;
+  readSurah: string;
+  closeSurah: string;
+  markSurahRead: string;
+  surahCompleted: string;
+  surahCompletedMsg: string;
+  virtueLabel: string;
+  tasbihCounter: string;
+  tasbihCompleted: string;
+  addToTodayTasks: string;
+  addedToTasksSuccess: string;
+  todaySpiritualProgress: string;
+  completedSpiritualItems: string;
+  allSpiritualDone: string;
+  spiritualRemindersTitle: string;
+  enableSpiritualReminders: string;
+  remindAfterPrayer: string;
+  setReminderTime: string;
+  testSpiritualSound: string;
+  dailyAthkarReminders: string;
+  quranWardReminders: string;
+
+  // User Profile & Personalized Smart Guidance
+  userProfileTitle: string;
+  userProfileSubtitle: string;
+  userName: string;
+  userNamePlaceholder: string;
+  userRole: string;
+  roleProfessional: string;
+  roleStudent: string;
+  roleOther: string;
+  professionSelect: string;
+  trackSelect: string;
+  customFieldPrompt: string;
+  customFieldPlaceholder: string;
+  personalizedTips: string;
+  specializedTemplates: string;
+  applyTemplate: string;
+  templateAppliedSuccess: string;
+  onboardingRoleTitle: string;
+  onboardingRoleDesc: string;
+  onboardingProfileNamePrompt: string;
+  domainTipsTitle: string;
 }
 
 export const translations: Record<LanguageCode, Translations> = {
@@ -298,6 +382,7 @@ export const translations: Record<LanguageCode, Translations> = {
     calendar: "التقويم",
     assistant: "المساعد الذكي",
     health: "الصحة واللياقة",
+    spiritual: "الورد والأذكار",
     settings: "الإعدادات",
     archive: "الأرشيف",
     analytics: "التحليلات",
@@ -317,13 +402,30 @@ export const translations: Record<LanguageCode, Translations> = {
     todayProgress: "إنجاز اليوم",
     tasksCompleted: "مهام مكتملة",
 
-    // Focus Mode
+    // Focus Mode & Pomodoro
     focusMode: "وضع التركيز الفائق",
     focusModeActive: "وضع التركيز مفعّل",
     focusModeDesc: "إخفاء المهام المكتملة وغير العاجلة للتركيز على الأهم والمستعجل",
     focusModeHint: "يعرض فقط المهام العاجلة والمتأخرة قيد التنفيذ",
     exitFocusMode: "إلغاء التركيز",
     focusModeEmpty: "لا توجد مهام عاجلة متبقية لليوم. كل شيء تحت السيطرة!",
+    pomodoro: "مؤقت بومودورو",
+    pomodoroTitle: "مؤقت التركيز وبومودورو 4K",
+    pomodoroDesc: "جلسات تركيز عميق لمدة 25 دقيقة متبوعة بفترات استراحة قصيرة لزيادة إنتاجيتك.",
+    focusSession: "جلسة تركيز (25 دقيقة)",
+    shortBreak: "استراحة قصيرة (5 دقائق)",
+    longBreak: "استراحة طويلة (15 دقيقة)",
+    startFocus: "بدء التركيز",
+    pauseFocus: "إيقاف مؤقت",
+    resumeFocus: "استئناف الجلسة",
+    resetFocus: "إعادة ضبط",
+    pomodoroCompleted: "🎉 أحسنت! اكتملت جلسة التركيز بنجاح",
+    pomodoroCompletedDesc: "لقد أتممت جلسة عمل مركزة بنجاح، خذ استراحة قصيرة لتجديد طاقتك.",
+    selectTaskForPomodoro: "ربط الجلسة بمهمة محددة",
+    focusTimeRemaining: "الوقت المتبقي للجلسة",
+    completedCyclesCount: "الجلسات المكتملة اليوم",
+    startPomodoroForTask: "بدء مؤقت تركيز 25 دقيقة",
+    minimizeTimer: "تصغير المؤقت والشاشة",
 
     urgent: "عاجل",
     important: "مهم",
@@ -486,6 +588,8 @@ export const translations: Record<LanguageCode, Translations> = {
     selectSadTone: "اختر نغمة التأخير الحزينة",
     araskoSad1: "اراسكو الحزين 1 (لحن الناي والكمان الشجي)",
     araskoSad2: "اراسكو الحزين 2 (مرثية الأوتار والتشيلو العميقة)",
+    sadOudLament: "تقاسيم عود أندلسية حزينة (Sad Oriental Oud & Strings)",
+    sadQanunSigh: "شجن القانون والكمان الحزين (Melancholic Qanun Echo)",
     defaultSadToneBadge: "النغمة الافتراضية",
     sadViolin: "كمان الحزن والشجن (Emotional Violin)",
     sadPiano: "بيانو الحزن الرقيق (Melancholy Piano)",
@@ -524,6 +628,12 @@ export const translations: Record<LanguageCode, Translations> = {
     exportSuccess: "تم تصدير بياناتك بنجاح وحفظ الملف.",
     importSuccess: "تم استيراد البيانات وتحديث التطبيق بنجاح.",
     importError: "الملف غير صالح أو تالف. يرجى اختيار ملف نسخة أراسكو صالح.",
+    copyBackupJson: "نسخ محتوى النسخة الاحتياطية",
+    copiedToClipboard: "تم نسخ كود النسخة الاحتياطية إلى الحافظة!",
+    pasteBackupJson: "لصق واستيراد نص JSON مباشرة",
+    backupStatsInfo: "حجم البيانات المحفوظة محلياً",
+    pasteJsonPlaceholder: "الصق كود النسخة الاحتياطية (JSON) هنا لاستيراده فوراً...",
+    importConfirmWarning: "سيتم استعادة وتحديث بيانات التطبيق والإعدادات من هذه النسخة الاحتياطية.",
     resetAllData: "إعادة ضبط المصنع ومسح كل البيانات",
     resetConfirm: "تحذير: سيتم مسح كافة المهام والبيانات نهائياً!",
     aboutTitle: "حول تطبيق أراسكو",
@@ -561,6 +671,64 @@ export const translations: Record<LanguageCode, Translations> = {
     tplCleaning: "ترتيب وتنظيف شامل للمنزل",
     tplMealPrep: "التخطيط وإعداد الوجبات الأسبوعية",
     tplCoding: "تطوير ميزة برمجية واختبارها",
+
+    // Gestures & Swiping
+    swipeComplete: "اسحب لليمين للإكمال",
+    swipeDelete: "اسحب لليسار للحذف",
+    swipeHint: "اسحب البطاقة يميناً للإكمال أو يساراً للحذف",
+
+    // Spiritual / Islamic Routine
+    spiritualTitle: "الروتين الديني والورد القرآني",
+    spiritualDesc: "أذكار الصباح والمساء والاستيقاظ والنوم وقراءة السور المأثورة الموزعة على الصلوات الخمس",
+    quranWardsTitle: "الورد القرآني اليومي (حسب الصلوات)",
+    quranWardsSubtitle: "سورة مخصصة بعد كل صلاة لتيسير القراءة ونيل البركة",
+    athkarTitle: "الأذكار اليومية وحصن المسلم",
+    wakingAthkar: "أذكار الاستيقاظ",
+    morningAthkar: "أذكار الصباح",
+    eveningAthkar: "أذكار المساء",
+    sleepingAthkar: "أذكار النوم",
+    readSurah: "قراءة السورة كاملة",
+    closeSurah: "إغلاق المصحف",
+    markSurahRead: "تحديد الورد كمقروء",
+    surahCompleted: "تمت القراءة",
+    surahCompletedMsg: "تقبل الله طاعتكم وبارك في يومكم وأثابكم خيراً.",
+    virtueLabel: "فضل السورة والوقت",
+    tasbihCounter: "المسبحة الإلكترونية",
+    tasbihCompleted: "اكتمل الذكر المبارك",
+    addToTodayTasks: "إضافة الورد والأذكار إلى مهام اليوم",
+    addedToTasksSuccess: "تمت إضافة السور والأذكار إلى قائمة مهامك بنجاح!",
+    todaySpiritualProgress: "إنجاز الورد الديني لليوم",
+    completedSpiritualItems: "أوراد وأذكار منجزة",
+    allSpiritualDone: "ما شاء الله! أنجزت كامل وردك القرآني وأذكارك اليومية المباركة.",
+    spiritualRemindersTitle: "تنبيهات الورد القرآني والأذكار المأثورة",
+    enableSpiritualReminders: "تفعيل التذكير اليومي التلقائي بالورد والأذكار",
+    remindAfterPrayer: "تذكير بعد الصلاة",
+    setReminderTime: "وقت التنبيه",
+    testSpiritualSound: "تجربة نغمة التنبيه",
+    dailyAthkarReminders: "تنبيهات أذكار اليوم (استيقاظ، صباح، مساء، نوم)",
+    quranWardReminders: "تنبيهات أوراد السور الخمس بعد الصلوات المكتوبة",
+
+    // User Profile & Personalized Smart Guidance
+    userProfileTitle: "الملف الشخصي والمسار المخصص",
+    userProfileSubtitle: "خصص تجربتك باسمك ومجالك المهني أو الدراسي لتقديم نصائح وتوجيهات تناسب دورك تماماً",
+    userName: "اسمك الكريم",
+    userNamePlaceholder: "اكتب اسمك هنا (مثال: أحمد، سارة، م. عمر...)",
+    userRole: "نوع الدور الحالي",
+    roleProfessional: "مهني / موظف",
+    roleStudent: "طالب علم",
+    roleOther: "مجال آخر",
+    professionSelect: "اختر مجالك المهني من القائمة",
+    trackSelect: "اختر تخصصك أو مساقك الدراسي",
+    customFieldPrompt: "اكتب مجالك أو تخصصك بدقة",
+    customFieldPlaceholder: "مثال: ذكاء اصطناعي، تسويق رقمي، أدب مقارن...",
+    personalizedTips: "إرشادات ونصائح مخصصة لمجالك",
+    specializedTemplates: "قوالب وخطط عمل مخصصة لمجالك",
+    applyTemplate: "إضافة كمهام عملية لليوم",
+    templateAppliedSuccess: "تمت إضافة خطوات النموذج كمهام لليوم بنجاح!",
+    onboardingRoleTitle: "أخبرنا عنك لتخصيص تجربتك",
+    onboardingRoleDesc: "أدخل اسمك ومجالك المهني أو الدراسي لنقدم لك إرشادات ونماذج عمل تناسب أهدافك تماماً.",
+    onboardingProfileNamePrompt: "ما هو اسمك الكريم؟",
+    domainTipsTitle: "توجيهات وإرشادات خاصة بمسارك",
   },
   en: {
     appName: "Arasko",
@@ -572,6 +740,7 @@ export const translations: Record<LanguageCode, Translations> = {
     calendar: "Calendar",
     assistant: "Smart Assistant",
     health: "Health & Fitness",
+    spiritual: "Spiritual & Quran",
     settings: "Settings",
     archive: "Archive",
     analytics: "Analytics",
@@ -591,13 +760,30 @@ export const translations: Record<LanguageCode, Translations> = {
     todayProgress: "Today's Progress",
     tasksCompleted: "Tasks Completed",
 
-    // Focus Mode
+    // Focus Mode & Pomodoro
     focusMode: "Focus Mode",
     focusModeActive: "Focus Mode Active",
     focusModeDesc: "Hides completed tasks and non-urgent items to help you concentrate on top priorities",
     focusModeHint: "Showing only pending urgent and overdue tasks",
     exitFocusMode: "Exit Focus",
     focusModeEmpty: "No urgent tasks remaining today. You're completely on top of things!",
+    pomodoro: "Pomodoro Timer",
+    pomodoroTitle: "4K Pomodoro Focus Timer",
+    pomodoroDesc: "25-minute deep focus intervals followed by restorative breaks to maximize productivity.",
+    focusSession: "Focus Session (25 min)",
+    shortBreak: "Short Break (5 min)",
+    longBreak: "Long Break (15 min)",
+    startFocus: "Start Focus",
+    pauseFocus: "Pause",
+    resumeFocus: "Resume",
+    resetFocus: "Reset",
+    pomodoroCompleted: "🎉 Great job! Focus session completed",
+    pomodoroCompletedDesc: "You completed a deep work block. Take a well-deserved short break.",
+    selectTaskForPomodoro: "Link session with task",
+    focusTimeRemaining: "Time remaining",
+    completedCyclesCount: "Completed cycles today",
+    startPomodoroForTask: "Start 25m Focus Timer",
+    minimizeTimer: "Minimize Timer",
 
     urgent: "Urgent",
     important: "Important",
@@ -760,6 +946,8 @@ export const translations: Record<LanguageCode, Translations> = {
     selectSadTone: "Select Overdue Sad Tone",
     araskoSad1: "Arasko The Sad 1 (Melancholic Ney & Violin)",
     araskoSad2: "Arasko The Sad 2 (Elegiac Cello & Strings)",
+    sadOudLament: "Sad Oriental Oud & Strings (Andalusian Lament)",
+    sadQanunSigh: "Melancholic Qanun & Violin Echo",
     defaultSadToneBadge: "Default Melody",
     sadViolin: "Violin of Sorrow",
     sadPiano: "Melancholy Piano",
@@ -798,6 +986,12 @@ export const translations: Record<LanguageCode, Translations> = {
     exportSuccess: "Your Arasko data was exported and saved successfully.",
     importSuccess: "Data imported successfully. The app has updated.",
     importError: "Invalid or corrupted backup file. Please provide a valid Arasko JSON file.",
+    copyBackupJson: "Copy Backup JSON",
+    copiedToClipboard: "Backup data copied to clipboard!",
+    pasteBackupJson: "Paste & Import JSON Directly",
+    backupStatsInfo: "Locally Stored Data Size",
+    pasteJsonPlaceholder: "Paste your Arasko backup JSON code here to restore...",
+    importConfirmWarning: "Your tasks, routines, and preferences will be updated with this backup.",
     resetAllData: "Reset All Data to Factory Default",
     resetConfirm: "Warning: All tasks, routines, and custom settings will be permanently erased!",
     aboutTitle: "About Arasko",
@@ -835,6 +1029,64 @@ export const translations: Record<LanguageCode, Translations> = {
     tplCleaning: "Deep Home Clean & Organization",
     tplMealPrep: "Weekly Meal Planning & Grocery Prep",
     tplCoding: "Build & Test Software Feature",
+
+    // Gestures & Swiping
+    swipeComplete: "Swipe right to complete",
+    swipeDelete: "Swipe left to delete",
+    swipeHint: "Swipe task right to complete or left to delete",
+
+    // Spiritual / Islamic Routine
+    spiritualTitle: "Daily Spiritual Routine & Quran",
+    spiritualDesc: "Morning, evening, waking & sleeping Athkar, plus daily prayer-scheduled Quran Surahs",
+    quranWardsTitle: "Daily Quran Reading (By Prayer)",
+    quranWardsSubtitle: "Scheduled Surahs after each prayer for consistency and blessing",
+    athkarTitle: "Daily Athkar & Fortress of the Muslim",
+    wakingAthkar: "Waking Up Athkar",
+    morningAthkar: "Morning Athkar",
+    eveningAthkar: "Evening Athkar",
+    sleepingAthkar: "Sleeping Athkar",
+    readSurah: "Read Full Surah",
+    closeSurah: "Close Quran Reader",
+    markSurahRead: "Mark as Completed",
+    surahCompleted: "Completed",
+    surahCompletedMsg: "May Allah accept your devotion, grant ease and bless your day.",
+    virtueLabel: "Virtue & Timing",
+    tasbihCounter: "Digital Tasbih",
+    tasbihCompleted: "Dhikr Completed",
+    addToTodayTasks: "Add Routine to Today's Tasks",
+    addedToTasksSuccess: "Quran wards and Athkar added to today's task list!",
+    todaySpiritualProgress: "Today's Spiritual Progress",
+    completedSpiritualItems: "Completed Wards & Athkar",
+    allSpiritualDone: "All daily Athkar and Quran wards completed!",
+    spiritualRemindersTitle: "Daily Quran & Athkar Reminders",
+    enableSpiritualReminders: "Enable Daily Quran & Athkar Reminders",
+    remindAfterPrayer: "Remind After Prayer",
+    setReminderTime: "Reminder Time",
+    testSpiritualSound: "Test Alert Sound",
+    dailyAthkarReminders: "Daily Athkar Reminders (Waking, Morning, Evening, Sleep)",
+    quranWardReminders: "5 Daily Quran Wards Reminders (After Prescribed Prayers)",
+
+    // User Profile & Personalized Smart Guidance
+    userProfileTitle: "Personal Profile & Custom Track",
+    userProfileSubtitle: "Personalize Arasko with your name, profession or academic track for tailored tips and task plans",
+    userName: "Your Name",
+    userNamePlaceholder: "e.g. John, Dr. Sarah, Eng. Alex...",
+    userRole: "Current Role",
+    roleProfessional: "Professional / Employee",
+    roleStudent: "Student / Scholar",
+    roleOther: "Other Field",
+    professionSelect: "Select Your Profession / Industry",
+    trackSelect: "Select Your Academic Major / Track",
+    customFieldPrompt: "Specify Your Domain / Major",
+    customFieldPlaceholder: "e.g. AI Research, Digital Marketing, Literature...",
+    personalizedTips: "Tailored Guidance for Your Field",
+    specializedTemplates: "Specialized Action Plans & Templates",
+    applyTemplate: "Add Steps to Today's Tasks",
+    templateAppliedSuccess: "Template steps added to today's tasks!",
+    onboardingRoleTitle: "Personalize Your Experience",
+    onboardingRoleDesc: "Tell us your name and profession/major to receive tailored tips, greetings, and domain templates.",
+    onboardingProfileNamePrompt: "What is your name?",
+    domainTipsTitle: "Domain-Specific Tips & Strategies",
   },
   fr: {
     appName: "Arasko",
@@ -846,6 +1098,7 @@ export const translations: Record<LanguageCode, Translations> = {
     calendar: "Calendrier",
     assistant: "Assistant Intelligent",
     health: "Santé & Forme",
+    spiritual: "Routine Spirituelle",
     settings: "Paramètres",
     archive: "Archives",
     analytics: "Statistiques",
@@ -865,13 +1118,30 @@ export const translations: Record<LanguageCode, Translations> = {
     todayProgress: "Progression du jour",
     tasksCompleted: "Tâches terminées",
 
-    // Focus Mode
+    // Focus Mode & Pomodoro
     focusMode: "Mode Focus",
     focusModeActive: "Mode Focus Actif",
     focusModeDesc: "Masque les tâches terminées et non urgentes pour vous concentrer sur l'essentiel",
     focusModeHint: "Affichage uniquement des tâches urgentes et en retard",
     exitFocusMode: "Quitter le focus",
     focusModeEmpty: "Aucune tâche urgente restante pour aujourd'hui. Tout est sous contrôle !",
+    pomodoro: "Minuteur Pomodoro",
+    pomodoroTitle: "Minuteur Focus Pomodoro 4K",
+    pomodoroDesc: "Sessions de 25 minutes de concentration intense suivies de courtes pauses régénératrices.",
+    focusSession: "Session de Focus (25 min)",
+    shortBreak: "Courte Pause (5 min)",
+    longBreak: "Longue Pause (15 min)",
+    startFocus: "Démarrer le Focus",
+    pauseFocus: "Mettre en Pause",
+    resumeFocus: "Reprendre",
+    resetFocus: "Réinitialiser",
+    pomodoroCompleted: "🎉 Bravo ! Session de focus terminée",
+    pomodoroCompletedDesc: "Vous avez complété une session de travail intense. Prenez une courte pause bien méritée.",
+    selectTaskForPomodoro: "Associer à une tâche",
+    focusTimeRemaining: "Temps restant",
+    completedCyclesCount: "Cycles terminés aujourd'hui",
+    startPomodoroForTask: "Lancer le Pomodoro 25 min",
+    minimizeTimer: "Réduire le minuteur",
 
     urgent: "Urgent",
     important: "Important",
@@ -1034,6 +1304,8 @@ export const translations: Record<LanguageCode, Translations> = {
     selectSadTone: "Choisir la sonnerie triste",
     araskoSad1: "Arasko Le Triste 1 (Ney & Violon Mélancolique)",
     araskoSad2: "Arasko Le Triste 2 (Élégie Violoncelle & Cordes)",
+    sadOudLament: "Oud Oriental Triste & Cordes Andalouses",
+    sadQanunSigh: "Écho de Qanun & Violon Mélancolique",
     defaultSadToneBadge: "Mélodie par défaut",
     sadViolin: "Violon Émouvant & Triste",
     sadPiano: "Piano Mélancolique",
@@ -1072,6 +1344,12 @@ export const translations: Record<LanguageCode, Translations> = {
     exportSuccess: "Vos données Arasko ont été exportées avec succès.",
     importSuccess: "Données importées avec succès. L'application est à jour.",
     importError: "Fichier de sauvegarde invalide ou corrompu.",
+    copyBackupJson: "Copier la sauvegarde JSON",
+    copiedToClipboard: "Sauvegarde copiée dans le presse-papiers !",
+    pasteBackupJson: "Coller & Importer le code JSON",
+    backupStatsInfo: "Taille des données stockées localement",
+    pasteJsonPlaceholder: "Collez le code JSON de sauvegarde ici pour restaurer...",
+    importConfirmWarning: "Vos données et réglages seront mis à jour avec cette sauvegarde.",
     resetAllData: "Réinitialiser aux valeurs d'usine",
     resetConfirm: "Attention : Toutes vos tâches et configurations seront définitivement effacées !",
     aboutTitle: "À propos d'Arasko",
@@ -1109,5 +1387,64 @@ export const translations: Record<LanguageCode, Translations> = {
     tplCleaning: "Grand nettoyage et rangement de la maison",
     tplMealPrep: "Planification et préparation des repas de la semaine",
     tplCoding: "Développement et test d'une fonctionnalité",
+
+    // Gestures & Swiping
+    swipeComplete: "Glisser vers la droite pour terminer",
+    swipeDelete: "Glisser vers la gauche pour supprimer",
+    swipeHint: "Glissez la carte à droite pour valider ou à gauche pour supprimer",
+
+    // Spiritual / Islamic Routine
+    spiritualTitle: "Routine Spirituelle & Coran Quotidien",
+    spiritualDesc: "Invocations du matin, soir, réveil et sommeil, avec lecture des sourates réparties sur les 5 prières",
+    quranWardsTitle: "Lecture Quotidienne du Coran (Par Prière)",
+    quranWardsSubtitle: "Sourates programmées après chaque prière pour la régularité et la bénédiction",
+    athkarTitle: "Invocations Quotidiennes & Citadelle du Musulman",
+    wakingAthkar: "Invocations du réveil",
+    morningAthkar: "Invocations du matin",
+    eveningAthkar: "Invocations du soir",
+    sleepingAthkar: "Invocations avant de dormir",
+    readSurah: "Lire la sourate complète",
+    closeSurah: "Fermer la lecture",
+    markSurahRead: "Marquer comme lu",
+    surahCompleted: "Lecture accomplie",
+    surahCompletedMsg: "Qu'Allah accepte vos bonnes actions et bénisse votre journée.",
+    virtueLabel: "Mérites et timing",
+    tasbihCounter: "Chapelet Électronique (Tasbih)",
+    tasbihCompleted: "Évocation accomplie",
+    addToTodayTasks: "Ajouter la routine aux tâches d'aujourd'hui",
+    addedToTasksSuccess: "Sourates et invocations ajoutées à la liste du jour !",
+    todaySpiritualProgress: "Progression spirituelle du jour",
+    completedSpiritualItems: "Invocations & lectures terminées",
+    allSpiritualDone: "Toutes les invocations et sourates du jour sont accomplies !",
+    spiritualRemindersTitle: "Rappels Quotidiens du Coran et des Invocations",
+    enableSpiritualReminders: "Activer les rappels quotidiens du Coran et des Adhkar",
+    remindAfterPrayer: "Rappel après la prière",
+    setReminderTime: "Heure du rappel",
+    testSpiritualSound: "Tester la tonalité de rappel",
+    dailyAthkarReminders: "Rappels des Invocations (Réveil, Matin, Soir, Sommeil)",
+    quranWardReminders: "Rappels des 5 Sourates Quotidiennes (Après les Prières)",
+
+    // User Profile & Personalized Smart Guidance
+    userProfileTitle: "Profil Personnel & Parcours Métier",
+    userProfileSubtitle: "Personnalisez Arasko avec votre nom, profession ou filière d'études pour un accompagnement sur mesure",
+    userName: "Votre Nom",
+    userNamePlaceholder: "Ex. Ahmed, Sarah, Dr. Thomas...",
+    userRole: "Rôle Actuel",
+    roleProfessional: "Professionnel / Salarié",
+    roleStudent: "Étudiant / Scolaire",
+    roleOther: "Autre domaine",
+    professionSelect: "Sélectionnez votre profession",
+    trackSelect: "Sélectionnez votre filière d'études",
+    customFieldPrompt: "Précisez votre domaine d'activité",
+    customFieldPlaceholder: "Ex. IA, Marketing Digital, Droit...",
+    personalizedTips: "Conseils & Stratégies pour votre profil",
+    specializedTemplates: "Plans d'action & modèles spécifiques",
+    applyTemplate: "Ajouter aux tâches du jour",
+    templateAppliedSuccess: "Étapes du modèle ajoutées aux tâches du jour !",
+    onboardingRoleTitle: "Personnalisons votre expérience",
+    onboardingRoleDesc: "Indiquez votre nom et domaine d'activité pour recevoir des conseils et modèles sur mesure.",
+    onboardingProfileNamePrompt: "Quel est votre prénom / nom ?",
+    domainTipsTitle: "Conseils et astuces dédiés à votre domaine",
   }
 };
+

@@ -452,6 +452,14 @@ export const DEFAULT_SETTINGS: AppSettings = {
   sleepGoalHours: 8,
   stepGoal: 8000,
   hasCompletedOnboarding: false,
+  userName: '',
+  userRoleType: 'professional',
+  userProfession: 'tech_software',
+  userStudyTrack: 'student_cs_ai',
+  userCustomField: '',
+  spiritualTrackingEnabled: true,
+  spiritualDailyLogs: {},
+  spiritualTasbihCounters: {},
 };
 
 function getRelativeDateStr(offsetDays: number, hours = 9, minutes = 0): string {
@@ -465,120 +473,13 @@ function getRelativeDateStr(offsetDays: number, hours = 9, minutes = 0): string 
 }
 
 export function getInitialSeedTasks(): TaskItem[] {
-  return [
-    {
-      id: 'task_sample_1',
-      title: 'مراجعة التقرير المالي وخطة الربع القادم',
-      description: 'تدقيق الأرقام المالية وتجهيز العرض التقديمي للاجتماع مع الإدارة.',
-      categoryId: 'cat_work',
-      priority: 'urgent',
-      status: 'in_progress',
-      startDate: getRelativeDateStr(0, 8, 30),
-      dueDate: getRelativeDateStr(0, 11, 30),
-      recurrence: 'none',
-      subTasks: [
-        { id: 'sub_1', title: 'مراجعة بنود المصروفات والإيرادات', isCompleted: true },
-        { id: 'sub_2', title: 'إعداد الرسوم البيانية والجداول المقارنة', isCompleted: true },
-        { id: 'sub_3', title: 'كتابة التوصيات الاستراتيجية', isCompleted: false },
-      ],
-      reminders: [{ id: 'rem_1', minutesBefore: 30, triggered: false }],
-      notes: 'الملفات موجودة على المجلد المشترك.',
-      createdAt: new Date().toISOString(),
-      estimatedMinutes: 90,
-    },
-    {
-      id: 'task_sample_2',
-      title: 'جلسة تدريب مرونة وتليين المفاصل',
-      description: 'إنجاز روتين المرونة الصباحي لزيادة الطاقة وتحسين وضعية الجلوس.',
-      categoryId: 'cat_health',
-      priority: 'important',
-      status: 'not_started',
-      startDate: getRelativeDateStr(0, 16, 0),
-      dueDate: getRelativeDateStr(0, 16, 45),
-      recurrence: 'daily',
-      subTasks: [
-        { id: 'sub_2_1', title: 'إحماء خفيف 5 دقائق', isCompleted: false },
-        { id: 'sub_2_2', title: 'إطالة الظهر والرقبة', isCompleted: false },
-        { id: 'sub_2_3', title: 'شرب 500 مل ماء بعد التمرين', isCompleted: false },
-      ],
-      reminders: [{ id: 'rem_2', minutesBefore: 15, triggered: false }],
-      createdAt: new Date().toISOString(),
-      estimatedMinutes: 45,
-    },
-    {
-      id: 'task_sample_3',
-      title: 'قراءة فصلين من كتاب التطوير المهني',
-      description: 'التركيز على مهارات إدارة الوقت والتنظيم الذاتي وتدوين أهم الأفكار.',
-      categoryId: 'cat_study',
-      priority: 'normal',
-      status: 'not_started',
-      startDate: getRelativeDateStr(0, 20, 0),
-      dueDate: getRelativeDateStr(0, 21, 0),
-      recurrence: 'daily',
-      subTasks: [
-        { id: 'sub_3_1', title: 'قراءة الفصل الخامس', isCompleted: false },
-        { id: 'sub_3_2', title: 'تلخيص النقاط الذهبية', isCompleted: false },
-      ],
-      reminders: [{ id: 'rem_3', minutesBefore: 10, triggered: false }],
-      createdAt: new Date().toISOString(),
-      estimatedMinutes: 60,
-    },
-    {
-      id: 'task_sample_4',
-      title: 'شراء المستلزمات الأسبوعية والوجبات الصحية',
-      description: 'شراء الخضار والفواكه ومصادر البروتين وتجهيز علب الوجبات.',
-      categoryId: 'cat_home',
-      priority: 'important',
-      status: 'completed',
-      completedAt: new Date().toISOString(),
-      startDate: getRelativeDateStr(-1, 17, 0),
-      dueDate: getRelativeDateStr(-1, 18, 30),
-      recurrence: 'weekly',
-      subTasks: [
-        { id: 'sub_4_1', title: 'إعداد قائمة المشتريات', isCompleted: true },
-        { id: 'sub_4_2', title: 'شراء الخضروات الطازجة', isCompleted: true },
-      ],
-      reminders: [],
-      createdAt: new Date().toISOString(),
-      estimatedMinutes: 60,
-    },
-    {
-      id: 'task_sample_5',
-      title: 'تطوير الخطة السنوية وتحقيق الأهداف الاستثمارية',
-      description: 'مراجعة الحساب الادخاري والبحث عن فرص نمو للمحفظة المالية.',
-      categoryId: 'cat_finance',
-      priority: 'normal',
-      status: 'not_started',
-      startDate: getRelativeDateStr(2, 10, 0),
-      dueDate: getRelativeDateStr(2, 12, 0),
-      recurrence: 'monthly',
-      subTasks: [
-        { id: 'sub_5_1', title: 'تحديد نسبة الادخار للشهر القادم', isCompleted: false },
-      ],
-      reminders: [{ id: 'rem_5', minutesBefore: 60, triggered: false }],
-      createdAt: new Date().toISOString(),
-      estimatedMinutes: 120,
-    },
-  ];
+  // Production-ready clean initial state: No fake/dummy entries
+  return [];
 }
 
 export function getInitialSeedHabits(): HabitEntry[] {
-  const habits: HabitEntry[] = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
-    habits.push({
-      date: dateStr,
-      waterMet: i !== 3,
-      sleepMet: i % 2 === 0,
-      workoutMet: i === 0 || i === 2 || i === 4 || i === 6,
-      mealsLogged: 3,
-      mindfulnessDone: i % 3 === 0,
-      stepCount: 6500 + (7 - i) * 350,
-    });
-  }
-  return habits;
+  // Production-ready clean habits
+  return [];
 }
 
 export function getInitialSeedWater(): WaterLog {
@@ -586,32 +487,14 @@ export function getInitialSeedWater(): WaterLog {
   const dateStr = d.toISOString().split('T')[0];
   return {
     date: dateStr,
-    amountMl: 1250,
-    logs: [
-      { time: '08:15', amount: 250 },
-      { time: '10:30', amount: 500 },
-      { time: '13:45', amount: 250 },
-      { time: '15:20', amount: 250 },
-    ],
+    amountMl: 0,
+    logs: [],
   };
 }
 
 export function getInitialSeedSleep(): SleepLog[] {
-  const logs: SleepLog[] = [];
-  for (let i = 5; i >= 1; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split('T')[0];
-    logs.push({
-      date: dateStr,
-      bedTime: '23:30',
-      wakeTime: '07:15',
-      hours: 7.75,
-      quality: 4,
-      notes: 'نوم هادئ ومريح ومزاج ممتاز في الصباح.',
-    });
-  }
-  return logs;
+  // Production-ready clean sleep logs
+  return [];
 }
 
 export const StorageService = {

@@ -94,7 +94,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
       id="onboarding-modal-backdrop"
     >
       <div
-        className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative flex flex-col items-center text-center space-y-6 overflow-hidden"
+        className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-floating-4k card-floating-4k relative flex flex-col items-center text-center space-y-6 overflow-hidden"
         id="onboarding-modal-content"
       >
         {/* Ambient Top Glow */}

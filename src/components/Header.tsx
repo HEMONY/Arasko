@@ -4,6 +4,7 @@ import {
   Plus,
   Moon,
   Sun,
+  Timer,
 } from 'lucide-react';
 import { LanguageCode } from '../types';
 import { translations } from '../i18n/translations';
@@ -16,6 +17,7 @@ interface HeaderProps {
   onToggleTheme: () => void;
   onAddTask: () => void;
   onOpenNotifications: () => void;
+  onOpenPomodoro?: () => void;
   unreadNotificationsCount: number;
 }
 
@@ -26,6 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleTheme,
   onAddTask,
   onOpenNotifications,
+  onOpenPomodoro,
   unreadNotificationsCount,
 }) => {
   const t = translations[language];
@@ -41,6 +44,20 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Header Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Pomodoro Focus Timer Quick Button */}
+          {onOpenPomodoro && (
+            <button
+              type="button"
+              onClick={onOpenPomodoro}
+              className="p-2 rounded-xl text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 border border-indigo-200/60 dark:border-indigo-800/60 transition-all active:scale-95 flex items-center gap-1.5"
+              title={t.pomodoroTitle}
+              id="header-pomodoro-btn"
+            >
+              <Timer size={18} className="stroke-[2.5]" />
+              <span className="text-xs font-bold hidden md:inline">{t.pomodoro}</span>
+            </button>
+          )}
+
           {/* Quick Theme Toggle Button */}
           <button
             type="button"
