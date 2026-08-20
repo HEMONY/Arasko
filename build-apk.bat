@@ -5,6 +5,21 @@ echo     ARASKO - Automated Android APK Builder
 echo ===================================================
 echo.
 
+:: Auto-detect and set Java 17/21/22 if installed
+if exist "C:\Program Files\Java\jdk-17" (
+    set "JAVA_HOME=C:\Program Files\Java\jdk-17"
+    set "PATH=C:\Program Files\Java\jdk-17\bin;%PATH%"
+) else if exist "C:\Program Files\Java\jdk-21" (
+    set "JAVA_HOME=C:\Program Files\Java\jdk-21"
+    set "PATH=C:\Program Files\Java\jdk-21\bin;%PATH%"
+) else if exist "C:\Program Files\Java\jdk-22" (
+    set "JAVA_HOME=C:\Program Files\Java\jdk-22"
+    set "PATH=C:\Program Files\Java\jdk-22\bin;%PATH%"
+) else if exist "C:\Program Files\Android\Android Studio\jbr" (
+    set "JAVA_HOME=C:\Program Files\Android\Android Studio\jbr"
+    set "PATH=C:\Program Files\Android\Android Studio\jbr\bin;%PATH%"
+)
+
 echo [1/4] Building web application assets...
 call npm run build
 if %ERRORLEVEL% NEQ 0 (
@@ -24,7 +39,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [3/4] Building Android APK via Gradle...
+echo [3/4] Building Android APK via Gradle (Using Java 17+)...
 cd android
 set GRADLE_OPTS=-Dhttp.socketTimeout=120000 -Dhttp.connectionTimeout=120000
 call gradlew.bat assembleDebug
@@ -44,7 +59,7 @@ if %ERRORLEVEL% EQU 0 (
     explorer.exe /select,..\Arasko.apk
 ) else (
     echo.
-    echo Gradle build encountered an issue. Please make sure Java (JDK 17 or higher) is installed.
+    echo Gradle build encountered an issue.
 )
 
 cd ..
