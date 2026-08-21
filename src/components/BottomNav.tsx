@@ -34,7 +34,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-t border-slate-200/80 dark:border-slate-800/80 transition-colors py-1.5 shadow-2xl shadow-slate-950/20"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-[#060b17]/90 backdrop-blur-xl border-t border-slate-200/80 dark:border-blue-950/80 transition-colors py-1.5 shadow-2xl shadow-slate-950/30"
       id="bottom-navigation-bar"
     >
       <div className="max-w-md mx-auto px-4 flex items-center justify-between">
@@ -49,14 +49,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               onClick={() => onTabChange(tab.id as ActiveTab)}
               className={`flex-1 py-1 px-1 rounded-2xl flex flex-col items-center gap-1 transition-all duration-200 ${
                 isSel
-                  ? 'text-indigo-600 dark:text-indigo-400 font-bold scale-105'
+                  ? 'text-blue-600 dark:text-sky-400 font-bold scale-105'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
               id={`nav-tab-${tab.id}`}
             >
               <div
                 className={`p-1.5 rounded-xl transition-colors ${
-                  isSel ? 'bg-indigo-50 dark:bg-indigo-950/60' : ''
+                  isSel ? 'bg-blue-50 dark:bg-blue-950/70 border border-blue-200/50 dark:border-blue-800/40' : ''
                 }`}
               >
                 {tab.isLogo ? (

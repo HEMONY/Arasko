@@ -21,7 +21,9 @@ import { LanguageCode, PriorityLevel, TaskCategory, TaskItem } from '../types';
 import { translations } from '../i18n/translations';
 import { TaskCard } from './TaskCard';
 import { CategoryIcon } from './CategoryIcon';
-import { TodaySummary } from './TodaySummary';
+import { TodaySummary, calculateCurrentStreak } from './TodaySummary';
+import { GoalMilestone } from './GoalMilestone';
+import { TaskFocusSection } from './TaskFocusSection';
 import { playAlertSound, triggerVibration } from '../services/soundEngine';
 import { AraskoMark } from './Logo';
 
@@ -58,6 +60,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
   userName,
   userProfession,
   userStudyTrack,
+  streakCount,
 }) => {
   const t = translations[language];
   const [searchQuery, setSearchQuery] = useState('');
@@ -90,6 +93,10 @@ export const TodayView: React.FC<TodayViewProps> = ({
 
     return isDueToday || isDaily || isOverduePending;
   });
+
+  const completedTodayCount = todayTasks.filter((t) => t.status === 'completed').length;
+  const totalTodayCount = todayTasks.length;
+  const effectiveStreak = streakCount ?? calculateCurrentStreak(tasks);
 
   // Apply focus mode, search, category, and priority filters
   const filteredTasks = todayTasks.filter((task) => {
@@ -210,7 +217,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
 
   return (
     <div className="space-y-5 pb-28 animate-fade-in relative" id="today-view-container">
-      {/* Personalized Greeting with Role Badge (if set) */}
+      {/* Header Area: Personalized Greeting with Role Badge (if set) */}
       {userName && (
         <div className="flex items-center justify-between px-1 py-0.5" id="user-personalized-greeting">
           <div className="flex items-center gap-2 flex-wrap">
@@ -226,6 +233,21 @@ export const TodayView: React.FC<TodayViewProps> = ({
         </div>
       )}
 
+      {/* Goal Milestone Header Component */}
+      <GoalMilestone
+        completedCount={completedTodayCount}
+        totalCount={totalTodayCount}
+        language={language}
+        streakCount={effectiveStreak}
+      />
+
+      {/* Task Focus Distribution Section */}
+      <TaskFocusSection
+        tasks={tasks}
+        categories={categories}
+        language={language}
+      />
+
       {/* 1. Dynamic Summary Component */}
       <TodaySummary
         tasks={tasks}
@@ -237,7 +259,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
       <div className="space-y-1.5" id="today-category-chips-wrapper">
         <div className="flex items-center justify-between px-1">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-            <Layers size={13} className="text-indigo-500" />
+            <Layers size={13} className="text-blue-500" />
             <span>{language === 'ar' ? 'تصنيف المهام والتركيز' : 'Focus Category'}</span>
           </span>
 
@@ -248,8 +270,8 @@ export const TodayView: React.FC<TodayViewProps> = ({
               onClick={toggleSelectMode}
               className={`text-xs font-bold px-2.5 py-1 rounded-xl transition-all flex items-center gap-1.5 ${
                 isSelectMode
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-blue-600 dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-blue-950/50'
               }`}
               id="toggle-multi-select-btn"
             >
@@ -261,7 +283,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
               <button
                 type="button"
                 onClick={() => handleCategorySelect('all')}
-                className="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+                className="text-[11px] text-blue-600 dark:text-sky-400 font-bold hover:underline"
               >
                 {language === 'ar' ? 'عرض الكل' : 'Show All'}
               </button>
@@ -277,7 +299,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
             onClick={() => handleCategorySelect('all')}
             className={`snap-start inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-sm shrink-0 border ${
               selectedCategory === 'all'
-                ? 'bg-indigo-600 border-indigo-600 text-white shadow-indigo-500/25 ring-2 ring-indigo-500/20'
+                ? 'bg-blue-600 border-blue-600 text-white shadow-blue-900/30 ring-2 ring-blue-500/20'
                 : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white'
             }`}
             id="today-chip-all"
@@ -305,7 +327,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 onClick={() => handleCategorySelect(cat.id)}
                 className={`snap-start inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-sm shrink-0 border ${
                   isSelected
-                    ? 'bg-indigo-50 dark:bg-indigo-950/70 border-indigo-500 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-500/20 shadow-indigo-500/10'
+                    ? 'bg-blue-50 dark:bg-blue-950/70 border-blue-500 text-blue-700 dark:text-sky-300 ring-2 ring-blue-500/20 shadow-blue-500/10'
                     : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white'
                 }`}
                 id={`today-chip-${cat.id}`}
@@ -319,7 +341,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 <span
                   className={`px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                     isSelected
-                      ? 'bg-indigo-200/60 dark:bg-indigo-900/80 text-indigo-900 dark:text-indigo-200'
+                      ? 'bg-blue-200/60 dark:bg-blue-900/80 text-blue-900 dark:text-sky-200'
                       : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
                   }`}
                 >
@@ -368,7 +390,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
       {/* Multi-Select Floating Action Bar */}
       {isSelectMode && (
         <div
-          className="sticky top-2 z-40 p-3 rounded-2xl bg-slate-900/95 dark:bg-slate-900/95 text-white border border-indigo-500/30 shadow-2xl backdrop-blur-md flex flex-wrap items-center justify-between gap-2 animate-fade-in"
+          className="sticky top-2 z-40 p-3 rounded-2xl bg-slate-900/95 dark:bg-slate-900/95 text-white border border-blue-500/30 shadow-2xl backdrop-blur-md flex flex-wrap items-center justify-between gap-2 animate-fade-in"
           id="multi-select-toolbar"
         >
           <div className="flex items-center gap-2">
@@ -387,7 +409,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 </>
               )}
             </button>
-            <span className="text-xs font-bold text-indigo-300">
+            <span className="text-xs font-bold text-sky-300">
               ({selectedTaskIds.length} {language === 'ar' ? 'محددة' : 'selected'})
             </span>
           </div>
@@ -438,7 +460,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
                   <button
                     type="button"
                     onClick={() => handleBulkChangePriority('normal')}
-                    className="w-full text-left rtl:text-right px-2.5 py-1 rounded-lg text-xs font-semibold text-indigo-300 hover:bg-indigo-950/60"
+                    className="w-full text-left rtl:text-right px-2.5 py-1 rounded-lg text-xs font-semibold text-sky-300 hover:bg-blue-950/60"
                   >
                     ✓ {t.normal}
                   </button>
@@ -486,7 +508,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.searchPlaceholder}
-            className="w-full pl-9 pr-8 rtl:pr-9 rtl:pl-8 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-hidden focus:border-indigo-500 shadow-floating-4k transition-all"
+            className="w-full pl-9 pr-8 rtl:pr-9 rtl:pl-8 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-hidden focus:border-blue-500 shadow-floating-4k transition-all"
             id="today-search-input"
           />
           {searchQuery && (
@@ -642,7 +664,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="text-center py-12 px-4 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30"
             >
-              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 flex items-center justify-center">
                 {isFocusMode ? <Zap size={24} className="text-amber-500" /> : <AraskoMark size={26} variant="gradient" />}
               </div>
               <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm">
@@ -687,7 +709,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 <button
                   type="button"
                   onClick={onAddTask}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition-all active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
                   id="today-empty-add-btn"
                 >
                   <Plus size={15} /> {t.addNewTask}
@@ -703,10 +725,10 @@ export const TodayView: React.FC<TodayViewProps> = ({
         {isQuickAddExpanded ? (
           <form
             onSubmit={handleQuickAddSubmit}
-            className="w-72 sm:w-80 p-3.5 rounded-3xl bg-slate-900/95 dark:bg-slate-900/95 text-white border border-indigo-500/40 shadow-2xl backdrop-blur-xl animate-fade-in space-y-2.5"
+            className="w-72 sm:w-80 p-3.5 rounded-3xl bg-slate-900/95 dark:bg-slate-900/95 text-white border border-blue-500/40 shadow-2xl backdrop-blur-xl animate-fade-in space-y-2.5"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-indigo-300 flex items-center gap-1">
+              <span className="text-xs font-bold text-sky-300 flex items-center gap-1">
                 <Sparkles size={13} />
                 <span>{language === 'ar' ? 'إضافة مهمة سريعة' : 'Quick Add Task'}</span>
               </span>
@@ -738,12 +760,12 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 onChange={(e) => setQuickTitle(e.target.value)}
                 placeholder={language === 'ar' ? 'ما الذي تريد إنجازه؟...' : 'What needs to be done?...'}
                 autoFocus
-                className="w-full pl-3 pr-10 rtl:pr-3 rtl:pl-10 py-2 rounded-xl bg-white/10 border border-white/20 text-xs text-white placeholder:text-slate-400 focus:outline-hidden focus:border-indigo-400"
+                className="w-full pl-3 pr-10 rtl:pr-3 rtl:pl-10 py-2 rounded-xl bg-white/10 border border-white/20 text-xs text-white placeholder:text-slate-400 focus:outline-hidden focus:border-blue-400"
               />
               <button
                 type="submit"
                 disabled={!quickTitle.trim()}
-                className="absolute right-1.5 rtl:right-auto rtl:left-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-indigo-500 hover:bg-indigo-400 disabled:opacity-40 text-white transition-all"
+                className="absolute right-1.5 rtl:right-auto rtl:left-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white transition-all"
               >
                 <Send size={12} className="rtl:-rotate-90" />
               </button>
@@ -763,7 +785,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
                           ? 'bg-rose-500 text-white'
                           : p === 'important'
                           ? 'bg-amber-500 text-white'
-                          : 'bg-indigo-500 text-white'
+                          : 'bg-blue-600 text-white'
                         : 'bg-white/10 text-slate-300 hover:bg-white/20'
                     }`}
                   >
@@ -793,7 +815,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
               triggerVibration(20);
               setIsQuickAddExpanded(true);
             }}
-            className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all ring-4 ring-indigo-500/20"
+            className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-500 hover:from-blue-600 hover:to-sky-400 text-white flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all ring-4 ring-blue-500/20"
             title={language === 'ar' ? 'إضافة مهمة سريعة' : 'Quick Add Task'}
             id="pinned-quick-add-fab"
           >

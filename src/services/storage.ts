@@ -663,4 +663,47 @@ export const StorageService = {
       // ignore
     }
   },
+
+  /**
+   * Explicitly removes all user task, health (water, sleep, habits),
+   * and spiritual logs from storage while retaining standard default configuration.
+   */
+  clearAllUserData(): boolean {
+    try {
+      // 1. Clear tasks
+      this.saveTasks([]);
+
+      // 2. Clear health logs
+      const cleanWater = getInitialSeedWater();
+      this.saveWaterLogs({ [cleanWater.date]: cleanWater });
+      this.saveSleepLogs([]);
+      this.saveHabitLogs([]);
+
+      // 3. Clear spiritual progress logs in settings
+      const currentSettings = this.getSettings();
+      const cleanedSettings: AppSettings = {
+        ...currentSettings,
+        spiritualDailyLogs: {},
+        spiritualTasbihCounters: {},
+      };
+      this.saveSettings(cleanedSettings);
+
+      // 4. Reset notifications to clean state
+      this.saveNotifications([
+        {
+          id: 'notif_clean_slate',
+          title: 'أراسكو جاهز ومُرتّب!',
+          body: 'تم تفريغ جميع البيانات السابقة بنجاح. يمكنك الآن بدء يومك وإضافة مهامك الحقيقية.',
+          timestamp: new Date().toISOString(),
+          isRead: false,
+          type: 'assistant',
+        },
+      ]);
+
+      return true;
+    } catch (err) {
+      console.error('Storage: Failed to clear user data:', err);
+      return false;
+    }
+  },
 };

@@ -32,7 +32,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   const slides = [
     {
       icon: (
-        <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#1E1B4B] via-[#4338CA] to-[#7C3AED] flex items-center justify-center text-white shadow-xl shadow-indigo-500/25">
+        <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#030712] via-[#0f172a] to-[#1e3a8a] flex items-center justify-center text-white shadow-xl shadow-blue-950/40 border border-blue-900/40">
           <Logo size="lg" showText={false} variant="gradient" />
         </div>
       ),
@@ -42,7 +42,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     },
     {
       icon: (
-        <div className="w-20 h-20 rounded-3xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-lg border border-indigo-200 dark:border-indigo-800">
+        <div className="w-20 h-20 rounded-3xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 flex items-center justify-center shadow-lg border border-blue-200 dark:border-blue-800/60">
           <Calendar size={38} />
         </div>
       ),
@@ -52,7 +52,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     },
     {
       icon: (
-        <div className="w-20 h-20 rounded-3xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-lg border border-purple-200 dark:border-purple-800">
+        <div className="w-20 h-20 rounded-3xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center shadow-lg border border-sky-200 dark:border-sky-800/60">
           <Zap size={38} />
         </div>
       ),
@@ -62,7 +62,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     },
     {
       icon: (
-        <div className="w-20 h-20 rounded-3xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-lg border border-emerald-200 dark:border-emerald-800">
+        <div className="w-20 h-20 rounded-3xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-lg border border-emerald-200 dark:border-emerald-800/60">
           <Heart size={38} />
         </div>
       ),
@@ -98,7 +98,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
         id="onboarding-modal-content"
       >
         {/* Ambient Top Glow */}
-        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-48 h-48 bg-gradient-to-b from-indigo-500/20 to-purple-500/0 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-48 h-48 bg-gradient-to-b from-blue-500/20 to-sky-500/0 rounded-full blur-3xl pointer-events-none" />
 
         {/* Skip button */}
         {currentSlide < slides.length - 1 && (
@@ -134,7 +134,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               key={idx}
               className={`h-2 rounded-full transition-all duration-300 ${
                 currentSlide === idx
-                  ? 'w-6 bg-indigo-600'
+                  ? 'w-6 bg-blue-600'
                   : 'w-2 bg-slate-200 dark:bg-slate-700'
               }`}
             />
@@ -158,7 +158,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           <button
             type="button"
             onClick={handleNext}
-            className="flex-1 py-3 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-bold shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-1.5"
+            className="flex-1 py-3 px-6 rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white text-xs font-bold shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-1.5"
             id="onboarding-next-btn"
           >
             <span>{currentSlide === slides.length - 1 ? t.getStarted : t.next}</span>

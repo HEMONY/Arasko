@@ -281,7 +281,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
               }}
               className={`py-2 px-1 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all ${
                 isSel
-                  ? 'bg-gradient-to-tr from-indigo-600 to-purple-600 text-white shadow-xs'
+                  ? 'bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
               id={`health-tab-${tab.id}`}
@@ -297,7 +297,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
       {activeTab === 'water' && (
         <div className="space-y-4">
           {/* Hydro Card */}
-          <div className="bg-gradient-to-tr from-blue-900 via-indigo-900 to-cyan-900 rounded-3xl p-6 text-white relative overflow-hidden shadow-floating-4k card-floating-4k border border-cyan-500/30">
+          <div className="bg-gradient-to-tr from-blue-950 via-slate-900 to-sky-950 rounded-3xl p-6 text-white relative overflow-hidden shadow-floating-4k card-floating-4k border border-sky-500/30">
             <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div>
                 <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 text-xs font-bold mb-2">
@@ -481,9 +481,9 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
       {/* 2. SLEEP SCHEDULE SECTION */}
       {activeTab === 'sleep' && (
         <div className="space-y-4">
-          <div className="bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white border border-indigo-900/60 shadow-floating-4k card-floating-4k">
+          <div className="bg-gradient-to-tr from-slate-950 via-blue-950 to-slate-900 rounded-3xl p-6 text-white border border-blue-900/60 shadow-floating-4k card-floating-4k">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-sky-300 flex items-center justify-center">
                 <Moon size={18} />
               </div>
               <h3 className="font-bold text-base text-white">{t.sleepSchedule}</h3>
@@ -492,7 +492,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
             <form onSubmit={handleSaveSleep} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-indigo-200 mb-1">
+                  <label className="block text-xs font-semibold text-sky-200 mb-1">
                     {t.bedTime}
                   </label>
                   <input
@@ -503,7 +503,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-indigo-200 mb-1">
+                  <label className="block text-xs font-semibold text-sky-200 mb-1">
                     {t.wakeTime}
                   </label>
                   <input
@@ -517,7 +517,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
 
               {/* Quality Rating */}
               <div>
-                <label className="block text-xs font-semibold text-indigo-200 mb-1.5">
+                <label className="block text-xs font-semibold text-sky-200 mb-1.5">
                   {t.sleepQuality}
                 </label>
                 <div className="flex items-center gap-2">
@@ -539,7 +539,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-xs font-bold shadow-floating-4k transition-all"
+                className="w-full py-2.5 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 hover:from-blue-800 hover:to-blue-700 text-white text-xs font-bold shadow-floating-4k transition-all"
                 id="save-sleep-btn"
               >
                 {t.logSleep}
@@ -552,14 +552,14 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h4 className="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                  <Moon size={14} className="text-indigo-500" />
+                  <Moon size={14} className="text-blue-500" />
                   <span>{language === 'ar' ? 'مؤشر انتظام النوم (30 يوماً)' : '30-Day Sleep Consistency'}</span>
                 </h4>
                 <p className="text-[11px] text-slate-400 mt-0.5">
                   {language === 'ar' ? `الهدف: ${sleepGoalHours} ساعات يومياً` : `Target: ${sleepGoalHours} hrs / night`}
                 </p>
               </div>
-              <span className="text-xs font-black px-2.5 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/60">
+              <span className="text-xs font-black px-2.5 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-sky-400 border border-blue-200 dark:border-blue-800/60">
                 {language === 'ar' ? 'جودة 4.5/5' : 'Score 4.5/5'}
               </span>
             </div>
@@ -592,10 +592,10 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                     formatter={(val: any) => [`${val} ${t.sleepHours}`, language === 'ar' ? 'ساعات النوم' : 'Hours Slept']}
                     labelFormatter={(label: any) => `${language === 'ar' ? 'التاريخ' : 'Date'}: ${label}`}
                   />
-                  <ReferenceLine y={sleepGoalHours} stroke="#6366f1" strokeDasharray="3 3" opacity={0.7} />
+                  <ReferenceLine y={sleepGoalHours} stroke="#3b82f6" strokeDasharray="3 3" opacity={0.7} />
                   <Bar
                     dataKey="hours"
-                    fill="#6366f1"
+                    fill="#3b82f6"
                     radius={[6, 6, 0, 0]}
                   />
                 </BarChart>
@@ -643,7 +643,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
               {/* Header */}
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400">
                     {t[`workout${activeWorkout.level.charAt(0).toUpperCase() + activeWorkout.level.slice(1)}` as keyof typeof t] || activeWorkout.level}
                   </span>
                   <h3 className="font-black text-lg text-slate-900 dark:text-slate-100">
@@ -677,11 +677,11 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                         </div>
 
                         {/* Exercise Name */}
-                        <div className="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/40 shadow-floating-4k">
+                        <div className="p-4 rounded-2xl bg-blue-50/60 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 shadow-floating-4k">
                           <h4 className="text-base font-black text-slate-900 dark:text-white">
                             {currentEx.name[language] || currentEx.name.en}
                           </h4>
-                          <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-xs font-bold">
+                          <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-xs font-bold">
                             {currentEx.repsOrDuration}
                           </span>
                           <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
@@ -733,7 +733,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setActiveWorkout(null)}
-                    className="px-6 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-floating-4k"
+                    className="px-6 py-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-floating-4k"
                   >
                     {t.finishWorkout}
                   </button>
@@ -746,7 +746,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
               {PRESET_WORKOUTS.map((workout) => (
                 <div
                   key={workout.id}
-                  className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k hover:border-indigo-300 dark:hover:border-indigo-700 transition-all space-y-3"
+                  className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k hover:border-blue-300 dark:hover:border-blue-700 transition-all space-y-3"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -784,7 +784,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                     <button
                       type="button"
                       onClick={() => handleStartWorkout(workout)}
-                      className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-floating-4k transition-colors"
+                      className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-floating-4k transition-colors"
                       id={`start-workout-${workout.id}`}
                     >
                       <Play size={13} /> {t.startWorkout}
@@ -855,7 +855,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                   {/* Sleep Habit */}
                   <tr>
                     <td className="py-2.5 font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                      <Moon size={13} className="text-indigo-500" /> {t.habitSleep}
+                      <Moon size={13} className="text-blue-500" /> {t.habitSleep}
                     </td>
                     {habitLogs.slice(0, 7).map((h) => (
                       <td key={h.date} className="py-2 text-center">
@@ -864,7 +864,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                           onClick={() => handleToggleHabit(h.date, 'sleepMet')}
                           className={`w-6 h-6 rounded-lg inline-flex items-center justify-center transition-all ${
                             h.sleepMet
-                              ? 'bg-indigo-500 text-white font-bold'
+                              ? 'bg-blue-600 text-white font-bold'
                               : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
                           }`}
                         >
@@ -877,7 +877,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                   {/* Workout Habit */}
                   <tr>
                     <td className="py-2.5 font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                      <Dumbbell size={13} className="text-purple-500" /> {t.habitWorkout}
+                      <Dumbbell size={13} className="text-sky-500" /> {t.habitWorkout}
                     </td>
                     {habitLogs.slice(0, 7).map((h) => (
                       <td key={h.date} className="py-2 text-center">
@@ -886,7 +886,7 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                           onClick={() => handleToggleHabit(h.date, 'workoutMet')}
                           className={`w-6 h-6 rounded-lg inline-flex items-center justify-center transition-all ${
                             h.workoutMet
-                              ? 'bg-purple-500 text-white font-bold'
+                              ? 'bg-sky-500 text-white font-bold'
                               : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
                           }`}
                         >

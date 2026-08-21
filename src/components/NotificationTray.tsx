@@ -40,13 +40,13 @@ export const NotificationTray: React.FC<NotificationTrayProps> = ({
       case 'water':
         return <Droplet size={14} className="text-cyan-500" />;
       case 'sleep':
-        return <Moon size={14} className="text-indigo-500" />;
+        return <Moon size={14} className="text-sky-500" />;
       case 'workout':
-        return <Dumbbell size={14} className="text-purple-500" />;
+        return <Dumbbell size={14} className="text-emerald-500" />;
       case 'assistant':
         return <Sparkles size={14} className="text-amber-500" />;
       default:
-        return <Clock size={14} className="text-indigo-500" />;
+        return <Clock size={14} className="text-blue-500" />;
     }
   };
 
@@ -65,7 +65,7 @@ export const NotificationTray: React.FC<NotificationTrayProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60">
           <div className="flex items-center gap-2">
-            <Bell size={16} className="text-indigo-600 dark:text-indigo-400" />
+            <Bell size={16} className="text-blue-600 dark:text-sky-400" />
             <h3 className="font-bold text-xs text-slate-900 dark:text-slate-100 uppercase tracking-wider">
               {t.notificationsTray} ({notifications.length})
             </h3>
@@ -130,7 +130,7 @@ export const NotificationTray: React.FC<NotificationTrayProps> = ({
           <button
             type="button"
             onClick={onTestNotification}
-            className="w-full py-2 px-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-indigo-100 transition-colors"
+            className="w-full py-2 px-3 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-sky-300 text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
           >
             <Volume2 size={13} /> {t.testNotification}
           </button>

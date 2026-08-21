@@ -205,7 +205,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-sky-400 flex items-center justify-center">
               <CheckSquare size={18} />
             </div>
             <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">
@@ -241,7 +241,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 errors.title
                   ? 'border-red-500 ring-2 ring-red-500/20'
                   : 'border-slate-200 dark:border-slate-700'
-              } text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all`}
+              } text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all`}
               autoFocus
               id="task-title-input"
             />
@@ -263,7 +263,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-indigo-500 transition-all appearance-none cursor-pointer"
+                  className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-blue-500 transition-all appearance-none cursor-pointer"
                   id="task-category-select"
                 >
                   {categories.map((cat) => (
@@ -294,7 +294,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                             ? 'bg-rose-500 text-white shadow-xs'
                             : p === 'important'
                             ? 'bg-amber-500 text-white shadow-xs'
-                            : 'bg-indigo-600 text-white shadow-xs'
+                            : 'bg-blue-600 text-white shadow-xs'
                           : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                       }`}
                       id={`priority-btn-${p}`}
@@ -317,7 +317,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as CompletionStatus)}
-                className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-indigo-500 transition-all cursor-pointer"
+                className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-blue-500 transition-all cursor-pointer"
                 id="task-status-select"
               >
                 <option value="not_started">{t.notStarted}</option>
@@ -335,7 +335,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               <select
                 value={recurrence}
                 onChange={(e) => setRecurrence(e.target.value as RecurrenceOption)}
-                className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-indigo-500 transition-all cursor-pointer"
+                className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-hidden focus:border-blue-500 transition-all cursor-pointer"
                 id="task-recurrence-select"
               >
                 <option value="none">{t.recurrenceNone}</option>
@@ -358,7 +358,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 type="datetime-local"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-blue-500"
                 id="task-startdate-input"
               />
             </div>
@@ -370,7 +370,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 type="datetime-local"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-indigo-500"
+                className="w-full px-3 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-blue-500"
                 required
                 id="task-duedate-input"
               />
@@ -381,7 +381,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
           <div className="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/60">
             <div className="flex items-center justify-between mb-2.5">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                <CheckSquare size={14} className="text-indigo-600 dark:text-indigo-400" />
+                <CheckSquare size={14} className="text-blue-600 dark:text-sky-400" />
                 {t.subTasks} ({subTasks.filter((s) => s.isCompleted).length}/{subTasks.length})
               </label>
             </div>
@@ -403,7 +403,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                         type="checkbox"
                         checked={sub.isCompleted}
                         onChange={() => {}}
-                        className="rounded-sm text-indigo-600 focus:ring-indigo-500 pointer-events-none"
+                        className="rounded-sm text-blue-600 focus:ring-blue-500 pointer-events-none"
                       />
                       <span
                         className={`${
@@ -440,13 +440,13 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                   }
                 }}
                 placeholder={t.subTaskPlaceholder}
-                className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-indigo-500"
+                className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-blue-500"
                 id="new-subtask-input"
               />
               <button
                 type="button"
                 onClick={handleAddSubTask}
-                className="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1 transition-colors"
+                className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1 transition-colors"
                 id="add-subtask-btn"
               >
                 <Plus size={14} /> {t.addSubTask}
@@ -480,7 +480,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                     }
                     className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
                       isSelected
-                        ? 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-300 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300'
+                        ? 'bg-blue-50 dark:bg-blue-950/60 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-sky-300'
                         : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                     }`}
                   >
@@ -501,7 +501,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder={t.taskDescPlaceholder}
-              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-indigo-500 resize-none"
+              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs focus:outline-hidden focus:border-blue-500 resize-none"
               id="task-desc-textarea"
             />
           </div>
@@ -574,7 +574,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             <button
               type="button"
               onClick={handleSubmit}
-              className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-bold shadow-md shadow-indigo-500/20 transition-all"
+              className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 hover:from-blue-800 hover:to-blue-700 text-white text-xs font-bold shadow-md shadow-blue-900/30 transition-all"
               id="save-task-modal-btn"
             >
               {t.save}

@@ -23,6 +23,10 @@ import {
   Play,
   Plus,
   RotateCcw,
+  Send,
+  ExternalLink,
+  MessageCircle,
+  Users,
   Shield,
   Sparkles,
   Square,
@@ -69,6 +73,7 @@ interface SettingsViewProps {
   onExportBackup: () => void;
   onImportBackup: (fileOrString: File | string) => void;
   onResetAllData: () => void;
+  onClearUserData?: () => void;
   onReopenOnboarding: () => void;
   onOpenArchive: () => void;
   onApplyTemplateToTasks?: (tasks: Partial<TaskItem>[]) => void;
@@ -83,6 +88,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onExportBackup,
   onImportBackup,
   onResetAllData,
+  onClearUserData,
   onReopenOnboarding,
   onOpenArchive,
   onApplyTemplateToTasks,
@@ -113,7 +119,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   // Category modal state
   const [showAddCatModal, setShowAddCatModal] = useState(false);
   const [newCatName, setNewCatName] = useState('');
-  const [newCatColor, setNewCatColor] = useState('#4F46E5');
+  const [newCatColor, setNewCatColor] = useState('#2563eb');
   const [newCatIcon, setNewCatIcon] = useState('Target');
 
   // Subscribe to sound engine state
@@ -388,7 +394,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* 1. Language Selection */}
       <div className="glass-panel bg-white/90 dark:bg-slate-900/90 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3.5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 flex items-center justify-center text-blue-600 dark:text-sky-400">
             <Globe size={18} />
           </div>
           <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">{t.language}</h3>
@@ -408,7 +414,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 onClick={() => handleLanguageChange(lang.code as LanguageCode)}
                 className={`py-3.5 px-2.5 rounded-2xl border text-xs font-bold transition-all flex flex-col items-center gap-1.5 ${
                   isSel
-                    ? 'bg-indigo-50/90 dark:bg-indigo-950/70 border-indigo-500 text-indigo-700 dark:text-indigo-300 shadow-sm ring-2 ring-indigo-500/20'
+                    ? 'bg-blue-50/90 dark:bg-blue-950/70 border-blue-500 text-blue-700 dark:text-sky-300 shadow-sm ring-2 ring-blue-500/20'
                     : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                 }`}
                 id={`lang-btn-${lang.code}`}
@@ -424,7 +430,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* 2. Theme & Appearance Mode */}
       <div className="glass-panel bg-white/90 dark:bg-slate-900/90 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3.5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/60 flex items-center justify-center text-purple-600 dark:text-purple-400">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 flex items-center justify-center text-blue-600 dark:text-sky-400">
             <Moon size={18} />
           </div>
           <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">{t.theme}</h3>
@@ -445,7 +451,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 onClick={() => handleThemeChange(th.id as ThemeMode)}
                 className={`py-3.5 px-2.5 rounded-2xl border text-xs font-bold transition-all flex flex-col items-center gap-1.5 ${
                   isSel
-                    ? 'bg-purple-50/90 dark:bg-purple-950/70 border-purple-500 text-purple-700 dark:text-purple-300 shadow-sm ring-2 ring-purple-500/20'
+                    ? 'bg-blue-50/90 dark:bg-blue-950/70 border-blue-500 text-blue-700 dark:text-sky-300 shadow-sm ring-2 ring-blue-500/20'
                     : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'
                 }`}
                 id={`theme-btn-${th.id}`}
@@ -1097,7 +1103,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <button
             type="button"
             onClick={() => setShowAddCatModal(true)}
-            className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
+            className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
             id="add-cat-open-btn"
           >
             <Plus size={14} /> {t.addCategory}
@@ -1140,7 +1146,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         {showAddCatModal && (
           <form
             onSubmit={handleAddCategory}
-            className="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 space-y-3 animate-fade-in"
+            className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 space-y-3 animate-fade-in"
           >
             <h4 className="text-xs font-bold text-slate-900 dark:text-white">
               {t.addCategory}
@@ -1160,20 +1166,20 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             {/* Colors picker */}
             <div className="flex items-center gap-2">
               {[
-                '#4F46E5',
-                '#7C3AED',
-                '#EC4899',
-                '#059669',
-                '#0891B2',
-                '#D97706',
-                '#DC2626',
+                '#2563eb',
+                '#0284c7',
+                '#0d9488',
+                '#10b981',
+                '#f59e0b',
+                '#e11d48',
+                '#64748b',
               ].map((c) => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setNewCatColor(c)}
                   className={`w-6 h-6 rounded-full transition-transform ${
-                    newCatColor === c ? 'scale-125 ring-2 ring-indigo-500' : ''
+                    newCatColor === c ? 'scale-125 ring-2 ring-blue-500' : ''
                   }`}
                   style={{ backgroundColor: c }}
                 />
@@ -1189,7 +1195,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   onClick={() => setNewCatIcon(iconName)}
                   className={`p-1.5 rounded-lg border ${
                     newCatIcon === iconName
-                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      ? 'bg-blue-600 text-white border-blue-600'
                       : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                   }`}
                 >
@@ -1208,7 +1214,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </button>
               <button
                 type="submit"
-                className="px-4 py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-bold"
+                className="px-4 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-bold"
               >
                 {t.save}
               </button>
@@ -1269,7 +1275,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           </button>
 
           {/* 2. Import JSON File */}
-          <label className="p-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer">
+          <label className="p-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer">
             <Upload size={16} /> {t.importData}
             <input
               type="file"
@@ -1287,7 +1293,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <button
             type="button"
             onClick={handleCopyBackupJson}
-            className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-indigo-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+            className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
             id="copy-backup-btn"
           >
             {copiedBackup ? (
@@ -1309,7 +1315,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <button
             type="button"
             onClick={() => setShowPasteModal(true)}
-            className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-indigo-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+            className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-400 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
             id="paste-backup-btn"
           >
             <FileText size={15} />
@@ -1317,15 +1323,48 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           </button>
         </div>
 
+        {/* 3. Explicit 'Clear All User Data' Action Banner */}
+        <div className="p-4 rounded-2xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 dark:border-amber-700/40 space-y-2.5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-1">
+              <h4 className="text-xs font-bold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                <Trash2 size={15} className="text-amber-600 dark:text-amber-400" />
+                {t.clearAllUserData}
+              </h4>
+              <p className="text-[11px] text-amber-800/80 dark:text-amber-300/70 leading-relaxed">
+                {t.clearAllUserDataDesc}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm(t.clearUserDataConfirm)) {
+                  if (onClearUserData) {
+                    onClearUserData();
+                  } else {
+                    StorageService.clearAllUserData();
+                    window.location.reload();
+                  }
+                }
+              }}
+              className="shrink-0 px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5"
+              id="clear-user-data-btn"
+            >
+              <RotateCcw size={14} />
+              <span>{language === 'ar' ? 'تفريغ البيانات' : 'Clear Data'}</span>
+            </button>
+          </div>
+        </div>
+
         {/* Paste JSON Modal Form */}
         {showPasteModal && (
           <form
             onSubmit={handleDirectPasteSubmit}
-            className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-800/80 border border-indigo-200 dark:border-indigo-900/60 space-y-3 animate-fade-in"
+            className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-800/80 border border-blue-200 dark:border-blue-900/60 space-y-3 animate-fade-in"
           >
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <FileJson size={15} className="text-indigo-600 dark:text-indigo-400" />
+                <FileJson size={15} className="text-blue-600 dark:text-sky-400" />
                 {t.pasteBackupJson}
               </h4>
               <span className="text-[10px] text-slate-400">JSON Format</span>
@@ -1357,7 +1396,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </button>
               <button
                 type="submit"
-                className="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors"
+                className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-colors"
               >
                 {t.importData}
               </button>
@@ -1370,25 +1409,31 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <button
             type="button"
             onClick={onOpenArchive}
-            className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline flex items-center gap-1"
+            className="text-blue-600 dark:text-sky-400 font-semibold hover:underline flex items-center gap-1"
           >
             📂 {t.archive}
           </button>
           <button
             type="button"
             onClick={onReopenOnboarding}
-            className="text-purple-600 dark:text-purple-400 font-semibold hover:underline flex items-center gap-1"
+            className="text-sky-600 dark:text-sky-400 font-semibold hover:underline flex items-center gap-1"
           >
             ✨ {t.viewOnboardingAgain}
           </button>
         </div>
       </div>
 
-      {/* 9. About Screen Card */}
-      <div className="bg-gradient-to-tr from-slate-950 via-indigo-950 to-purple-950 rounded-3xl p-6 text-white border border-indigo-900/60 shadow-xl space-y-4 glow-indigo">
-        <div className="flex items-center justify-between">
-          <Logo size="md" />
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/10 text-indigo-200 border border-white/15">
+      {/* 9. About & Contact Us / Community Section */}
+      <div className="bg-gradient-to-tr from-slate-950 via-[#0a152d] to-[#1e3a8a] rounded-3xl p-6 text-white border border-blue-900/60 shadow-xl space-y-5 glow-blue" id="settings-about-section">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <Logo size="md" />
+            <div>
+              <h3 className="font-bold text-sm text-white">{t.aboutTitle}</h3>
+              <p className="text-[11px] text-sky-300">{t.contactUs}</p>
+            </div>
+          </div>
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/10 text-sky-200 border border-white/15">
             {t.version}
           </span>
         </div>
@@ -1397,7 +1442,37 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           {t.aboutText}
         </p>
 
-        <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-indigo-300 font-semibold">
+        {/* Telegram Channel & Community Section */}
+        <div className="p-4 rounded-2xl bg-blue-950/80 border border-sky-500/40 space-y-3">
+          <div className="flex items-center gap-2 text-sky-300">
+            <Users size={16} />
+            <span className="text-xs font-bold uppercase tracking-wider text-white">
+              {t.contactUs}
+            </span>
+          </div>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            {t.telegramCommunityDesc}
+          </p>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+            <div className="flex items-center gap-2 text-xs font-mono text-sky-300 bg-black/30 px-3 py-1.5 rounded-xl border border-sky-500/20 dir-ltr">
+              <Send size={14} className="text-sky-400 shrink-0" />
+              <span>t.me/fallt_tec</span>
+            </div>
+            <a
+              href="https://t.me/fallt_tec"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-blue-500 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white text-xs font-bold transition-all shadow-lg flex items-center justify-center gap-2 active:scale-95 text-center"
+              id="join-telegram-channel-btn"
+            >
+              <Send size={14} className="rtl:-rotate-90 shrink-0" />
+              <span>{t.joinTelegramBtn}</span>
+              <ExternalLink size={13} className="shrink-0" />
+            </a>
+          </div>
+        </div>
+
+        <div className="pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-sky-300 font-semibold">
           <span>{t.developedBy}</span>
           <span>© 2026 Arasko Team Fallt</span>
         </div>

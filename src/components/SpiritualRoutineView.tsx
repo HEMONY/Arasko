@@ -290,9 +290,9 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
       )}
 
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900 via-slate-900 to-emerald-950 p-5 sm:p-6 text-white border border-indigo-500/20 shadow-xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-5 sm:p-6 text-white border border-blue-500/20 shadow-xl glow-blue">
         <div className="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl" />
-        <div className="absolute bottom-0 left-0 -mb-6 -ml-6 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl" />
+        <div className="absolute bottom-0 left-0 -mb-6 -ml-6 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
@@ -356,13 +356,13 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k space-y-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/60 flex items-center justify-center text-blue-600 dark:text-sky-400">
               <BellRing size={20} />
             </div>
             <div>
               <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <span>{t.spiritualRemindersTitle}</span>
-                <span className="px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-sky-300 text-[10px] font-bold">
                   {settings.spiritualRemindersEnabled !== false ? (language === 'ar' ? 'مفعل' : 'Active') : (language === 'ar' ? 'معطل' : 'Off')}
                 </span>
               </h3>
@@ -378,7 +378,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
             <button
               type="button"
               onClick={handleTestNotificationSound}
-              className="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1.5"
+              className="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:text-blue-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5"
               title={t.testSpiritualSound}
             >
               <Volume2 size={14} />
@@ -392,7 +392,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
                 onChange={(e) => handleToggleGlobalReminders(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              <div className="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
             </label>
 
             <button
@@ -412,7 +412,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
             {/* 1. Quran Wards Reminders */}
             <div className="space-y-2">
               <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <BookOpen size={14} className="text-indigo-500" />
+                <BookOpen size={14} className="text-blue-500" />
                 <span>{t.quranWardReminders}</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
@@ -424,7 +424,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
                       key={ward.id}
                       className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-2 ${
                         isEnabled
-                          ? 'bg-indigo-50/50 dark:bg-indigo-950/20 border-indigo-200 dark:border-indigo-800/60'
+                          ? 'bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800/60'
                           : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/60 opacity-60'
                       }`}
                     >
@@ -433,7 +433,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
                           type="checkbox"
                           checked={isEnabled}
                           onChange={(e) => handleToggleItemReminder(ward.id, e.target.checked)}
-                          className="rounded-md text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer"
+                          className="rounded-md text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
                         />
                         <div className="min-w-0">
                           <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
@@ -452,7 +452,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
                           value={reminderTime}
                           onChange={(e) => handleChangeItemTime(ward.id, e.target.value)}
                           disabled={!isEnabled}
-                          className="px-1.5 py-0.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+                          className="px-1.5 py-0.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-hidden focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -524,7 +524,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
       <div className="space-y-3" id="quran-wards-section">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+            <div className="p-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400">
               <BookOpen size={18} />
             </div>
             <div>
@@ -536,7 +536,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
               </p>
             </div>
           </div>
-          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+          <span className="text-xs font-bold text-blue-600 dark:text-sky-400">
             {todayLog.completedSurahs?.length || 0} / {QURAN_DAILY_WARDS.length}
           </span>
         </div>
@@ -550,7 +550,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
                 className={`group relative rounded-2xl border p-4 transition-all ${
                   isRead
                     ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300/80 dark:border-emerald-800/40 shadow-xs'
-                    : 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-800 shadow-sm'
+                    : 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-800 shadow-sm'
                 }`}
                 id={`ward-card-${ward.id}`}
               >
@@ -576,7 +576,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
 
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60">
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-sky-300 border border-blue-200 dark:border-blue-800/60">
                           {ward.prayerName[language] || ward.prayerName.ar}
                         </span>
                         <span className="text-[10px] text-slate-400 flex items-center gap-1">
@@ -609,7 +609,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
                     <button
                       type="button"
                       onClick={() => setSelectedSurah(ward)}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 dark:bg-indigo-950/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/80 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-50 dark:bg-blue-950/80 hover:bg-blue-100 dark:hover:bg-blue-900/80 text-blue-600 dark:text-sky-300 border border-blue-200 dark:border-blue-800/80 transition-colors cursor-pointer"
                       id={`read-surah-btn-${ward.id}`}
                     >
                       <BookOpen size={13} />
@@ -724,7 +724,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
                         className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex flex-col items-center justify-center font-black transition-all active:scale-90 shadow-md cursor-pointer ${
                           isCompleted
                             ? 'bg-emerald-500 text-white shadow-emerald-500/20'
-                            : 'bg-gradient-to-br from-indigo-600 to-emerald-600 text-white shadow-indigo-500/20 hover:opacity-95'
+                            : 'bg-gradient-to-br from-blue-600 to-emerald-600 text-white shadow-blue-500/20 hover:opacity-95'
                         }`}
                         title={t.tasbihCounter}
                         id={`tasbih-btn-${athkar.id}`}
@@ -786,7 +786,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
             <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/80 dark:bg-slate-950/60">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300">
                     {selectedSurah.prayerName[language] || selectedSurah.prayerName.ar}
                   </span>
                   <span className="text-xs text-slate-500">

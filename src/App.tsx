@@ -26,6 +26,7 @@ import { TaskModal } from './components/TaskModal';
 import { OnboardingModal } from './components/OnboardingModal';
 import { NotificationTray } from './components/NotificationTray';
 import { PomodoroTimer } from './components/PomodoroTimer';
+import { SplashScreen } from './components/SplashScreen';
 import { TaskBreakdownTemplate } from './services/smartAssistant';
 import {
   playAlertSound,
@@ -54,6 +55,7 @@ export default function App() {
   );
 
   // 2. Navigation & UI State
+  const [showSplash, setShowSplash] = useState(true);
   const [activeTab, setActiveTab] = useState<ActiveTab>('today');
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
   const [isNotificationTrayOpen, setIsNotificationTrayOpen] = useState(false);
@@ -577,6 +579,21 @@ export default function App() {
     window.location.reload();
   };
 
+  // Explicitly Clear All User Data while retaining default app config
+  const handleClearUserData = () => {
+    const success = StorageService.clearAllUserData();
+    if (success) {
+      setTasks([]);
+      setWaterLogs(StorageService.getWaterLogs());
+      setSleepLogs([]);
+      setHabitLogs([]);
+      setSettings(StorageService.getSettings());
+      setNotifications(StorageService.getNotifications());
+      playAlertSound('bell');
+      alert(t.clearUserDataSuccess);
+    }
+  };
+
   // Add bulk tasks (e.g. from Spiritual Routine or Personalized Profile Templates)
   const handleAddBulkTasks = (tasksToAdd: Partial<TaskItem>[]) => {
     try {
@@ -641,13 +658,13 @@ export default function App() {
     <div
       className={`min-h-screen ${
         isDarkMode ? 'dark' : ''
-      } bg-[var(--app-bg)] text-[var(--app-fg)] flex flex-col font-sans transition-colors duration-200 selection:bg-indigo-500 selection:text-white relative overflow-x-hidden`}
+      } bg-[var(--app-bg)] text-[var(--app-fg)] flex flex-col font-sans transition-colors duration-200 selection:bg-blue-600 selection:text-white relative overflow-x-hidden`}
       id="app-root-container"
     >
-      {/* 4K Ambient Background Glow Elements */}
-      <div className="fixed top-0 left-1/4 -translate-x-1/2 -z-10 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="fixed bottom-1/4 right-10 -z-10 w-80 h-80 bg-purple-500/5 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="fixed top-1/3 right-1/4 -z-10 w-64 h-64 bg-rose-500/5 dark:bg-rose-600/5 rounded-full blur-3xl pointer-events-none"></div>
+      {/* Ambient Dark-Blue & Deep-Slate Background Glow Elements */}
+      <div className="fixed top-0 left-1/4 -translate-x-1/2 -z-10 w-96 h-96 bg-blue-600/5 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="fixed bottom-1/4 right-10 -z-10 w-80 h-80 bg-sky-600/5 dark:bg-slate-800/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="fixed top-1/3 right-1/4 -z-10 w-64 h-64 bg-slate-500/5 dark:bg-blue-950/30 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Top Header */}
       <Header
@@ -706,7 +723,6 @@ export default function App() {
                 userName={settings.userName}
                 userProfession={settings.userProfessionCustom || settings.userProfessionId}
                 userStudyTrack={settings.userStudentTrackCustom || settings.userStudentTrackId}
-                streakCount={5}
               />
             )}
 
@@ -778,6 +794,7 @@ export default function App() {
                 onExportBackup={handleExportBackup}
                 onImportBackup={handleImportBackup}
                 onResetAllData={handleResetAllData}
+                onClearUserData={handleClearUserData}
                 onReopenOnboarding={() => setIsOnboardingOpen(true)}
                 onOpenArchive={() => setIsArchiveOpen(true)}
                 onApplyTemplateToTasks={handleAddBulkTasks}
@@ -786,6 +803,9 @@ export default function App() {
           </>
         )}
       </main>
+
+      {/* Instant High-Resolution Midnight Splash Screen */}
+      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
 
       {/* Bottom Ergonomic Navigation Bar */}
       <BottomNav

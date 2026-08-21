@@ -38,14 +38,48 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <meta name="theme-color" content="#4338CA" />
+    <meta name="theme-color" content="#030712" />
   </head>
-  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
-    <div id="root"></div>
+  <body class="bg-[#030712] text-slate-100 antialiased selection:bg-blue-600 selection:text-white" style="margin: 0; padding: 0; background-color: #030712;">
+    <div id="root">
+      <!-- Instant Pre-Hydration Midnight-Blue Splash Screen -->
+      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 40%, #0a152d 0%, #030712 70%); color: #ffffff; font-family: 'Plus Jakarta Sans', 'Cairo', system-ui, sans-serif;">
+        <div style="position: relative; width: 88px; height: 88px; margin-bottom: 20px;">
+          <svg viewBox="0 0 100 100" width="88" height="88" style="filter: drop-shadow(0 10px 25px rgba(37,99,235,0.45));">
+            <defs>
+              <linearGradient id="initMarkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38BDF8" />
+                <stop offset="50%" stop-color="#2563EB" />
+                <stop offset="100%" stop-color="#1E3A8A" />
+              </linearGradient>
+            </defs>
+            <rect width="100" height="100" rx="26" fill="#060e22" stroke="rgba(56,189,248,0.3)" stroke-width="2" />
+            <path d="M25 76 L46 25 C48 20 52 20 54 25 L75 76 C77 80 73 83 69 80 L50 64 L31 80 C27 83 23 80 25 76 Z" fill="url(#initMarkGrad)" />
+            <path d="M38 52 L47 61 L64 42" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="50" cy="22" r="3.5" fill="#38BDF8" />
+          </svg>
+        </div>
+        <div style="font-size: 26px; font-weight: 900; letter-spacing: -0.5px; background: linear-gradient(to right, #ffffff, #93c5fd, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          Arasko
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: #94a3b8; margin-top: 6px; letter-spacing: 0.5px;">
+          رفيقك اليومي للإنتاجية والتركيز
+        </div>
+        <div style="margin-top: 24px; width: 44px; height: 3px; border-radius: 99px; background: rgba(56,189,248,0.2); overflow: hidden; position: relative;">
+          <div style="width: 100%; height: 100%; background: linear-gradient(90deg, #38bdf8, #2563eb); border-radius: 99px; animation: initPulse 1.2s infinite ease-in-out;"></div>
+        </div>
+        <style>
+          @keyframes initPulse {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+        </style>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
       // Register Service Worker for offline PWA capabilities
-      if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker
             .register('/sw.js')
@@ -53,7 +87,7 @@
               console.log('[Arasko] Service Worker registered with scope:', reg.scope);
             })
             .catch((err) => {
-              console.warn('[Arasko] Service Worker registration skipped or failed:', err);
+              console.warn('[Arasko] Service Worker registration note:', err);
             });
         });
       }

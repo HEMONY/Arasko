@@ -12,6 +12,8 @@ export default defineConfig(() => {
       },
     },
     build: {
+      cssMinify: true,
+      sourcemap: false,
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {

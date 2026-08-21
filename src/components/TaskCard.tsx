@@ -157,14 +157,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     important:
       'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/50',
     normal:
-      'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-900/50',
+      'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/50',
   };
 
   // Subtle color-coded start/left-border indicator by priority
   const priorityBorderClasses = {
     urgent: 'border-s-4 border-s-rose-500 hover:border-s-rose-600',
     important: 'border-s-4 border-s-amber-500 hover:border-s-amber-600',
-    normal: 'border-s-4 border-s-indigo-400/80 dark:border-s-indigo-500/60 hover:border-s-indigo-500',
+    normal: 'border-s-4 border-s-blue-500/80 dark:border-s-blue-500/60 hover:border-s-blue-600',
   };
 
   // Format time or date cleanly
@@ -232,12 +232,12 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           priorityBorderClasses[task.priority] || priorityBorderClasses.normal
         } p-3.5 sm:p-4 card-floating-4k will-change-transform active:scale-[0.985] sm:active:scale-[0.99] transition-all duration-150 ease-out select-none ${
           isSelected
-            ? 'bg-indigo-50/90 dark:bg-indigo-950/70 border-indigo-500 dark:border-indigo-400 ring-2 ring-indigo-500/40 shadow-floating-4k scale-[0.99]'
+            ? 'bg-blue-50/90 dark:bg-blue-950/70 border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/40 shadow-floating-4k scale-[0.99]'
             : isCompleted
             ? 'bg-slate-100/80 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800/40 opacity-75 shadow-floating-4k'
             : isOverdue
             ? 'bg-rose-50/80 dark:bg-slate-900/90 border-rose-300 dark:border-rose-500/60 ring-1 ring-rose-500/20 shadow-floating-4k'
-            : 'bg-white dark:bg-slate-900/90 border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-slate-700 shadow-floating-4k'
+            : 'bg-white dark:bg-slate-900/90 border-slate-200/90 dark:border-slate-800 hover:border-blue-300 dark:hover:border-slate-700 shadow-floating-4k'
         }`}
         id={`task-card-${task.id}`}
       >
@@ -253,8 +253,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               }}
               className={`mt-0.5 shrink-0 w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${
                 isSelected
-                  ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm'
-                  : 'border-slate-300 dark:border-slate-600 hover:border-indigo-500 bg-white/50 dark:bg-slate-800/50'
+                  ? 'bg-blue-600 border-blue-600 text-white shadow-xs'
+                  : 'border-slate-300 dark:border-slate-600 hover:border-blue-500 bg-white/50 dark:bg-slate-800/50'
               }`}
               id={`select-task-${task.id}`}
             >
@@ -274,7 +274,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               className={`mt-0.5 shrink-0 rounded-full transition-transform active:scale-85 ${
                 isCompleted
                   ? 'text-emerald-500 hover:text-slate-400'
-                  : 'text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400'
+                  : 'text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-sky-400'
               }`}
               title={isCompleted ? t.undoComplete : t.markCompleted}
               id={`toggle-task-${task.id}`}
@@ -310,7 +310,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 className={`text-sm font-semibold leading-snug transition-colors ${
                   isCompleted
                     ? 'line-through text-slate-400 dark:text-slate-500 font-normal'
-                    : 'text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-300'
+                    : 'text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-sky-300'
                 }`}
               >
                 {task.title}
@@ -354,7 +354,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               <div className="mt-2 flex items-center gap-2">
                 <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-blue-500 via-sky-500 to-emerald-500 transition-all duration-300"
                     style={{ width: `${(completedSubs / totalSubs) * 100}%` }}
                   />
                 </div>
@@ -392,7 +392,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               {/* Custom Sound attached indicator */}
               {task.customSoundChoice && (
                 <span
-                  className="inline-flex items-center gap-0.5 text-purple-600 dark:text-purple-400"
+                  className="inline-flex items-center gap-0.5 text-sky-600 dark:text-sky-400"
                   title={t.customToneLabel}
                 >
                   <Music size={11} />
@@ -401,7 +401,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
               {/* Recurrence Indicator */}
               {task.recurrence && task.recurrence !== 'none' && (
-                <span className="inline-flex items-center gap-0.5 text-indigo-600 dark:text-indigo-400">
+                <span className="inline-flex items-center gap-0.5 text-blue-600 dark:text-sky-400">
                   <Repeat size={11} />
                 </span>
               )}
@@ -429,10 +429,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                     triggerVibration(20);
                     onStartPomodoro(task);
                   }}
-                  className="ml-auto rtl:mr-auto rtl:ml-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/70 hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-600 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/60 shadow-xs transition-all active:scale-95"
+                  className="ml-auto rtl:mr-auto rtl:ml-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-blue-50 dark:bg-blue-950/70 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-sky-300 border border-blue-200/80 dark:border-blue-800/60 shadow-xs transition-all active:scale-95"
                   title={t.startPomodoroForTask}
                 >
-                  <Timer size={11} className="text-indigo-500 stroke-[2.5]" />
+                  <Timer size={11} className="text-blue-500 stroke-[2.5]" />
                   <span>25 {language === 'ar' ? 'د' : 'm'}</span>
                 </button>
               )}

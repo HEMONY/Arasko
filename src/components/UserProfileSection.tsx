@@ -106,24 +106,24 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
     <div className="space-y-6" id="user-profile-personalization-section">
       {/* Toast Notification */}
       {successToast && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-indigo-600 text-white px-4 py-2 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 animate-bounce">
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-blue-600 text-white px-4 py-2 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 animate-bounce">
           <CheckCircle2 size={16} />
           <span>{successToast}</span>
         </div>
       )}
 
       {/* Greeting Preview Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-5 text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-indigo-950 border border-blue-900/50 p-5 text-white shadow-xl glow-blue">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md flex items-center justify-center shrink-0">
             {roleType === 'student' ? (
-              <GraduationCap size={24} className="text-white" />
+              <GraduationCap size={24} className="text-sky-300" />
             ) : (
-              <Briefcase size={24} className="text-white" />
+              <Briefcase size={24} className="text-sky-300" />
             )}
           </div>
           <div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-100 flex items-center gap-1">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-300 flex items-center gap-1">
               <Sparkles size={12} />
               {language === 'ar' ? 'المساعد الشخصي المخصص' : 'Personalized Profile'}
             </span>
@@ -136,7 +136,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
       <div className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-4">
         <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
           <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <User size={16} className="text-indigo-600 dark:text-indigo-400" />
+            <User size={16} className="text-blue-600 dark:text-sky-400" />
             <span>{t.userProfileTitle}</span>
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -148,7 +148,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
             <span>{t.userName}</span>
-            <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-normal">
+            <span className="text-[10px] text-blue-600 dark:text-sky-400 font-normal">
               ({language === 'ar' ? 'ليخاطبك التطبيق باسمك' : 'For personalized greetings'})
             </span>
           </label>
@@ -157,7 +157,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
             value={userName}
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder={t.userNamePlaceholder}
-            className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-blue-500 transition-all"
             id="profile-user-name-input"
           />
         </div>
@@ -173,7 +173,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
               onClick={() => handleRoleTypeChange('professional')}
               className={`p-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all ${
                 roleType === 'professional'
-                  ? 'bg-indigo-50 dark:bg-indigo-950/80 border-indigo-500 text-indigo-700 dark:text-indigo-300 shadow-sm'
+                  ? 'bg-blue-50 dark:bg-blue-950/80 border-blue-500 text-blue-700 dark:text-sky-300 shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
               }`}
               id="role-btn-professional"
@@ -187,7 +187,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
               onClick={() => handleRoleTypeChange('student')}
               className={`p-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all ${
                 roleType === 'student'
-                  ? 'bg-indigo-50 dark:bg-indigo-950/80 border-indigo-500 text-indigo-700 dark:text-indigo-300 shadow-sm'
+                  ? 'bg-blue-50 dark:bg-blue-950/80 border-blue-500 text-blue-700 dark:text-sky-300 shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
               }`}
               id="role-btn-student"
@@ -201,7 +201,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
               onClick={() => handleRoleTypeChange('other')}
               className={`p-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all ${
                 roleType === 'other'
-                  ? 'bg-indigo-50 dark:bg-indigo-950/80 border-indigo-500 text-indigo-700 dark:text-indigo-300 shadow-sm'
+                  ? 'bg-blue-50 dark:bg-blue-950/80 border-blue-500 text-blue-700 dark:text-sky-300 shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
               }`}
               id="role-btn-other"
@@ -221,7 +221,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
             <select
               value={professionId}
               onChange={(e) => handleProfessionChange(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
               id="profession-select-dropdown"
             >
               {PROFESSION_OPTIONS.map((opt) => (
@@ -242,7 +242,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
             <select
               value={trackId}
               onChange={(e) => handleTrackChange(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
               id="student-track-select-dropdown"
             >
               {STUDENT_TRACK_OPTIONS.map((opt) => (
@@ -265,7 +265,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
               value={customField}
               onChange={(e) => handleCustomFieldChange(e.target.value)}
               placeholder={t.customFieldPlaceholder}
-              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
               id="custom-field-input"
             />
           </div>
@@ -273,8 +273,8 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
       </div>
 
       {/* Personalized Domain Tips & Guidance */}
-      <div className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-3">
-        <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+      <div className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+        <div className="flex items-center gap-2 text-blue-600 dark:text-sky-400 font-bold text-sm">
           <Lightbulb size={18} />
           <span>{t.domainTipsTitle}</span>
         </div>
@@ -283,9 +283,9 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
           {personalizedAdvice.map((advice, idx) => (
             <div
               key={idx}
-              className="flex items-start gap-2.5 p-3 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/40 text-xs text-slate-700 dark:text-slate-300 leading-relaxed"
+              className="flex items-start gap-2.5 p-3 rounded-2xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 text-xs text-slate-700 dark:text-slate-300 leading-relaxed"
             >
-              <span className="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+              <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
                 {idx + 1}
               </span>
               <p>{advice}</p>
@@ -296,8 +296,8 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
 
       {/* Specialized Task Templates for Domain */}
       {personalizedTemplates.length > 0 && onApplyTemplateToTasks && (
-        <div className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm space-y-3">
-          <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-bold text-sm">
+        <div className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+          <div className="flex items-center gap-2 text-sky-600 dark:text-sky-400 font-bold text-sm">
             <Sparkles size={18} />
             <span>{t.specializedTemplates}</span>
           </div>
@@ -315,7 +315,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
                   <ul className="mt-2 space-y-1 text-[11px] text-slate-500 dark:text-slate-400">
                     {tpl.steps.slice(0, 3).map((s, sIdx) => (
                       <li key={sIdx} className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-purple-500 shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0" />
                         <span className="truncate">{s}</span>
                       </li>
                     ))}
@@ -325,7 +325,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
                 <button
                   type="button"
                   onClick={() => handleApplyTemplate(tpl)}
-                  className="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5"
                 >
                   <Plus size={14} />
                   <span>{t.applyTemplate}</span>

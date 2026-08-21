@@ -89,7 +89,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
               ? 'border-s-4 border-s-rose-500'
               : task.priority === 'important'
               ? 'border-s-4 border-s-amber-500'
-              : 'border-s-4 border-s-indigo-400/80 dark:border-s-indigo-500/60';
+              : 'border-s-4 border-s-blue-400/80 dark:border-s-blue-500/60';
 
           return (
             <div
@@ -115,7 +115,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({
                 <button
                   type="button"
                   onClick={() => onRestoreTask(task)}
-                  className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-bold hover:bg-indigo-100 flex items-center gap-1"
+                  className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-sky-400 text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900/40 flex items-center gap-1 transition-colors"
                   title={t.unarchiveTask}
                 >
                   <RotateCcw size={14} />

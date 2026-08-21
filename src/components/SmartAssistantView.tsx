@@ -89,10 +89,10 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
     });
 
     return [
-      { name: language === 'ar' ? 'الصباح' : 'Morning', count: morning || 3, fill: '#6366f1' },
-      { name: language === 'ar' ? 'الظهيرة' : 'Afternoon', count: afternoon || 4, fill: '#3b82f6' },
-      { name: language === 'ar' ? 'المساء' : 'Evening', count: evening || 2, fill: '#8b5cf6' },
-      { name: language === 'ar' ? 'الليل' : 'Night', count: night || 1, fill: '#06b6d4' },
+      { name: language === 'ar' ? 'الصباح' : 'Morning', count: morning || 3, fill: '#0284c7' },
+      { name: language === 'ar' ? 'الظهيرة' : 'Afternoon', count: afternoon || 4, fill: '#2563eb' },
+      { name: language === 'ar' ? 'المساء' : 'Evening', count: evening || 2, fill: '#1d4ed8' },
+      { name: language === 'ar' ? 'الليل' : 'Night', count: night || 1, fill: '#0ea5e9' },
     ];
   }, [tasks, language]);
 
@@ -108,7 +108,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
         total: total || 1,
         completed: completed,
         rate: total > 0 ? rate : 100,
-        color: cat.color || '#6366f1',
+        color: cat.color || '#2563eb',
       };
     });
   }, [tasks, categories, language]);
@@ -183,12 +183,12 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
 
       {/* Hero Badge - Offline & Rule-Based Guarantee */}
       <div
-        className="rounded-3xl p-5 bg-gradient-to-tr from-slate-900 via-indigo-950 to-indigo-900 text-white shadow-floating-4k card-floating-4k border border-indigo-500/20"
+        className="rounded-3xl p-5 bg-gradient-to-tr from-slate-950 via-blue-950 to-slate-900 text-white shadow-floating-4k card-floating-4k border border-blue-500/20 glow-blue"
         id="assistant-offline-hero"
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-300 shadow-floating-4k">
+            <div className="w-10 h-10 rounded-2xl bg-blue-500/20 flex items-center justify-center text-sky-300 shadow-floating-4k border border-blue-400/20">
               <AraskoMark size={24} variant="gradient" />
             </div>
             <div>
@@ -276,7 +276,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap size={18} className="text-indigo-600 dark:text-indigo-400" />
+            <Zap size={18} className="text-blue-600 dark:text-sky-400" />
             <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
               {t.smartPriorityOrder}
             </h3>
@@ -292,7 +292,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
         <div className="space-y-2 pt-1">
           {prioritized.slice(0, 5).map(({ task, score, reasonKey }, rank) => (
             <div key={task.id} className="relative">
-              <div className="absolute -top-1 -right-1 z-10 w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center shadow-floating-4k">
+              <div className="absolute -top-1 -right-1 z-10 w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center shadow-floating-4k">
                 #{rank + 1}
               </div>
               <TaskCard
@@ -317,7 +317,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
       {/* 4. TASK BREAKDOWN WIZARD (Rule-based templates) */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k space-y-3">
         <div className="flex items-center gap-2">
-          <Layers size={18} className="text-purple-600 dark:text-purple-400" />
+          <Layers size={18} className="text-sky-600 dark:text-sky-400" />
           <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
             {t.taskBreakdownGenerator}
           </h3>
@@ -337,7 +337,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
                 onClick={() => setSelectedTemplateId(tpl.id)}
                 className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all shadow-floating-4k ${
                   isSel
-                    ? 'bg-purple-50 dark:bg-purple-950/70 border border-purple-500 text-purple-700 dark:text-purple-300 font-bold'
+                    ? 'bg-blue-50 dark:bg-blue-950/70 border border-blue-500 text-blue-700 dark:text-sky-300 font-bold'
                     : 'bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -355,7 +355,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
           <div className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
             {selectedTemplate.steps.map((step, sIdx) => (
               <div key={sIdx} className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-bold text-[10px] flex items-center justify-center shrink-0">
+                <span className="w-4 h-4 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 font-bold text-[10px] flex items-center justify-center shrink-0">
                   {sIdx + 1}
                 </span>
                 <span>{step[language] || step.en}</span>
@@ -366,7 +366,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
           <button
             type="button"
             onClick={handleApplyTemplate}
-            className="mt-3 w-full py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-bold shadow-floating-4k transition-all flex items-center justify-center gap-1.5 active:scale-98"
+            className="mt-3 w-full py-2.5 rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 hover:from-blue-800 hover:to-sky-700 text-white text-xs font-bold shadow-floating-4k transition-all flex items-center justify-center gap-1.5 active:scale-98"
             id="apply-template-btn"
           >
             <AraskoMark size={16} variant="emerald" />
@@ -387,7 +387,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
         {/* 3 Metric Cards */}
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 text-center shadow-floating-4k card-floating-4k">
-            <span className="text-[10px] font-bold uppercase text-indigo-600 dark:text-indigo-400 block">
+            <span className="text-[10px] font-bold uppercase text-blue-600 dark:text-sky-400 block">
               {t.weeklySummary}
             </span>
             <span className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
@@ -409,7 +409,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
           </div>
 
           <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 text-center shadow-floating-4k card-floating-4k">
-            <span className="text-[10px] font-bold uppercase text-purple-600 dark:text-purple-400 block">
+            <span className="text-[10px] font-bold uppercase text-sky-600 dark:text-sky-400 block">
               {t.dayStreak}
             </span>
             <span className="text-lg sm:text-xl font-black text-amber-500 flex items-center justify-center gap-0.5">
@@ -424,7 +424,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
           <span className="text-slate-600 dark:text-slate-400 font-medium">
             {t.peakProductivityTime}:
           </span>
-          <span className="font-bold text-indigo-600 dark:text-indigo-400">
+          <span className="font-bold text-blue-600 dark:text-sky-400">
             {stats.peakPeriod === 'morning'
               ? t.morningPeak
               : stats.peakPeriod === 'afternoon'
@@ -437,7 +437,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
         <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-              <Clock size={14} className="text-indigo-500" />
+              <Clock size={14} className="text-blue-500" />
               {language === 'ar' ? 'أوقات الإنتاجية اليومية' : 'Productive Time Slots'}
             </span>
             <span className="text-[10px] font-semibold text-slate-400">
@@ -452,15 +452,15 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
                 <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0f172a',
+                    backgroundColor: '#030712',
                     borderRadius: '12px',
-                    border: '1px solid #1e293b',
+                    border: '1px solid #1e3a8a',
                     color: '#fff',
                     fontSize: '11px',
                   }}
                   formatter={(val: any) => [`${val} ${language === 'ar' ? 'مهام' : 'tasks'}`, language === 'ar' ? 'النشاط' : 'Activity']}
                 />
-                <Bar dataKey="count" fill="#6366f1" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="count" fill="#2563eb" radius={[6, 6, 0, 0]}>
                   {timeDistributionData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
@@ -517,7 +517,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
         <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-              <PieIcon size={14} className="text-purple-500" />
+              <PieIcon size={14} className="text-sky-500" />
               {language === 'ar' ? 'نسب الإنجاز حسب التصنيف' : 'Category Completion Ratios'}
             </span>
           </div>

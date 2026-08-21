@@ -30,6 +30,25 @@ export interface Translations {
   completionRate: string;
   todayProgress: string;
   tasksCompleted: string;
+  offlineStatus: string;
+  onlineStatus: string;
+  offlineCachedBadge: string;
+  offlineTooltip: string;
+  onlineTooltip: string;
+
+  // Task Focus & Goal Milestone
+  taskFocus: string;
+  taskFocusDesc: string;
+  workTasks: string;
+  personalTasks: string;
+  studyTasks: string;
+  dailyBalance: string;
+  goalMilestone: string;
+  dailyGoalCompleted: string;
+  milestoneAlmostDone: string;
+  milestoneHalfway: string;
+  milestoneGoodStart: string;
+  milestoneNotStarted: string;
 
   // Focus Mode & Pomodoro
   focusMode: string;
@@ -271,8 +290,17 @@ export interface Translations {
   importConfirmWarning: string;
   resetAllData: string;
   resetConfirm: string;
+  clearAllUserData: string;
+  clearAllUserDataDesc: string;
+  clearUserDataConfirm: string;
+  clearUserDataSuccess: string;
   aboutTitle: string;
+  contactUs: string;
   version: string;
+  telegramChannel: string;
+  followOnTelegram: string;
+  joinTelegramBtn: string;
+  telegramCommunityDesc: string;
   viewOnboardingAgain: string;
 
   // Onboarding
@@ -375,7 +403,7 @@ export const translations: Record<LanguageCode, Translations> = {
   ar: {
     appName: "أراسكو",
     appTagline: "تنظيم احترافي للمهام والروتين الصحي",
-    aboutText: "أراسكو هو تطبيق ذكي وبسيط لإدارة المهام والوقت مصمم لمساعدتك في تنظيم يومك وشهرك وسنتك بكل احترافية وسهولة. تم تطويره بواسطة فريق Fallt.",
+    aboutText: "أراسكو هو تطبيق ذكي وبسيط لإدارة المهام والوقت مصمم لمساعدتك في تنظيم يومك وشهرك وسنتك بكل احترافية وسهولة. تم تطويره بواسطة فريق Fallt. تابع قناتنا الرسمية على تلجرام: t.me/fallt_tec",
     developedBy: "تم التطوير بواسطة فريق Fallt",
 
     today: "اليوم",
@@ -401,6 +429,25 @@ export const translations: Record<LanguageCode, Translations> = {
     completionRate: "نسبة الإنجاز",
     todayProgress: "إنجاز اليوم",
     tasksCompleted: "مهام مكتملة",
+    offlineStatus: "أوفلاين",
+    onlineStatus: "متصل",
+    offlineCachedBadge: "أوفلاين (محتوى مخزن)",
+    offlineTooltip: "التطبيق يعمل أوفلاين بالكامل عبر ميزة التخزين المؤقت للبيانات والأصول",
+    onlineTooltip: "التطبيق متصل بالإنترنت ومحدث تلقائياً",
+
+    // Task Focus & Goal Milestone
+    taskFocus: "توزيع التركيز اليومي",
+    taskFocusDesc: "تحليل توزيع المهام المنشأة والمجدولة لليوم لموازنة العمل والحياة الشخصية والتعلم.",
+    workTasks: "عمل ومشاريع",
+    personalTasks: "شخصي وصحة",
+    studyTasks: "دراسة وتطوير",
+    dailyBalance: "توازن اليوم",
+    goalMilestone: "محطة الهدف اليومي",
+    dailyGoalCompleted: "تم تحقيق الهدف اليومي بنجاح!",
+    milestoneAlmostDone: "على وشك إنجاز الهدف كاملاً",
+    milestoneHalfway: "في منتصف طريق الإنجاز اليومي",
+    milestoneGoodStart: "بداية ممتازة ليومك!",
+    milestoneNotStarted: "ابدأ بإنجاز أولى مهامك اليوم",
 
     // Focus Mode & Pomodoro
     focusMode: "وضع التركيز الفائق",
@@ -636,8 +683,17 @@ export const translations: Record<LanguageCode, Translations> = {
     importConfirmWarning: "سيتم استعادة وتحديث بيانات التطبيق والإعدادات من هذه النسخة الاحتياطية.",
     resetAllData: "إعادة ضبط المصنع ومسح كل البيانات",
     resetConfirm: "تحذير: سيتم مسح كافة المهام والبيانات نهائياً!",
+    clearAllUserData: "مسح بيانات المستخدم (المهام، الصحة، والورد)",
+    clearAllUserDataDesc: "حذف كافة المهام والسجلات الصحية والورد اليومي مع الإبقاء على الإعدادات الافتراضية للتطبيق ليكون التطبيق نظيفاً وجديداً.",
+    clearUserDataConfirm: "هل أنت متأكد من رغبتك في مسح كافة المهام والأنشطة الصحية والورد اليومي؟ سيتم تجهيز التطبيق كأنه جديد لمستخدم جديد مع الإبقاء على إعداداتك العامة.",
+    clearUserDataSuccess: "تم تفريغ كافة بيانات المستخدم والمهام بنجاح! التطبيق الآن نظيف وجاهز للاستخدام.",
     aboutTitle: "حول تطبيق أراسكو",
+    contactUs: "تواصل معنا والمجتمع",
     version: "الإصدار 1.0.0",
+    telegramChannel: "t.me/fallt_tec",
+    followOnTelegram: "قناة التلجرام الرسمية",
+    joinTelegramBtn: "انضم إلى قناتنا على تلجرام",
+    telegramCommunityDesc: "انضم إلى مجتمعنا وقناتنا الرسمية على تلجرام لمتابعة آخر التحديثات، مناقشة الميزات الجديدة، والتواصل المباشر مع فريق التطوير.",
     viewOnboardingAgain: "عرض جولة التعريف بالتطبيق",
 
     onboardingWelcomeTitle: "مرحباً بك في أراسكو",
@@ -733,7 +789,7 @@ export const translations: Record<LanguageCode, Translations> = {
   en: {
     appName: "Arasko",
     appTagline: "Professional Task & Health Management",
-    aboutText: "Arasko is a smart, simple task and time management app designed to help you organize your day, month, and year professionally and effortlessly. Developed by Team Fallt.",
+    aboutText: "Arasko is a smart, simple task and time management app designed to help you organize your day, month, and year professionally and effortlessly. Developed by Team Fallt. Official Telegram: t.me/fallt_tec",
     developedBy: "Developed by Team Fallt",
 
     today: "Today",
@@ -759,6 +815,25 @@ export const translations: Record<LanguageCode, Translations> = {
     completionRate: "Completion Rate",
     todayProgress: "Today's Progress",
     tasksCompleted: "Tasks Completed",
+    offlineStatus: "Offline",
+    onlineStatus: "Online",
+    offlineCachedBadge: "Offline (Cached)",
+    offlineTooltip: "App is running offline with cached data and static assets via Service Worker",
+    onlineTooltip: "App is connected to the network and synced",
+
+    // Task Focus & Goal Milestone
+    taskFocus: "Task Focus Balance",
+    taskFocusDesc: "Analysis of tasks created and scheduled for today to help you visualize your work, personal, and study balance.",
+    workTasks: "Work & Projects",
+    personalTasks: "Personal & Life",
+    studyTasks: "Study & Learning",
+    dailyBalance: "Daily Balance",
+    goalMilestone: "Goal Milestone",
+    dailyGoalCompleted: "Daily goal achieved! All done!",
+    milestoneAlmostDone: "Almost there! Finish the final steps.",
+    milestoneHalfway: "Halfway through your daily tasks.",
+    milestoneGoodStart: "Great momentum! Keep it going.",
+    milestoneNotStarted: "Ready to start your first task today.",
 
     // Focus Mode & Pomodoro
     focusMode: "Focus Mode",
@@ -994,8 +1069,17 @@ export const translations: Record<LanguageCode, Translations> = {
     importConfirmWarning: "Your tasks, routines, and preferences will be updated with this backup.",
     resetAllData: "Reset All Data to Factory Default",
     resetConfirm: "Warning: All tasks, routines, and custom settings will be permanently erased!",
+    clearAllUserData: "Clear All User Data (Tasks, Health & Spiritual)",
+    clearAllUserDataDesc: "Explicitly removes all existing task, health, and spiritual logs, leaving only default configuration so the app is pristine for a new user.",
+    clearUserDataConfirm: "Are you sure you want to clear all user tasks, health logs, and spiritual records? Default app configuration will be retained.",
+    clearUserDataSuccess: "All user tasks, health records, and spiritual logs have been successfully cleared!",
     aboutTitle: "About Arasko",
+    contactUs: "Contact Us & Community",
     version: "Version 1.0.0",
+    telegramChannel: "t.me/fallt_tec",
+    followOnTelegram: "Official Telegram Channel",
+    joinTelegramBtn: "Join our Telegram Channel",
+    telegramCommunityDesc: "Join our official Telegram community for the latest announcements, feature updates, and direct support.",
     viewOnboardingAgain: "Replay Onboarding Guide",
 
     onboardingWelcomeTitle: "Welcome to Arasko",
@@ -1091,7 +1175,7 @@ export const translations: Record<LanguageCode, Translations> = {
   fr: {
     appName: "Arasko",
     appTagline: "Gestion professionnelle des tâches et de la santé",
-    aboutText: "Arasko est une application intelligente et simple de gestion des tâches et du temps conçue pour vous aider à organiser votre journée, votre mois et votre année de manière professionnelle et sans effort. Développé par Team Fallt.",
+    aboutText: "Arasko est une application intelligente et simple de gestion des tâches et du temps conçue pour vous aider à organiser votre journée, votre mois et votre année de manière professionnelle et sans effort. Développé par Team Fallt. Telegram officiel : t.me/fallt_tec",
     developedBy: "Développé par Team Fallt",
 
     today: "Aujourd'hui",
@@ -1117,6 +1201,25 @@ export const translations: Record<LanguageCode, Translations> = {
     completionRate: "Taux de réussite",
     todayProgress: "Progression du jour",
     tasksCompleted: "Tâches terminées",
+    offlineStatus: "Hors ligne",
+    onlineStatus: "En ligne",
+    offlineCachedBadge: "Hors ligne (En cache)",
+    offlineTooltip: "L'application fonctionne hors ligne avec le contenu mis en cache via Service Worker",
+    onlineTooltip: "L'application est connectée au réseau et synchronisée",
+
+    // Task Focus & Goal Milestone
+    taskFocus: "Équilibre et Focus du Jour",
+    taskFocusDesc: "Analyse des tâches créées et planifiées aujourd'hui pour visualiser l'équilibre travail, vie personnelle et études.",
+    workTasks: "Travail & Projets",
+    personalTasks: "Vie & Santé",
+    studyTasks: "Études & Savoir",
+    dailyBalance: "Équilibre Quotidien",
+    goalMilestone: "Étape de l'Objectif",
+    dailyGoalCompleted: "Objectif du jour accompli avec succès !",
+    milestoneAlmostDone: "Presque terminé ! Dernier coup d'accélérateur.",
+    milestoneHalfway: "À mi-chemin de vos objectifs du jour.",
+    milestoneGoodStart: "Bonne impulsion pour démarrer la journée !",
+    milestoneNotStarted: "Prêt pour entamer votre première tâche.",
 
     // Focus Mode & Pomodoro
     focusMode: "Mode Focus",
@@ -1352,8 +1455,17 @@ export const translations: Record<LanguageCode, Translations> = {
     importConfirmWarning: "Vos données et réglages seront mis à jour avec cette sauvegarde.",
     resetAllData: "Réinitialiser aux valeurs d'usine",
     resetConfirm: "Attention : Toutes vos tâches et configurations seront définitivement effacées !",
+    clearAllUserData: "Effacer toutes les données utilisateur (Tâches, Santé, Spirituel)",
+    clearAllUserDataDesc: "Supprime toutes les tâches et journaux tout en conservant la configuration par défaut.",
+    clearUserDataConfirm: "Êtes-vous sûr de vouloir effacer toutes les données de tâches, santé et spirituelles ?",
+    clearUserDataSuccess: "Toutes les données utilisateur ont été effacées avec succès !",
     aboutTitle: "À propos d'Arasko",
+    contactUs: "Contact & Communauté",
     version: "Version 1.0.0",
+    telegramChannel: "t.me/fallt_tec",
+    followOnTelegram: "Chaîne Telegram Officielle",
+    joinTelegramBtn: "Rejoindre notre canal Telegram",
+    telegramCommunityDesc: "Rejoignez notre communauté Telegram officielle pour les dernières nouveautés, l'assistance et les échanges.",
     viewOnboardingAgain: "Revoir le guide d'accueil",
 
     onboardingWelcomeTitle: "Bienvenue sur Arasko",

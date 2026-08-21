@@ -27,9 +27,9 @@ export const AraskoMark: React.FC<{
     >
       <defs>
         <linearGradient id="araskoMarkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#818CF8" />
-          <stop offset="50%" stopColor="#6366F1" />
-          <stop offset="100%" stopColor="#4338CA" />
+          <stop offset="0%" stopColor="#38BDF8" />
+          <stop offset="50%" stopColor="#2563EB" />
+          <stop offset="100%" stopColor="#1E3A8A" />
         </linearGradient>
         <linearGradient id="araskoEmeraldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#10B981" />
@@ -90,12 +90,12 @@ export const Logo: React.FC<LogoProps> = ({
         className={`relative ${currentSize.box} rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95 ${
           variant === 'monochrome'
             ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border border-slate-700'
-            : 'bg-gradient-to-tr from-[#1E1B4B] via-[#4338CA] to-[#6366F1] text-white shadow-indigo-500/25 border border-white/20'
+            : 'bg-gradient-to-tr from-[#020617] via-[#0f1d40] to-[#1e40af] text-white shadow-blue-900/40 border border-blue-400/30'
         }`}
         id="arasko-logo-badge"
       >
         {/* Ambient 3D Specular Highlight Overlay */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/25 via-transparent to-black/20 pointer-events-none" />
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/25 via-transparent to-black/30 pointer-events-none" />
 
         {/* Geometric Stylized 'A' merged with upward checkmark/progress arrow */}
         <svg
@@ -139,7 +139,7 @@ export const Logo: React.FC<LogoProps> = ({
             className={`font-black tracking-tight font-sans bg-clip-text text-transparent ${
               variant === 'monochrome'
                 ? 'text-slate-900 dark:text-white'
-                : 'bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-800 dark:from-white dark:via-indigo-100 dark:to-indigo-300'
+                : 'bg-gradient-to-r from-slate-950 via-blue-950 to-blue-800 dark:from-white dark:via-blue-100 dark:to-sky-300'
             } ${currentSize.text}`}
           >
             Arasko

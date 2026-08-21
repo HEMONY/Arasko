@@ -241,7 +241,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
             <button
               type="button"
               onClick={handleTogglePlay}
-              className="p-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-colors"
+              className="p-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition-colors"
               title={isRunning ? t.pauseFocus : t.startFocus}
             >
               {isRunning ? <Pause size={14} /> : <Play size={14} />}
@@ -267,16 +267,16 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
       id="pomodoro-modal-backdrop"
     >
       <div
-        className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-2xl shadow-indigo-950/30 overflow-hidden flex flex-col max-h-[92vh]"
+        className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-2xl shadow-blue-950/30 overflow-hidden flex flex-col max-h-[92vh]"
         id="pomodoro-modal-container"
       >
         {/* 3D Top Ambient Gradient Glow */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-indigo-500/10 via-purple-500/5 to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-600/10 via-sky-600/5 to-transparent pointer-events-none" />
 
         {/* Header Bar */}
         <div className="relative px-6 pt-5 pb-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-800 text-white shadow-md shadow-indigo-500/20 border border-white/20">
+            <div className="p-2.5 rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-600 text-white shadow-md shadow-blue-900/30 border border-white/20">
               <AraskoMark size={22} variant="white" />
             </div>
             <div>
@@ -299,7 +299,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
               }}
               className={`p-2 rounded-xl transition-colors ${
                 soundEnabled
-                  ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60'
+                  ? 'text-blue-600 dark:text-sky-400 bg-blue-50 dark:bg-blue-950/60'
                   : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
               title="تفعيل/تعطيل الصوت"
@@ -344,7 +344,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
               onClick={() => handleModeChange('focus')}
               className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                 mode === 'focus'
-                  ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-sky-400 shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
@@ -370,7 +370,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
               onClick={() => handleModeChange('longBreak')}
               className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                 mode === 'longBreak'
-                  ? 'bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400 shadow-sm'
+                  ? 'bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400 shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
@@ -388,8 +388,8 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
                 onClick={() => handleDurationSelect(min)}
                 className={`py-1 px-3 rounded-xl text-xs font-bold transition-all border ${
                   selectedMinutes === min
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm scale-105'
-                    : 'bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-indigo-400'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm scale-105'
+                    : 'bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-400'
                 }`}
               >
                 {min} {language === 'ar' ? 'دقيقة' : 'min'}
@@ -403,7 +403,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
               {/* Outer 3D Ambient Ring & Glow */}
               <div
                 className={`absolute inset-0 rounded-full blur-2xl opacity-20 transition-colors duration-500 ${
-                  mode === 'focus' ? 'bg-indigo-500' : 'bg-emerald-500'
+                  mode === 'focus' ? 'bg-blue-600' : 'bg-emerald-500'
                 }`}
               />
 
@@ -411,9 +411,9 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
               <svg className="w-full h-full -rotate-90 filter drop-shadow-lg" viewBox="0 0 240 240">
                 <defs>
                   <linearGradient id="focusProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#818CF8" />
-                    <stop offset="50%" stopColor="#6366F1" />
-                    <stop offset="100%" stopColor="#4338CA" />
+                    <stop offset="0%" stopColor="#38BDF8" />
+                    <stop offset="50%" stopColor="#2563EB" />
+                    <stop offset="100%" stopColor="#1E3A8A" />
                   </linearGradient>
                   <linearGradient id="breakProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#34D399" />
@@ -470,14 +470,14 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
                   <button
                     type="button"
                     onClick={() => handleAddMinutes(1)}
-                    className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-colors"
+                    className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950 text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors"
                   >
                     +1 {language === 'ar' ? 'د' : 'm'}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleAddMinutes(5)}
-                    className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-colors"
+                    className="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950 text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors"
                   >
                     +5 {language === 'ar' ? 'د' : 'm'}
                   </button>
@@ -506,7 +506,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
                 isRunning
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 shadow-amber-500/30'
                   : mode === 'focus'
-                  ? 'bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 shadow-indigo-600/35 border border-white/20'
+                  ? 'bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 shadow-blue-600/35 border border-white/20'
                   : 'bg-gradient-to-r from-emerald-600 to-teal-700 shadow-emerald-600/35 border border-white/20'
               }`}
             >
@@ -537,7 +537,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
           {/* Associated Task Selector */}
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 mb-2">
-              <ListTodo size={15} className="text-indigo-600 dark:text-indigo-400" />
+              <ListTodo size={15} className="text-blue-600 dark:text-sky-400" />
               <span>{t.selectTaskForPomodoro}</span>
             </label>
 
@@ -548,7 +548,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
                   triggerVibration(15);
                   setSelectedTaskId(e.target.value || undefined);
                 }}
-                className="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">
                   -- {language === 'ar' ? 'تركيز عام بدون مهمة محددة' : 'General Focus Session'} --
@@ -565,8 +565,8 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
 
             {/* If task is selected, show option to complete it */}
             {activeTask && onTaskComplete && (
-              <div className="mt-2.5 flex items-center justify-between p-2.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/40">
-                <span className="text-xs font-bold text-indigo-900 dark:text-indigo-200 truncate">
+              <div className="mt-2.5 flex items-center justify-between p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40">
+                <span className="text-xs font-bold text-blue-900 dark:text-sky-200 truncate">
                   {activeTask.title}
                 </span>
                 <button
@@ -575,7 +575,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
                     triggerVibration([30, 50, 30]);
                     onTaskComplete(activeTask.id);
                   }}
-                  className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold flex items-center gap-1 transition-colors shrink-0"
+                  className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold flex items-center gap-1 transition-colors shrink-0"
                 >
                   <Check size={13} />
                   <span>{t.markCompleted}</span>
@@ -590,7 +590,7 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({
               <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold block">
                 {t.completedCyclesCount}
               </span>
-              <span className="text-xl font-black text-indigo-600 dark:text-indigo-400 font-mono">
+              <span className="text-xl font-black text-blue-600 dark:text-sky-400 font-mono">
                 {completedCycles}
               </span>
             </div>

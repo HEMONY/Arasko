@@ -107,7 +107,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             onClick={() => setSubView('monthly')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-floating-4k ${
               subView === 'monthly'
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-blue-600 text-white'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
             id="subview-monthly-btn"
@@ -119,7 +119,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             onClick={() => setSubView('yearly')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-floating-4k ${
               subView === 'yearly'
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-blue-600 text-white'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
             id="subview-yearly-btn"
@@ -203,9 +203,9 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                     onClick={() => setSelectedDate(cell.dateStr)}
                     className={`h-11 sm:h-13 rounded-2xl p-1 flex flex-col items-center justify-between transition-all relative ${
                       isSelected
-                        ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/20 scale-102 ring-2 ring-indigo-500/40'
+                        ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-500/20 scale-102 ring-2 ring-blue-500/40'
                         : isToday
-                        ? 'bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-300 dark:border-indigo-800 text-indigo-900 dark:text-indigo-200 font-bold'
+                        ? 'bg-blue-50 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-800 text-blue-900 dark:text-sky-200 font-bold'
                         : 'bg-slate-50/50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                     id={`cal-cell-${cell.dateStr}`}
@@ -259,7 +259,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               <button
                 type="button"
                 onClick={() => onAddTaskForDate(selectedDate)}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-colors"
                 id="cal-add-date-task-btn"
               >
                 <Plus size={14} /> {t.addNewTask}
@@ -296,7 +296,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           {/* Year Overview Grid (12 Months mini-matrices) */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k">
             <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
-              <Layers size={16} className="text-indigo-600" />
+              <Layers size={16} className="text-blue-600 dark:text-sky-400" />
               {t.monthOverview} ({year})
             </h3>
 
@@ -324,10 +324,10 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       setCurrentDate(new Date(year, mIdx, 1));
                       setSubView('monthly');
                     }}
-                    className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all cursor-pointer group shadow-floating-4k card-floating-4k"
+                    className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-600 transition-all cursor-pointer group shadow-floating-4k card-floating-4k"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-indigo-600">
+                      <span className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-sky-400">
                         {mName}
                       </span>
                       <span className="text-[10px] text-slate-400 font-medium">
@@ -349,7 +349,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                             key={dayIndex}
                             className={`w-2 h-2 rounded-xs ${
                               hasTask
-                                ? 'bg-indigo-600 dark:bg-indigo-400'
+                                ? 'bg-blue-600 dark:bg-sky-400'
                                 : 'bg-slate-200 dark:bg-slate-700'
                             }`}
                           />
@@ -371,7 +371,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           {/* Yearly Milestones & Long-term Goals */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k">
             <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
-              <CalendarIcon size={16} className="text-purple-600" />
+              <CalendarIcon size={16} className="text-blue-500" />
               {t.yearMilestones}
             </h3>
 

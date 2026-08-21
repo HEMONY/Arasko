@@ -318,28 +318,28 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
       case 0:
       default:
         return isToday
-          ? 'bg-indigo-900/60 text-indigo-300 border-indigo-400 ring-2 ring-indigo-400/50'
+          ? 'bg-blue-900/70 text-sky-200 border-sky-400 ring-2 ring-sky-400/50'
           : 'bg-white/5 text-white/40 border-white/10 hover:bg-white/10';
     }
   };
 
   return (
     <div
-      className="relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-tr from-[#161338] via-[#24205B] to-[#3B349E] text-white shadow-floating-4k card-floating-4k select-none border border-indigo-500/20"
+      className="relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-tr from-[#020617] via-[#09152e] to-[#122852] text-white shadow-floating-4k card-floating-4k select-none border border-blue-500/25"
       id="today-summary-component"
     >
-      {/* 3D Ambient Specular Lighting Effects */}
-      <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 rounded-full bg-purple-500/20 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-48 h-48 rounded-full bg-emerald-400/15 blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/3 w-32 h-32 rounded-full bg-cyan-400/10 blur-2xl pointer-events-none" />
+      {/* Ambient Specular Lighting Effects */}
+      <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 rounded-full bg-blue-600/20 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-48 h-48 rounded-full bg-cyan-400/15 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/3 w-32 h-32 rounded-full bg-sky-400/10 blur-2xl pointer-events-none" />
 
       <div className="relative z-10 space-y-4">
         {/* TOP BAR: Date + Streak Pill + View Mode Switcher */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold uppercase tracking-wider text-indigo-200 flex items-center gap-1.5">
-                <CalendarIcon size={13} className="text-indigo-300" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <CalendarIcon size={13} className="text-sky-300" />
                 <span>{getFormattedDate()}</span>
               </span>
 
@@ -369,20 +369,20 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
               <span>{completionRate === 100 && totalCount > 0 ? t.greatJobAllDone : t.todayProgress}</span>
             </h2>
 
-            <p className="text-xs sm:text-sm text-indigo-200 font-medium">
+            <p className="text-xs sm:text-sm text-slate-300 font-medium">
               {getMotivationalMessage()}
             </p>
           </div>
 
           {/* View Mode Toggle Switch (Ring / Both / HeatMap) */}
-          <div className="flex items-center bg-black/30 backdrop-blur-md p-1 rounded-2xl border border-white/10 text-xs self-stretch sm:self-auto justify-between sm:justify-start">
+          <div className="flex items-center bg-black/40 backdrop-blur-md p-1 rounded-2xl border border-white/10 text-xs self-stretch sm:self-auto justify-between sm:justify-start">
             <button
               type="button"
               onClick={() => setActiveViewMode('ring')}
               className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
                 activeViewMode === 'ring'
-                  ? 'bg-white/20 text-white shadow-xs'
-                  : 'text-indigo-200 hover:text-white'
+                  ? 'bg-blue-600/80 text-white shadow-xs'
+                  : 'text-slate-300 hover:text-white'
               }`}
             >
               {language === 'ar' ? 'حلقة اليوم' : 'Ring'}
@@ -392,8 +392,8 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
               onClick={() => setActiveViewMode('both')}
               className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
                 activeViewMode === 'both'
-                  ? 'bg-white/20 text-white shadow-xs'
-                  : 'text-indigo-200 hover:text-white'
+                  ? 'bg-blue-600/80 text-white shadow-xs'
+                  : 'text-slate-300 hover:text-white'
               }`}
             >
               {language === 'ar' ? 'الكل' : 'Overview'}
@@ -403,8 +403,8 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
               onClick={() => setActiveViewMode('heatmap')}
               className={`px-3 py-1.5 rounded-xl font-bold transition-all ${
                 activeViewMode === 'heatmap'
-                  ? 'bg-white/20 text-white shadow-xs'
-                  : 'text-indigo-200 hover:text-white'
+                  ? 'bg-blue-600/80 text-white shadow-xs'
+                  : 'text-slate-300 hover:text-white'
               }`}
             >
               {language === 'ar' ? 'خريطة 30 يوماً' : '30-Day Map'}
@@ -427,8 +427,8 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
                       <stop offset="100%" stopColor="#06B6D4" />
                     </linearGradient>
                     <linearGradient id="ringGradConsistency" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#818CF8" />
-                      <stop offset="100%" stopColor="#6366F1" />
+                      <stop offset="0%" stopColor="#38BDF8" />
+                      <stop offset="100%" stopColor="#2563EB" />
                     </linearGradient>
                   </defs>
 
@@ -489,7 +489,7 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
               {/* Ring Legend & Task Breakdown */}
               <div className="space-y-1 text-start">
                 <div>
-                  <span className="block text-[10px] text-indigo-200 uppercase font-bold tracking-wider">
+                  <span className="block text-[10px] text-slate-300 uppercase font-bold tracking-wider">
                     {t.todayProgress}
                   </span>
                   <span className="text-xs font-black text-white flex items-center gap-1">
@@ -499,11 +499,11 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
                 </div>
 
                 <div className="pt-1">
-                  <span className="block text-[10px] text-indigo-200 uppercase font-bold tracking-wider">
+                  <span className="block text-[10px] text-slate-300 uppercase font-bold tracking-wider">
                     {language === 'ar' ? 'الاستمرارية (30 يوم)' : '30-Day Consistency'}
                   </span>
-                  <span className="text-xs font-black text-indigo-200 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-indigo-400 inline-block" />
+                  <span className="text-xs font-black text-sky-200 flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
                     {consistencyRate30}% ({activeDays30}/30 {language === 'ar' ? 'يوم نشط' : 'active days'})
                   </span>
                 </div>
@@ -513,7 +513,7 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
             {/* Quick Metrics Cards */}
             <div className="sm:col-span-7 grid grid-cols-3 gap-2">
               <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/10 text-center">
-                <div className="text-[10px] uppercase font-bold text-indigo-200 truncate">
+                <div className="text-[10px] uppercase font-bold text-slate-300 truncate">
                   {t.completed}
                 </div>
                 <div className="text-lg sm:text-xl font-black text-emerald-300 mt-0.5">
@@ -525,7 +525,7 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
               </div>
 
               <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/10 text-center">
-                <div className="text-[10px] uppercase font-bold text-indigo-200 truncate">
+                <div className="text-[10px] uppercase font-bold text-slate-300 truncate">
                   {t.notStarted}
                 </div>
                 <div className="text-lg sm:text-xl font-black text-amber-300 mt-0.5">
@@ -537,14 +537,14 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
               </div>
 
               <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/10 text-center">
-                <div className="text-[10px] uppercase font-bold text-indigo-200 truncate">
+                <div className="text-[10px] uppercase font-bold text-slate-300 truncate">
                   {t.streakDays}
                 </div>
                 <div className="text-lg sm:text-xl font-black text-orange-300 mt-0.5 flex items-center justify-center gap-1">
                   <Flame size={16} className="fill-current text-amber-400" />
                   <span>{streakCount}</span>
                 </div>
-                <div className="text-[10px] text-indigo-200 font-medium truncate">
+                <div className="text-[10px] text-slate-300 font-medium truncate">
                   {language === 'ar' ? `الأفضل: ${longestStreak}` : `Best: ${longestStreak}d`}
                 </div>
               </div>
@@ -555,20 +555,20 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
         {/* SECTION 2: 30-DAY CALENDAR HEAT-MAP GRID */}
         {(activeViewMode === 'heatmap' || activeViewMode === 'both') && (
           <div
-            className="p-4 rounded-2xl bg-black/25 backdrop-blur-md border border-white/15 space-y-3 shadow-inner"
+            className="p-4 rounded-2xl bg-black/35 backdrop-blur-md border border-white/15 space-y-3 shadow-inner"
             id="today-summary-30day-heatmap"
           >
             {/* Heatmap Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CalendarIcon size={14} className="text-indigo-300" />
-                <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-100">
+                <CalendarIcon size={14} className="text-sky-300" />
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-100">
                   {language === 'ar' ? 'خريطة إنجازات الـ 30 يوماً الماضية' : '30-Day Activity Heat-Map'}
                 </h4>
               </div>
 
               {/* Quick Heatmap Stats */}
-              <div className="flex items-center gap-3 text-[11px] font-semibold text-indigo-200">
+              <div className="flex items-center gap-3 text-[11px] font-semibold text-slate-300">
                 <span className="flex items-center gap-1">
                   <Trophy size={12} className="text-amber-400" />
                   <span>{total30DayCompleted} {language === 'ar' ? 'مهمة منجزة' : 'tasks done'}</span>
@@ -605,7 +605,7 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
 
                     {/* Today indicator dot */}
                     {day.isToday && (
-                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 ring-2 ring-indigo-950 animate-ping" />
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 ring-2 ring-slate-950 animate-ping" />
                     )}
                   </button>
                 );
@@ -638,7 +638,7 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
             )}
 
             {/* Heat-Map Legend */}
-            <div className="flex items-center justify-between text-[10px] text-indigo-200/80 pt-1 border-t border-white/10">
+            <div className="flex items-center justify-between text-[10px] text-slate-300/80 pt-1 border-t border-white/10">
               <span>{language === 'ar' ? 'أقل نشاطاً' : 'Less active'}</span>
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-md bg-white/10 border border-white/10" title="0" />
@@ -654,7 +654,7 @@ export const TodaySummary: React.FC<TodaySummaryProps> = ({
 
         {/* Dynamic Horizontal Progress Bar */}
         <div className="pt-2 border-t border-white/10 space-y-1.5" id="today-summary-progress-bar">
-          <div className="flex items-center justify-between text-xs text-indigo-200 font-medium">
+          <div className="flex items-center justify-between text-xs text-slate-300 font-medium">
             <span className="flex items-center gap-1.5">
               <AraskoMark size={15} variant="white" />
               <span>

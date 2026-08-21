@@ -1,30 +1,31 @@
-// Arasko Service Worker - Offline First Architecture
-const CACHE_NAME = 'arasko-cache-v2.1';
+// Arasko Service Worker - Cache-First Offline Architecture
+const CACHE_NAME = 'arasko-v1.0.0';
 const OFFLINE_FALLBACK_URL = '/';
 
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/src/main.tsx',
-  '/src/index.css',
+  '/icon.svg',
+  '/icon-192.png',
+  '/icon-512.png',
 ];
 
-// Install Event: Precaching core app shell
+// Install Event: Precaching static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then((cache) => {
         return cache.addAll(PRECACHE_ASSETS).catch((err) => {
-          console.warn('[SW] Pre-caching partial failure, proceeding gracefully:', err);
+          console.warn('[SW] Pre-caching asset error (handled):', err);
         });
       })
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate Event: Clean up stale caches
+// Activate Event: Clear outdated caches and claim clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
@@ -43,7 +44,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event: Offline-first with cache-first / stale-while-revalidate strategy
+// Fetch Event: Pure Cache-First Strategy for all static assets and dynamic offline fallback
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
@@ -52,40 +53,65 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // Handle SPA navigation requests
+  // Ignore chrome-extension or other non-http schemes
+  if (!url.protocol.startsWith('http')) return;
+
+  // Navigation requests (HTML / SPA route changes)
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseToCache);
+      caches.match(request).then((cachedResponse) => {
+        if (cachedResponse) {
+          // Serve from cache immediately, refresh in background
+          fetch(request)
+            .then((networkResponse) => {
+              if (networkResponse && networkResponse.status === 200) {
+                const responseToCache = networkResponse.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                  cache.put(request, responseToCache);
+                });
+              }
+            })
+            .catch(() => {
+              // Network failed, cache served
             });
-          }
-          return networkResponse;
-        })
-        .catch(async () => {
-          // If offline, serve cached page or fallback
-          const cachedResponse = await caches.match(request);
-          if (cachedResponse) return cachedResponse;
-          const fallback = await caches.match(OFFLINE_FALLBACK_URL);
-          if (fallback) return fallback;
-          return new Response('Offline - Arasko is ready when you are.', {
-            headers: { 'Content-Type': 'text/plain' },
+          return cachedResponse;
+        }
+
+        // Not in cache, try network
+        return fetch(request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const responseToCache = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(request, responseToCache);
+              });
+            }
+            return networkResponse;
+          })
+          .catch(async () => {
+            // Network failed - return cached index.html or root
+            const fallback = (await caches.match('/index.html')) || (await caches.match(OFFLINE_FALLBACK_URL));
+            if (fallback) return fallback;
+            return new Response('Arasko is offline. Please reopen when online or cached.', {
+              headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+            });
           });
-        })
+      })
     );
     return;
   }
 
-  // Handle Static Assets (JS, CSS, Images, Fonts, Audio, WebP, SVG)
+  // Static Assets & Resources: Cache-First Strategy
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
-      // Return cached version if found
-      const fetchPromise = fetch(request)
+      if (cachedResponse) {
+        // Return from cache immediately
+        return cachedResponse;
+      }
+
+      // If not in cache, fetch from network and cache it
+      return fetch(request)
         .then((networkResponse) => {
-          // Cache successful responses from same-origin or trusted font CDN
           if (
             networkResponse &&
             networkResponse.status === 200 &&
@@ -98,14 +124,13 @@ self.addEventListener('fetch', (event) => {
           }
           return networkResponse;
         })
-        .catch((err) => {
-          // Network drop - swallow error if we already have cache
-          if (cachedResponse) return cachedResponse;
-          console.warn('[SW] Offline fetch fallback for:', request.url, err);
+        .catch(() => {
+          // Network failure: return fallback or 408
+          if (request.destination === 'image') {
+            return caches.match('/icon-192.png');
+          }
           return new Response('', { status: 408, statusText: 'Offline Network Timeout' });
         });
-
-      return cachedResponse || fetchPromise;
     })
   );
 });
