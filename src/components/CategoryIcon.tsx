@@ -8,7 +8,6 @@ import {
   Home,
   CheckCircle2,
   Calendar,
-  Sparkles,
   Flame,
   Clock,
   Award,
@@ -17,6 +16,7 @@ import {
   Smile,
   Compass,
 } from 'lucide-react';
+import { AraskoMark } from './Logo';
 
 interface CategoryIconProps {
   name: string;
@@ -33,7 +33,6 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; size?: n
   Home,
   CheckCircle2,
   Calendar,
-  Sparkles,
   Flame,
   Clock,
   Award,
@@ -44,6 +43,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; size?: n
 };
 
 export const CategoryIcon: React.FC<CategoryIconProps> = ({ name, className = '', size = 18 }) => {
+  if (name === 'Sparkles' || name === 'AraskoMark' || name === 'Logo' || name === 'arasko') {
+    return <AraskoMark className={className} size={size} variant="gradient" />;
+  }
   const IconComponent = iconMap[name] || Target;
   return <IconComponent className={className} size={size} />;
 };
@@ -57,7 +59,7 @@ export const AVAILABLE_CATEGORY_ICONS = [
   'Home',
   'CheckCircle2',
   'Calendar',
-  'Sparkles',
+  'AraskoMark',
   'Flame',
   'Clock',
   'Award',

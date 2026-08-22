@@ -11,10 +11,18 @@ import {
   FileText,
   AlertCircle,
   Repeat,
+  Music,
+  Volume2,
+  Play,
+  Square,
+  UploadCloud,
+  Flame,
   Sparkles,
+  Check,
 } from 'lucide-react';
 import {
   CompletionStatus,
+  CustomToneItem,
   LanguageCode,
   PriorityLevel,
   RecurrenceOption,
@@ -25,6 +33,14 @@ import {
 } from '../types';
 import { translations } from '../i18n/translations';
 import { CategoryIcon } from './CategoryIcon';
+import { AudioStorageService } from '../services/audioStorage';
+import {
+  playAlertSound,
+  playCustomAudioUrl,
+  stopAllAudio,
+  subscribeAudioState,
+  triggerVibration,
+} from '../services/soundEngine';
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -62,12 +78,36 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   const [reminders, setReminders] = useState<ReminderItem[]>([
     { id: 'rem_default', minutesBefore: 15, triggered: false },
   ]);
+  const [customSoundChoice, setCustomSoundChoice] = useState<string>('');
+  const [customTones, setCustomTones] = useState<CustomToneItem[]>([]);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [uploadFeedback, setUploadFeedback] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
   const [imageAttachment, setImageAttachment] = useState<string | undefined>();
   const [errors, setErrors] = useState<{ title?: string }>({});
 
+  // Subscribe to audio state for play/stop button synchronization
+  useEffect(() => {
+    const unsubscribe = subscribeAudioState((playing) => {
+      setIsPlayingAudio(playing);
+    });
+    return () => {
+      unsubscribe();
+      stopAllAudio();
+    };
+  }, []);
+
+  // Load custom tones from IndexedDB when modal is active
   useEffect(() => {
     if (isOpen) {
+      AudioStorageService.getAllTones()
+        .then((tones) => {
+          setCustomTones(tones);
+        })
+        .catch((err) => {
+          console.warn('Failed to load custom tones in TaskModal:', err);
+        });
+
       if (initialTask) {
         setTitle(initialTask.title);
         setDescription(initialTask.description || '');
@@ -79,6 +119,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
         setRecurrence(initialTask.recurrence || 'none');
         setSubTasks(initialTask.subTasks ? [...initialTask.subTasks] : []);
         setReminders(initialTask.reminders ? [...initialTask.reminders] : []);
+        setCustomSoundChoice(initialTask.customSoundChoice || '');
         setNotes(initialTask.notes || '');
         setImageAttachment(initialTask.imageAttachment);
       } else {
@@ -101,11 +142,15 @@ export const TaskModal: React.FC<TaskModalProps> = ({
         setRecurrence('none');
         setSubTasks([]);
         setReminders([{ id: `rem_${Date.now()}`, minutesBefore: 15, triggered: false }]);
+        setCustomSoundChoice('');
         setNotes('');
         setImageAttachment(undefined);
       }
       setErrors({});
       setNewSubTaskTitle('');
+      setUploadFeedback(null);
+    } else {
+      stopAllAudio();
     }
   }, [isOpen, initialTask, categories, selectedDateStr]);
 
@@ -157,6 +202,64 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     }
   };
 
+  // Preview the currently selected alert sound
+  const handlePreviewTone = async () => {
+    triggerVibration(25);
+    if (isPlayingAudio) {
+      stopAllAudio();
+      return;
+    }
+
+    const soundToPlay = customSoundChoice || 'chime';
+    if (soundToPlay.startsWith('custom_')) {
+      const toneId = soundToPlay.replace('custom_', '');
+      const tone = customTones.find((t) => t.id === toneId) || (await AudioStorageService.getTone(toneId));
+      if (tone?.dataUrl) {
+        playCustomAudioUrl(tone.dataUrl, soundToPlay);
+      } else {
+        playAlertSound('chime');
+      }
+    } else {
+      playAlertSound(soundToPlay);
+    }
+  };
+
+  // Upload local audio file directly within TaskModal
+  const handleDirectAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const cleanName = file.name.replace(/\.[^/.]+$/, '').trim() || 'Task Audio';
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const dataUrl = reader.result as string;
+        const newTone: CustomToneItem = {
+          id: `tone_${Date.now()}`,
+          name: cleanName,
+          category: priority === 'urgent' || priority === 'important' ? 'sad' : 'general',
+          dataUrl,
+          fileName: file.name,
+          fileSizeKb: Math.round(file.size / 1024),
+          createdAt: new Date().toISOString(),
+        };
+
+        await AudioStorageService.saveTone(newTone);
+        const all = await AudioStorageService.getAllTones();
+        setCustomTones(all);
+        setCustomSoundChoice(`custom_${newTone.id}`);
+        setUploadFeedback(t.toneAddedSuccess);
+        playCustomAudioUrl(dataUrl, `custom_${newTone.id}`);
+        triggerVibration([50, 50, 100]);
+
+        setTimeout(() => setUploadFeedback(null), 3500);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Failed to upload audio in modal:', err);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
@@ -176,6 +279,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       recurrence,
       subTasks,
       reminders,
+      customSoundChoice: customSoundChoice || undefined,
       notes: notes.trim() || undefined,
       imageAttachment,
       createdAt: initialTask?.createdAt || new Date().toISOString(),
@@ -186,6 +290,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       isArchived: initialTask?.isArchived || false,
     };
 
+    stopAllAudio();
     onSave(taskToSave);
     onClose();
   };
@@ -489,6 +594,118 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                 );
               })}
             </div>
+          </div>
+
+          {/* Select Custom Alert Sound Section */}
+          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 space-y-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <Music size={13} className="text-indigo-500" />
+                {t.selectCustomAlertSound}
+              </label>
+
+              {(priority === 'urgent' || priority === 'important') && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/60 animate-pulse">
+                  <Flame size={11} className="text-amber-500" />
+                  {t.highPrioritySoundRecommendation}
+                </span>
+              )}
+            </div>
+
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              {t.selectCustomAlertSoundDesc}
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+              {/* Dropdown for sound choice */}
+              <div className="relative flex-1">
+                <select
+                  value={customSoundChoice}
+                  onChange={(e) => {
+                    setCustomSoundChoice(e.target.value);
+                    stopAllAudio();
+                  }}
+                  className="w-full pl-3 pr-8 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-xs font-medium focus:outline-hidden focus:border-indigo-500 transition-colors shadow-2xs"
+                  id="task-custom-sound-select"
+                >
+                  <option value="">{t.defaultSystemTone}</option>
+
+                  {/* Locally stored custom audio files from IndexedDB */}
+                  {customTones.length > 0 && (
+                    <optgroup label={`📁 ${t.locallyStoredAudioFiles} (${customTones.length})`}>
+                      {customTones.map((tone) => (
+                        <option key={tone.id} value={`custom_${tone.id}`}>
+                          🎵 {tone.name} {tone.durationSeconds ? `(${tone.durationSeconds}s)` : ''}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+
+                  {/* Built-in high priority and general tones */}
+                  <optgroup label={`✨ ${t.builtInMelodies}`}>
+                    <option value="bell">🔔 Bell Chime (High Priority)</option>
+                    <option value="chime">✨ Uplifting Harmonic Chime</option>
+                    <option value="ping">⚡ Fast Resonance Ping</option>
+                    <option value="zen">🧘 Peaceful Zen Bell</option>
+                    <option value="harp">🎻 Elegant Harp Arpeggio</option>
+                    <option value="arasko_sad_1">🚨 Arasko Urgent Alert Tone 1</option>
+                    <option value="arasko_sad_2">⚠️ Arasko Urgent Alert Tone 2</option>
+                    <option value="sad_alarm">⏰ Deep Alert Pulse</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-1.5 shrink-0">
+                {/* Preview / Stop Button */}
+                <button
+                  type="button"
+                  onClick={handlePreviewTone}
+                  className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-2xs ${
+                    isPlayingAudio
+                      ? 'bg-rose-500 hover:bg-rose-600 text-white animate-pulse'
+                      : 'bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+                  }`}
+                  id="task-sound-preview-btn"
+                  title={isPlayingAudio ? t.stopSound : t.previewSound}
+                >
+                  {isPlayingAudio ? (
+                    <>
+                      <Square size={13} className="fill-current" />
+                      <span>{t.stopSound}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 size={13} />
+                      <span>{t.previewSound}</span>
+                    </>
+                  )}
+                </button>
+
+                {/* Upload Local Audio File directly */}
+                <label
+                  className="px-3 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
+                  id="task-sound-upload-btn"
+                  title={t.uploadNewAudioForTask}
+                >
+                  <UploadCloud size={13} className="text-slate-500 dark:text-slate-400" />
+                  <span className="hidden sm:inline">{t.uploadNewAudioForTask}</span>
+                  <span className="sm:hidden">{t.uploadNewAudioForTask}</span>
+                  <input
+                    type="file"
+                    accept="audio/*,.mp3,.wav,.m4a,.ogg,.aac"
+                    onChange={handleDirectAudioUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+
+            {uploadFeedback && (
+              <div className="flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800 animate-fade-in">
+                <Check size={12} />
+                <span>{uploadFeedback}</span>
+              </div>
+            )}
           </div>
 
           {/* Description & Notes */}

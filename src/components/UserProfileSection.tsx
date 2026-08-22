@@ -6,7 +6,6 @@ import {
   GraduationCap,
   Lightbulb,
   Plus,
-  Sparkles,
   User,
   UserCheck,
 } from 'lucide-react';
@@ -20,6 +19,7 @@ import {
   getUserPersonalizedTemplates,
 } from '../data/userProfileData';
 import { triggerVibration } from '../services/soundEngine';
+import { AraskoMark } from './Logo';
 
 interface UserProfileSectionProps {
   settings: AppSettings;
@@ -123,8 +123,8 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
             )}
           </div>
           <div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-300 flex items-center gap-1">
-              <Sparkles size={12} />
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-300 flex items-center gap-1.5">
+              <AraskoMark size={14} variant="gradient" className="shrink-0" />
               {language === 'ar' ? 'المساعد الشخصي المخصص' : 'Personalized Profile'}
             </span>
             <h3 className="text-lg sm:text-xl font-black">{personalizedGreeting}</h3>
@@ -206,7 +206,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
               }`}
               id="role-btn-other"
             >
-              <Sparkles size={18} />
+              <AraskoMark size={18} variant="gradient" className="shrink-0" />
               <span>{t.roleOther}</span>
             </button>
           </div>
@@ -296,26 +296,32 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
 
       {/* Specialized Task Templates for Domain */}
       {personalizedTemplates.length > 0 && onApplyTemplateToTasks && (
-        <div className="p-5 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
-          <div className="flex items-center gap-2 text-sky-600 dark:text-sky-400 font-bold text-sm">
-            <Sparkles size={18} />
-            <span>{t.specializedTemplates}</span>
+        <div className="p-5 rounded-3xl border border-blue-200/70 dark:border-blue-900/60 bg-gradient-to-br from-white via-blue-50/20 to-sky-50/30 dark:from-slate-900 dark:via-[#09152f] dark:to-[#03091e] shadow-floating-4k card-floating-4k space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-blue-700 dark:text-sky-400 font-bold text-sm">
+              <AraskoMark size={20} variant="gradient" className="shrink-0" />
+              <span>{t.specializedTemplates}</span>
+            </div>
+            <span className="text-[11px] font-semibold text-blue-600 dark:text-sky-300 bg-blue-100/70 dark:bg-blue-950/70 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-800/60">
+              {personalizedTemplates.length} {language === 'ar' ? 'قوالب جاهزة' : 'Templates'}
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {personalizedTemplates.map((tpl, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 flex flex-col justify-between gap-3"
+                className="p-4 rounded-2xl border border-blue-200/60 dark:border-blue-900/50 bg-white/90 dark:bg-[#071129]/90 backdrop-blur-md flex flex-col justify-between gap-3.5 shadow-floating-4k card-floating-4k hover:border-blue-400 dark:hover:border-sky-500/60 transition-all group"
               >
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                    {tpl.title}
-                  </h4>
-                  <ul className="mt-2 space-y-1 text-[11px] text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
+                    <AraskoMark size={14} variant="gradient" className="shrink-0" />
+                    <h4>{tpl.title}</h4>
+                  </div>
+                  <ul className="mt-2.5 space-y-1.5 text-[11px] text-slate-600 dark:text-slate-300">
                     {tpl.steps.slice(0, 3).map((s, sIdx) => (
-                      <li key={sIdx} className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0" />
+                      <li key={sIdx} className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-500 to-sky-400 shrink-0" />
                         <span className="truncate">{s}</span>
                       </li>
                     ))}
@@ -325,7 +331,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
                 <button
                   type="button"
                   onClick={() => handleApplyTemplate(tpl)}
-                  className="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 active:scale-95 text-white font-bold text-xs shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-1.5"
                 >
                   <Plus size={14} />
                   <span>{t.applyTemplate}</span>

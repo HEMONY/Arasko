@@ -276,7 +276,7 @@ export const SmartAssistantView: React.FC<SmartAssistantViewProps> = ({
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap size={18} className="text-blue-600 dark:text-sky-400" />
+            <AraskoMark size={18} variant="gradient" className="shrink-0" />
             <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
               {t.smartPriorityOrder}
             </h3>

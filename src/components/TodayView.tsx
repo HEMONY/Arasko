@@ -13,9 +13,9 @@ import {
   Archive,
   Trash2,
   AlertCircle,
-  Sparkles,
   Send,
   ChevronDown,
+  Filter,
 } from 'lucide-react';
 import { LanguageCode, PriorityLevel, TaskCategory, TaskItem } from '../types';
 import { translations } from '../i18n/translations';
@@ -255,68 +255,73 @@ export const TodayView: React.FC<TodayViewProps> = ({
         language={language}
       />
 
-      {/* 2. Horizontal Chip Selector (Categories Filter) */}
-      <div className="space-y-1.5" id="today-category-chips-wrapper">
+      {/* 2. Category-based Filtering Tabs (Work, Personal, Health, Spiritual, etc.) */}
+      <div className="space-y-2 bg-white dark:bg-slate-900/90 p-3 sm:p-3.5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-floating-4k card-floating-4k" id="today-category-tabs-container">
         <div className="flex items-center justify-between px-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-            <Layers size={13} className="text-blue-500" />
-            <span>{language === 'ar' ? 'تصنيف المهام والتركيز' : 'Focus Category'}</span>
-          </span>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-lg bg-blue-50 dark:bg-blue-950/70 border border-blue-200/60 dark:border-blue-800/60 flex items-center justify-center text-blue-600 dark:text-sky-400">
+              <Filter size={13} />
+            </div>
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+              {language === 'ar' ? 'تصنيف المهام والتركيز' : language === 'fr' ? 'Catégories & Focus' : 'Category Focus Tabs'}
+            </span>
+          </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             {/* Multi-Select Mode Toggle Button */}
             <button
               type="button"
               onClick={toggleSelectMode}
-              className={`text-xs font-bold px-2.5 py-1 rounded-xl transition-all flex items-center gap-1.5 ${
+              className={`text-[11px] font-bold px-2.5 py-1 rounded-xl transition-all flex items-center gap-1.5 ${
                 isSelectMode
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-blue-600 dark:text-sky-400 hover:bg-blue-50 dark:hover:bg-blue-950/50'
               }`}
               id="toggle-multi-select-btn"
             >
               <CheckSquare size={13} />
-              <span>{isSelectMode ? (language === 'ar' ? 'إلغاء التحديد' : 'Cancel Select') : (language === 'ar' ? 'تحديد متعدد' : 'Select Multiple')}</span>
+              <span>{isSelectMode ? (language === 'ar' ? 'إلغاء التحديد' : 'Cancel Select') : (language === 'ar' ? 'تحديد متعدد' : 'Multi-Select')}</span>
             </button>
 
             {selectedCategory !== 'all' && (
               <button
                 type="button"
                 onClick={() => handleCategorySelect('all')}
-                className="text-[11px] text-blue-600 dark:text-sky-400 font-bold hover:underline"
+                className="text-[11px] text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-sky-400 font-bold underline"
               >
-                {language === 'ar' ? 'عرض الكل' : 'Show All'}
+                {language === 'ar' ? 'إعادة ضبط' : 'Reset'}
               </button>
             )}
           </div>
         </div>
 
-        {/* Scrollable Horizontal Chip Bar */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 scrollbar-none snap-x" id="today-category-horizontal-chips">
-          {/* "All" Chip */}
+        {/* Scrollable Category Filter Tabs Bar */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 scrollbar-none snap-x" id="today-category-horizontal-chips">
+          {/* "All" Tab */}
           <button
             type="button"
             onClick={() => handleCategorySelect('all')}
-            className={`snap-start inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-sm shrink-0 border ${
+            className={`snap-start inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-xs shrink-0 border ${
               selectedCategory === 'all'
                 ? 'bg-blue-600 border-blue-600 text-white shadow-blue-900/30 ring-2 ring-blue-500/20'
-                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                : 'bg-slate-50/80 dark:bg-slate-800/60 border-slate-200/70 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white'
             }`}
             id="today-chip-all"
           >
+            <Layers size={13} className={selectedCategory === 'all' ? 'text-white' : 'text-slate-400'} />
             <span>{t.filterAll}</span>
             <span
               className={`px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                 selectedCategory === 'all'
                   ? 'bg-white/20 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                  : 'bg-slate-200/70 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               }`}
             >
               {todayTasks.length}
             </span>
           </button>
 
-          {/* Individual Category Chips */}
+          {/* Individual Category Tabs */}
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             const countForCat = todayTasks.filter((t) => t.categoryId === cat.id).length;
@@ -325,24 +330,24 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 key={cat.id}
                 type="button"
                 onClick={() => handleCategorySelect(cat.id)}
-                className={`snap-start inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-sm shrink-0 border ${
+                className={`snap-start inline-flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-150 active:scale-95 shadow-xs shrink-0 border ${
                   isSelected
-                    ? 'bg-blue-50 dark:bg-blue-950/70 border-blue-500 text-blue-700 dark:text-sky-300 ring-2 ring-blue-500/20 shadow-blue-500/10'
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-blue-50 dark:bg-blue-950/80 border-blue-500 text-blue-700 dark:text-sky-300 ring-2 ring-blue-500/20 shadow-blue-500/10'
+                    : 'bg-slate-50/80 dark:bg-slate-800/60 border-slate-200/70 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white'
                 }`}
                 id={`today-chip-${cat.id}`}
               >
                 <span
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: cat.color }}
                 />
-                <CategoryIcon name={cat.icon} size={14} style={{ color: cat.color }} />
+                <CategoryIcon name={cat.icon} size={14} style={{ color: isSelected ? undefined : cat.color }} />
                 <span>{cat.name[language] || cat.name.en}</span>
                 <span
                   className={`px-1.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                     isSelected
                       ? 'bg-blue-200/60 dark:bg-blue-900/80 text-blue-900 dark:text-sky-200'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                      : 'bg-slate-200/70 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                   }`}
                 >
                   {countForCat}
@@ -351,6 +356,29 @@ export const TodayView: React.FC<TodayViewProps> = ({
             );
           })}
         </div>
+
+        {/* Active Category Filter Feedback Indicator */}
+        {selectedCategory !== 'all' && (
+          <div className="flex items-center justify-between px-2 py-1.5 rounded-xl bg-blue-50/60 dark:bg-slate-800/50 border border-blue-100 dark:border-slate-700/50 text-[11px] animate-fade-in">
+            <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+              <Filter size={12} className="text-blue-500" />
+              <span>
+                {language === 'ar' ? 'تصفية حسب:' : 'Filtered by:'}{' '}
+                <strong className="text-blue-600 dark:text-sky-400 font-bold">
+                  {categories.find((c) => c.id === selectedCategory)?.name[language] || selectedCategory}
+                </strong>{' '}
+                ({filteredTasks.length} {language === 'ar' ? 'مهام' : 'tasks'})
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleCategorySelect('all')}
+              className="text-xs text-blue-600 dark:text-sky-400 font-bold hover:underline"
+            >
+              {language === 'ar' ? 'إلغاء التصفية' : 'Clear filter'}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Focus Mode Banner */}
@@ -728,8 +756,8 @@ export const TodayView: React.FC<TodayViewProps> = ({
             className="w-72 sm:w-80 p-3.5 rounded-3xl bg-slate-900/95 dark:bg-slate-900/95 text-white border border-blue-500/40 shadow-2xl backdrop-blur-xl animate-fade-in space-y-2.5"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-sky-300 flex items-center gap-1">
-                <Sparkles size={13} />
+              <span className="text-xs font-bold text-sky-300 flex items-center gap-1.5">
+                <AraskoMark size={14} variant="gradient" className="shrink-0" />
                 <span>{language === 'ar' ? 'إضافة مهمة سريعة' : 'Quick Add Task'}</span>
               </span>
               <div className="flex items-center gap-1">

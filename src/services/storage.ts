@@ -451,6 +451,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   waterGoalMl: 2500,
   sleepGoalHours: 8,
   stepGoal: 8000,
+  hydrationPushEnabled: true,
+  hydrationReminderIntervalMinutes: 120,
   hasCompletedOnboarding: false,
   userName: '',
   userRoleType: 'professional',

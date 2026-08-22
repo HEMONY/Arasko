@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Calendar,
-  Sparkles,
   Heart,
   ChevronRight,
   ChevronLeft,
@@ -11,7 +10,7 @@ import {
 } from 'lucide-react';
 import { LanguageCode } from '../types';
 import { translations } from '../i18n/translations';
-import { Logo } from './Logo';
+import { Logo, AraskoMark } from './Logo';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -52,8 +51,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     },
     {
       icon: (
-        <div className="w-20 h-20 rounded-3xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center shadow-lg border border-sky-200 dark:border-sky-800/60">
-          <Zap size={38} />
+        <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-50 to-sky-50 dark:from-blue-950/60 dark:to-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center shadow-lg border border-sky-200 dark:border-sky-800/60">
+          <AraskoMark size={38} variant="gradient" />
         </div>
       ),
       title: t.onboardingAssistantTitle,

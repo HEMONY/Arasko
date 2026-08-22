@@ -28,7 +28,6 @@ import {
   MessageCircle,
   Users,
   Shield,
-  Sparkles,
   Square,
   Sun,
   Tag,
@@ -49,7 +48,7 @@ import {
   ThemeMode,
 } from '../types';
 import { translations } from '../i18n/translations';
-import { Logo } from './Logo';
+import { Logo, AraskoMark } from './Logo';
 import { AVAILABLE_CATEGORY_ICONS, CategoryIcon } from './CategoryIcon';
 import { UserProfileSection } from './UserProfileSection';
 import {
@@ -876,7 +875,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
         {audioFeedbackMsg && (
           <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-xs font-semibold text-emerald-800 dark:text-emerald-200 flex items-center gap-2 animate-fade-in">
-            <Sparkles size={15} className="text-emerald-500" />
+            <AraskoMark size={15} variant="emerald" className="shrink-0" />
             {audioFeedbackMsg}
           </div>
         )}
@@ -1416,9 +1415,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <button
             type="button"
             onClick={onReopenOnboarding}
-            className="text-sky-600 dark:text-sky-400 font-semibold hover:underline flex items-center gap-1"
+            className="text-sky-600 dark:text-sky-400 font-semibold hover:underline flex items-center gap-1.5"
           >
-            ✨ {t.viewOnboardingAgain}
+            <AraskoMark size={14} variant="gradient" className="shrink-0" />
+            <span>{t.viewOnboardingAgain}</span>
           </button>
         </div>
       </div>

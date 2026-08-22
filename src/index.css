@@ -210,3 +210,34 @@
 .glow-emerald {
   box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35);
 }
+
+/* 4K+ / 8K Ultra-HD Retina Rendering Enhancements */
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+  * {
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: geometricPrecision;
+  }
+}
+
+.ultra-crisp {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.hdr-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dark .hdr-glass {
+  background: rgba(6, 11, 23, 0.85);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+

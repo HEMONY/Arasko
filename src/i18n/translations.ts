@@ -143,6 +143,17 @@ export interface Translations {
   prevYear: string;
   nextYear: string;
   dayProductivityHeatmap: string;
+  yearlyDistribution: string;
+  quarterlyGoals: string;
+  annualMilestones: string;
+  annualStats: string;
+  totalAnnualTasks: string;
+  annualCompletionRate: string;
+  q1: string;
+  q2: string;
+  q3: string;
+  q4: string;
+  viewMonthTasks: string;
 
   // Smart Assistant (Offline Rule-Based)
   smartAssistantTitle: string;
@@ -212,6 +223,37 @@ export interface Translations {
   stepCountGoal: string;
   weeklyHabitMatrix: string;
 
+  // 7-Day Health Overview Chart
+  sevenDayHealthOverview: string;
+  sevenDayHealthDesc: string;
+  combinedView: string;
+  waterView: string;
+  sleepView: string;
+  waterConsumed: string;
+  sleepDuration: string;
+  weeklyAvgWater: string;
+  weeklyAvgSleep: string;
+  waterTarget: string;
+  sleepTarget: string;
+  waterTargetMet: string;
+  sleepTargetMet: string;
+  hydrationAndRestCorrelation: string;
+
+  // Hydration Push Notifications Setting
+  hydrationPushNotifications: string;
+  hydrationPushDesc: string;
+  hydrationReminderFrequency: string;
+  hydrationFrequency1h: string;
+  hydrationFrequency2h: string;
+  hydrationFrequency3h: string;
+  hydrationFrequencySmart: string;
+  testHydrationNotification: string;
+  hydrationReminderTitle: string;
+  hydrationReminderBody: string;
+  hydrationGoalAlreadyMet: string;
+  hydrationPushPermissionDenied: string;
+  hydrationPushEnabledSuccess: string;
+
   // Settings Screen
   settingsTitle: string;
   generalSettings: string;
@@ -271,6 +313,30 @@ export interface Translations {
   customToneLabel: string;
   taskSoundChoice: string;
   defaultAppSound: string;
+  selectCustomAlertSound: string;
+  selectCustomAlertSoundDesc: string;
+  highPrioritySoundRecommendation: string;
+  defaultSystemTone: string;
+  locallyStoredAudioFiles: string;
+  builtInMelodies: string;
+  uploadNewAudioForTask: string;
+  previewSound: string;
+  stopSound: string;
+  streakCounterTitle: string;
+  consecutiveDays: string;
+  currentStreak: string;
+  bestStreak: string;
+  streakMilestone: string;
+  streakCelebration7Title: string;
+  streakCelebration7Body: string;
+  streakCelebration30Title: string;
+  streakCelebration30Body: string;
+  keepStreakGoing: string;
+  closeCelebration: string;
+  celebrateStreakMilestone: string;
+  streakMilestoneUnlocked: string;
+  streakBronzeBadge: string;
+  streakGoldBadge: string;
 
   healthGoalsTitle: string;
   dailyWaterGoal: string;
@@ -539,6 +605,17 @@ export const translations: Record<LanguageCode, Translations> = {
     prevYear: "السنة السابقة",
     nextYear: "السنة القادمة",
     dayProductivityHeatmap: "خريطة إنتاجية الأيام",
+    yearlyDistribution: "توزيع المهام السنوي ومخطط الـ 12 شهراً",
+    quarterlyGoals: "الأهداف الربع سنوية (الفصول)",
+    annualMilestones: "الأهداف الكبرى والمحطات السنوية",
+    annualStats: "إحصائيات السنة والأداء الإجمالي",
+    totalAnnualTasks: "إجمالي مهام السنة",
+    annualCompletionRate: "نسبة إنجاز السنة",
+    q1: "الربع الأول (يناير - مارس)",
+    q2: "الربع الثاني (أبريل - يونيو)",
+    q3: "الربع الثالث (يوليو - سبتمبر)",
+    q4: "الربع الرابع (أكتوبر - ديسمبر)",
+    viewMonthTasks: "استعراض مهام الشهر",
 
     smartAssistantTitle: "المساعد الذكي (محلي وبدون إنترنت)",
     smartAssistantDesc: "خوارزميات ذكية محلية ترتب أولوياتك، تحذرك من التعارضات، وتجزئ المهام الكبيرة مجاناً وبأمان تام على جهازك.",
@@ -606,6 +683,37 @@ export const translations: Record<LanguageCode, Translations> = {
     stepCountGoal: "هدف الخطوات",
     weeklyHabitMatrix: "جدول التزام العادات خلال الأسبوع",
 
+    // 7-Day Health Overview Chart
+    sevenDayHealthOverview: "مؤشرات الصحة لآخر 7 أيام",
+    sevenDayHealthDesc: "تحليل مقارن يوضح استهلاك الماء وساعات النوم على مدار الأسبوع الماضي لدعم توازنك ونشاطك.",
+    combinedView: "عرض شامل ومزدوج",
+    waterView: "مؤشر الماء (7 أيام)",
+    sleepView: "مؤشر النوم (7 أيام)",
+    waterConsumed: "الماء المستهلك",
+    sleepDuration: "ساعات النوم",
+    weeklyAvgWater: "المعدل اليومي للماء",
+    weeklyAvgSleep: "المعدل اليومي للنوم",
+    waterTarget: "الهدف اليومي للماء",
+    sleepTarget: "الهدف اليومي للنوم",
+    waterTargetMet: "أيام تحقيق هدف الماء",
+    sleepTargetMet: "أيام تحقيق هدف النوم",
+    hydrationAndRestCorrelation: "الترابط بين الترطيب والراحة اليومية",
+
+    // Hydration Push Notifications
+    hydrationPushNotifications: "تنبيهات شرب الماء الفورية",
+    hydrationPushDesc: "إرسال إشعارات فورية عبر المتصفح والجهاز لتذكيرك بشرب الماء إذا كان استهلاكك الحالي أقل من الهدف المحدد.",
+    hydrationReminderFrequency: "تكرار التذكير",
+    hydrationFrequency1h: "كل ساعة",
+    hydrationFrequency2h: "كل ساعتين",
+    hydrationFrequency3h: "كل 3 ساعات",
+    hydrationFrequencySmart: "ذكي (حسب وتيرة اليوم)",
+    testHydrationNotification: "اختبار إشعار الترطيب الآن",
+    hydrationReminderTitle: "💧 حان وقت ترطيب جسمك!",
+    hydrationReminderBody: "استهلاكك الحالي للماء أقل من هدفك اليومي. اشرب كوباً من الماء الآن للحفاظ على نشاطك وتركيزك.",
+    hydrationGoalAlreadyMet: "رائع! لقد حققت هدفك اليومي من الماء بالفعل اليوم 🎉",
+    hydrationPushPermissionDenied: "يرجى منح إذن الإشعارات في المتصفح لتفعيل تنبيهات شرب الماء.",
+    hydrationPushEnabledSuccess: "تم تفعيل تنبيهات شرب الماء الفورية بنجاح!",
+
     settingsTitle: "الإعدادات والتخصيص",
     generalSettings: "الإعدادات العامة",
     language: "اللغة (Language)",
@@ -664,6 +772,30 @@ export const translations: Record<LanguageCode, Translations> = {
     customToneLabel: "نغمة مخصصة",
     taskSoundChoice: "نغمة تنبيه المهمة",
     defaultAppSound: "النغمة العامة الافتراضية",
+    selectCustomAlertSound: "تحديد نغمة تنبيه خاصة للمهمة",
+    selectCustomAlertSoundDesc: "اختر نغمة صوتية مميزة للمهام العاجلة والهامة من الملفات المخزنة محلياً في جهازك",
+    highPrioritySoundRecommendation: "موصى به للمهام العاجلة وعالية الأهمية 🔥",
+    defaultSystemTone: "نغمة التطبيق العامة (حسب الإعدادات)",
+    locallyStoredAudioFiles: "الملفات الصوتية المخزنة محلياً",
+    builtInMelodies: "نغمات وألحان مدمجة",
+    uploadNewAudioForTask: "رفع ملف صوتي جديد للمهمة",
+    previewSound: "استماع",
+    stopSound: "إيقاف",
+    streakCounterTitle: "عداد الالتزام والاستمرارية",
+    consecutiveDays: "أيام متتالية",
+    currentStreak: "السلسلة الحالية",
+    bestStreak: "أفضل إنجاز متتالي",
+    streakMilestone: "محطة الاستمرارية",
+    streakCelebration7Title: "إنجاز رائع! سلسلة 7 أيام متتالية! 🔥🎉",
+    streakCelebration7Body: "لقد أتممت أسبوعاً كاملاً من الالتزام بالعادات الصحية. استمر في الحفاظ على هذا الزخم القوي والهمة العالية!",
+    streakCelebration30Title: "أسطوري! سلسلة 30 يوماً متتالية! 🏆🔥🎉",
+    streakCelebration30Body: "شهر كامل من الانضباط والتميز والالتزام بالعادات الصحية! أنت تصنع فارقاً حقيقياً في روتينك وصحتك.",
+    keepStreakGoing: "واصل التألق والالتزام",
+    closeCelebration: "رائع، شكراً!",
+    celebrateStreakMilestone: "الاحتفال بالمحطة",
+    streakMilestoneUnlocked: "تم فتح وسام الإنجاز المتتالي!",
+    streakBronzeBadge: "شعلة الأسبوع (7 أيام) 🔥",
+    streakGoldBadge: "تاج الأسطورة (30 يوماً) 🏆🔥",
 
     healthGoalsTitle: "أهداف الصحة واللياقة",
     dailyWaterGoal: "هدف الماء اليومي (مل)",
@@ -925,6 +1057,17 @@ export const translations: Record<LanguageCode, Translations> = {
     prevYear: "Previous Year",
     nextYear: "Next Year",
     dayProductivityHeatmap: "Daily Productivity Heatmap",
+    yearlyDistribution: "12-Month Task Distribution & Velocity",
+    quarterlyGoals: "Quarterly Milestones & Roadmaps",
+    annualMilestones: "Major Annual Milestones",
+    annualStats: "Annual Performance & Metrics",
+    totalAnnualTasks: "Total Year Tasks",
+    annualCompletionRate: "Annual Completion Rate",
+    q1: "Q1 (Jan - Mar)",
+    q2: "Q2 (Apr - Jun)",
+    q3: "Q3 (Jul - Sep)",
+    q4: "Q4 (Oct - Dec)",
+    viewMonthTasks: "Explore Month",
 
     smartAssistantTitle: "Smart Assistant (Local & Offline)",
     smartAssistantDesc: "Intelligent offline algorithms that auto-prioritize tasks, detect schedule conflicts, and generate step-by-step breakdowns securely on your device.",
@@ -992,6 +1135,37 @@ export const translations: Record<LanguageCode, Translations> = {
     stepCountGoal: "Step Goal",
     weeklyHabitMatrix: "7-Day Habit Consistency",
 
+    // 7-Day Health Overview Chart
+    sevenDayHealthOverview: "7-Day Health Metrics Overview",
+    sevenDayHealthDesc: "Comparative analysis of your hydration and sleep patterns across the past 7 days to support recovery and daily vigor.",
+    combinedView: "Dual Combined View",
+    waterView: "Water Intake (7 Days)",
+    sleepView: "Sleep Duration (7 Days)",
+    waterConsumed: "Water Consumed",
+    sleepDuration: "Sleep Duration",
+    weeklyAvgWater: "7-Day Avg Water",
+    weeklyAvgSleep: "7-Day Avg Sleep",
+    waterTarget: "Water Daily Target",
+    sleepTarget: "Sleep Daily Target",
+    waterTargetMet: "Days Water Goal Met",
+    sleepTargetMet: "Days Sleep Goal Met",
+    hydrationAndRestCorrelation: "Hydration & Rest Quality Correlation",
+
+    // Hydration Push Notifications
+    hydrationPushNotifications: "Instant Hydration Push Reminders",
+    hydrationPushDesc: "Send real-time browser notifications to drink water whenever your current intake is below your daily target.",
+    hydrationReminderFrequency: "Reminder Frequency",
+    hydrationFrequency1h: "Every 1 Hour",
+    hydrationFrequency2h: "Every 2 Hours",
+    hydrationFrequency3h: "Every 3 Hours",
+    hydrationFrequencySmart: "Smart (Adaptive pacing)",
+    testHydrationNotification: "Test Hydration Alert Now",
+    hydrationReminderTitle: "💧 Time to hydrate!",
+    hydrationReminderBody: "Your current water intake is below your daily target. Grab a glass of water to stay sharp and energized!",
+    hydrationGoalAlreadyMet: "Great job! You have already met your daily water intake goal 🎉",
+    hydrationPushPermissionDenied: "Please allow browser notification permissions to enable instant water reminders.",
+    hydrationPushEnabledSuccess: "Hydration push notifications enabled successfully!",
+
     settingsTitle: "Settings & Preferences",
     generalSettings: "General",
     language: "Language",
@@ -1050,6 +1224,30 @@ export const translations: Record<LanguageCode, Translations> = {
     customToneLabel: "Custom Tone",
     taskSoundChoice: "Task Alert Sound",
     defaultAppSound: "Default App Sound",
+    selectCustomAlertSound: "Select Custom Alert Sound",
+    selectCustomAlertSoundDesc: "Assign distinctive notification tones to high-priority tasks from locally stored audio files",
+    highPrioritySoundRecommendation: "Recommended for High-Priority / Urgent tasks 🔥",
+    defaultSystemTone: "Default App Notification Sound",
+    locallyStoredAudioFiles: "Locally Stored Audio Files",
+    builtInMelodies: "Built-in Alert Melodies",
+    uploadNewAudioForTask: "Upload New Audio File",
+    previewSound: "Preview",
+    stopSound: "Stop",
+    streakCounterTitle: "Habit Streak Counter",
+    consecutiveDays: "consecutive days",
+    currentStreak: "Current Streak",
+    bestStreak: "Best Streak",
+    streakMilestone: "Streak Milestone",
+    streakCelebration7Title: "Incredible! 7-Day Streak Achieved! 🔥🎉",
+    streakCelebration7Body: "You completed a full week of consistent daily habits. Keep this incredible momentum going!",
+    streakCelebration30Title: "Legendary! 30-Day Streak Milestone! 🏆🔥🎉",
+    streakCelebration30Body: "A full month of discipline, health, and outstanding habit consistency! You are truly unstoppable.",
+    keepStreakGoing: "Keep the Streak Going",
+    closeCelebration: "Awesome, Thanks!",
+    celebrateStreakMilestone: "Celebrate Milestone",
+    streakMilestoneUnlocked: "Milestone Badge Unlocked!",
+    streakBronzeBadge: "7-Day Flame 🔥",
+    streakGoldBadge: "30-Day Master Legend 🏆🔥",
 
     healthGoalsTitle: "Health & Routine Targets",
     dailyWaterGoal: "Daily Water Target (ml)",
@@ -1311,6 +1509,17 @@ export const translations: Record<LanguageCode, Translations> = {
     prevYear: "Année précédente",
     nextYear: "Année suivante",
     dayProductivityHeatmap: "Carte thermique de productivité",
+    yearlyDistribution: "Distribution sur 12 mois & vélocité",
+    quarterlyGoals: "Jalons trimestriels",
+    annualMilestones: "Objectifs annuels majeurs",
+    annualStats: "Performances annuelles globales",
+    totalAnnualTasks: "Total tâches de l'année",
+    annualCompletionRate: "Taux d'achèvement annuel",
+    q1: "T1 (Jan - Mar)",
+    q2: "T2 (Avr - Juin)",
+    q3: "T3 (Juil - Sep)",
+    q4: "T4 (Oct - Déc)",
+    viewMonthTasks: "Explorer le mois",
 
     smartAssistantTitle: "Assistant Intelligent (Local & Hors Ligne)",
     smartAssistantDesc: "Des algorithmes locaux intelligents hiérarchisent vos tâches, détectent les conflits d'horaire et décomposent vos grands projets en toute sécurité sur votre appareil.",
@@ -1378,6 +1587,37 @@ export const translations: Record<LanguageCode, Translations> = {
     stepCountGoal: "Objectif de pas",
     weeklyHabitMatrix: "Régularité des 7 derniers jours",
 
+    // 7-Day Health Overview Chart
+    sevenDayHealthOverview: "Aperçu Santé sur 7 Jours",
+    sevenDayHealthDesc: "Analyse comparative de votre hydratation et durée de sommeil sur les 7 derniers jours pour optimiser votre forme.",
+    combinedView: "Vue Combinée Double",
+    waterView: "Hydratation (7 Jours)",
+    sleepView: "Sommeil (7 Jours)",
+    waterConsumed: "Eau consommée",
+    sleepDuration: "Durée du sommeil",
+    weeklyAvgWater: "Moyenne Eau (7J)",
+    weeklyAvgSleep: "Moyenne Sommeil (7J)",
+    waterTarget: "Objectif Eau Quotidien",
+    sleepTarget: "Objectif Sommeil Quotidien",
+    waterTargetMet: "Jours objectif eau atteint",
+    sleepTargetMet: "Jours objectif sommeil atteint",
+    hydrationAndRestCorrelation: "Corrélation entre hydratation et récupération",
+
+    // Hydration Push Notifications
+    hydrationPushNotifications: "Rappels Push d'Hydratation Instantanés",
+    hydrationPushDesc: "Recevez des alertes push en temps réel pour boire de l'eau dès que votre consommation actuelle est inférieure à votre objectif quotidien.",
+    hydrationReminderFrequency: "Fréquence des rappels",
+    hydrationFrequency1h: "Toutes les heures",
+    hydrationFrequency2h: "Toutes les 2 heures",
+    hydrationFrequency3h: "Toutes les 3 heures",
+    hydrationFrequencySmart: "Intelligent (Rythme adaptatif)",
+    testHydrationNotification: "Tester le rappel d'hydratation",
+    hydrationReminderTitle: "💧 C'est l'heure de vous hydrater !",
+    hydrationReminderBody: "Votre consommation d'eau est inférieure à votre objectif quotidien. Buvez un verre d'eau pour rester en pleine forme !",
+    hydrationGoalAlreadyMet: "Bravo ! Vous avez déjà atteint votre objectif d'eau aujourd'hui 🎉",
+    hydrationPushPermissionDenied: "Veuillez autoriser les notifications dans votre navigateur pour activer les rappels d'eau.",
+    hydrationPushEnabledSuccess: "Notifications push d'hydratation activées avec succès !",
+
     settingsTitle: "Paramètres & Préférences",
     generalSettings: "Général",
     language: "Langue (Language)",
@@ -1436,6 +1676,30 @@ export const translations: Record<LanguageCode, Translations> = {
     customToneLabel: "Sonnerie personnalisée",
     taskSoundChoice: "Sonnerie de la tâche",
     defaultAppSound: "Sonnerie par défaut de l'app",
+    selectCustomAlertSound: "Sélectionner un son d'alerte personnalisé",
+    selectCustomAlertSoundDesc: "Attribuez une tonalité distinctive aux tâches urgentes et importantes depuis vos fichiers audio locaux",
+    highPrioritySoundRecommendation: "Recommandé pour les tâches urgentes et prioritaires 🔥",
+    defaultSystemTone: "Tonalité par défaut de l'application",
+    locallyStoredAudioFiles: "Fichiers audio stockés localement",
+    builtInMelodies: "Mélodies d'alerte intégrées",
+    uploadNewAudioForTask: "Importer un nouveau fichier audio pour la tâche",
+    previewSound: "Écouter",
+    stopSound: "Arrêter",
+    streakCounterTitle: "Compteur de régularité & série",
+    consecutiveDays: "jours consécutifs",
+    currentStreak: "Série actuelle",
+    bestStreak: "Meilleure série",
+    streakMilestone: "Étape de série",
+    streakCelebration7Title: "Incroyable ! Série de 7 jours consécutifs ! 🔥🎉",
+    streakCelebration7Body: "Vous avez complété une semaine entière d'habitudes saines. Continuez sur cette formidable lancée !",
+    streakCelebration30Title: "Légendaire ! Palier de 30 jours consécutifs ! 🏆🔥🎉",
+    streakCelebration30Body: "Un mois entier de discipline et d'excellence dans vos habitudes quotidiennes ! Vous êtes inarrêtable.",
+    keepStreakGoing: "Continuer la série",
+    closeCelebration: "Super, merci !",
+    celebrateStreakMilestone: "Célébrer l'étape",
+    streakMilestoneUnlocked: "Badge d'accomplissement débloqué !",
+    streakBronzeBadge: "Flamme 7 jours 🔥",
+    streakGoldBadge: "Légende 30 jours 🏆🔥",
 
     healthGoalsTitle: "Objectifs Santé & Routine",
     dailyWaterGoal: "Objectif d'eau quotidien (ml)",

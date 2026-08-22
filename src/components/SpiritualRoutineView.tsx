@@ -12,7 +12,6 @@ import {
   Moon,
   Plus,
   RotateCcw,
-  Sparkles,
   Sun,
   Volume2,
   X,
@@ -27,6 +26,7 @@ import {
 } from '../data/spiritualData';
 import { playAlertSound, triggerVibration } from '../services/soundEngine';
 import { fireTaskDoneConfetti } from '../utils/confetti';
+import { AraskoMark } from './Logo';
 
 interface SpiritualRoutineViewProps {
   settings: AppSettings;
@@ -297,7 +297,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold">
-              <Sparkles size={13} className="text-emerald-400" />
+              <AraskoMark size={13} variant="emerald" className="shrink-0" />
               <span>{t.spiritualTitle}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-arabic">
@@ -464,7 +464,7 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
             {/* 2. Daily Athkar Reminders */}
             <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
               <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <Sparkles size={14} className="text-amber-500" />
+                <AraskoMark size={14} variant="gradient" className="shrink-0" />
                 <span>{t.dailyAthkarReminders}</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
@@ -627,8 +627,8 @@ export const SpiritualRoutineView: React.FC<SpiritualRoutineViewProps> = ({
       <div className="space-y-3 pt-4" id="daily-athkar-section">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
-              <Sparkles size={18} />
+            <div className="p-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <AraskoMark size={18} variant="emerald" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">

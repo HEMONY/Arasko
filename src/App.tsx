@@ -113,10 +113,10 @@ export default function App() {
   const t = translations[language];
 
   // Ref to hold current state inside the overdue & reminder interval without stale closure
-  const stateRef = useRef({ tasks, settings, notifications, language });
+  const stateRef = useRef({ tasks, settings, notifications, language, waterLogs });
   useEffect(() => {
-    stateRef.current = { tasks, settings, notifications, language };
-  }, [tasks, settings, notifications, language]);
+    stateRef.current = { tasks, settings, notifications, language, waterLogs };
+  }, [tasks, settings, notifications, language, waterLogs]);
 
   // Sync RTL / LTR, Document Theme Class & Color Scheme
   useEffect(() => {
@@ -325,6 +325,59 @@ export default function App() {
         }
       }
 
+      // 4. Check Hydration Push Reminders (Active during day 08:00 - 22:00 if intake < goal)
+      if (curSettings.hydrationPushEnabled !== false && curSettings.notificationsEnabled) {
+        const nowDate = new Date();
+        const currentHour = nowDate.getHours();
+        if (currentHour >= 8 && currentHour <= 22) {
+          const todayDateKey = nowDate.toISOString().split('T')[0];
+          const todayLog = stateRef.current.waterLogs[todayDateKey];
+          const currentWater = todayLog ? todayLog.amountMl : 0;
+          const targetWater = curSettings.waterGoalMl || 2500;
+
+          if (currentWater < targetWater) {
+            const intervalMin = curSettings.hydrationReminderIntervalMinutes || 60;
+            const currentMin = nowDate.getMinutes();
+            const isIntervalTick = intervalMin >= 60 ? currentMin === 0 : currentMin % intervalMin === 0;
+
+            if (isIntervalTick) {
+              const hydrationNotifKey = `hydration_${todayDateKey}_${currentHour}_${Math.floor(currentMin / 15)}`;
+              const alreadyFired = newNotifs.some((n) => n.id.startsWith(`notif_${hydrationNotifKey}`));
+
+              if (!alreadyFired) {
+                playAlertSound('water_droplet');
+                triggerVibration(curSettings.vibrationEnabled, [80, 40, 80]);
+
+                const remaining = targetWater - currentWater;
+                const pushTitle = curT.hydrationPushReminderTitle;
+                const pushBody = `${curT.hydrationPushBelowTargetAlert} (${currentWater}/${targetWater} ml - ${curT.remainingWaterToGoal}: ${remaining} ml)`;
+
+                if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+                  try {
+                    new Notification(pushTitle, {
+                      body: pushBody,
+                      icon: '/favicon.ico',
+                    });
+                  } catch (e) {
+                    console.warn('Native push error:', e);
+                  }
+                }
+
+                newNotifs.unshift({
+                  id: `notif_${hydrationNotifKey}_${Date.now()}`,
+                  title: `💧 ${pushTitle}`,
+                  body: pushBody,
+                  timestamp: new Date().toISOString(),
+                  isRead: false,
+                  type: 'water',
+                });
+                hasNotifsUpdated = true;
+              }
+            }
+          }
+        }
+      }
+
       if (hasTasksUpdated) {
         stateRef.current.tasks = updatedTasks;
         setTasks(updatedTasks);
@@ -504,6 +557,13 @@ export default function App() {
 
     handleUpdateTasks([newTask, ...tasks]);
     playAlertSound('bell');
+  };
+
+  // Direct push notification helper
+  const handleAddNotification = (alert: LocalNotificationAlert) => {
+    const updated = [alert, ...notifications];
+    setNotifications(updated);
+    StorageService.saveNotifications(updated);
   };
 
   // Test Notification simulation
@@ -781,6 +841,9 @@ export default function App() {
                 onAddSleepLog={handleAddSleepLog}
                 onUpdateHabitLogs={handleUpdateHabitLogs}
                 vibrationEnabled={settings.vibrationEnabled}
+                settings={settings}
+                onUpdateSettings={handleUpdateSettings}
+                onSendNotification={handleAddNotification}
               />
             )}
 

@@ -8,7 +8,6 @@ import {
   Zap,
   TrendingUp,
   Award,
-  Sparkles,
   ChevronRight,
   Info,
   Layers,

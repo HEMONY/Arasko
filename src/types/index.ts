@@ -164,6 +164,9 @@ export interface AppSettings {
   waterGoalMl: number;
   sleepGoalHours: number;
   stepGoal: number;
+  // Hydration Push Notifications
+  hydrationPushEnabled?: boolean;
+  hydrationReminderIntervalMinutes?: number; // e.g. 60, 120, 180
   hasCompletedOnboarding: boolean;
   // User Profile Personalization
   userName?: string;

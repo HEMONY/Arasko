@@ -7,12 +7,12 @@ import {
   Droplet,
   Moon,
   Dumbbell,
-  Sparkles,
   CheckCircle2,
   Clock,
 } from 'lucide-react';
 import { LanguageCode, LocalNotificationAlert } from '../types';
 import { translations } from '../i18n/translations';
+import { AraskoMark } from './Logo';
 
 interface NotificationTrayProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export const NotificationTray: React.FC<NotificationTrayProps> = ({
       case 'workout':
         return <Dumbbell size={14} className="text-emerald-500" />;
       case 'assistant':
-        return <Sparkles size={14} className="text-amber-500" />;
+        return <AraskoMark size={14} variant="gradient" />;
       default:
         return <Clock size={14} className="text-blue-500" />;
     }

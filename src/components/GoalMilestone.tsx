@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Target, Sparkles, Zap, Flame, CheckCircle2 } from 'lucide-react';
+import { Trophy, Target, Zap, Flame, CheckCircle2 } from 'lucide-react';
 import { LanguageCode } from '../types';
 import { translations } from '../i18n/translations';
+import { AraskoMark } from './Logo';
 
 interface GoalMilestoneProps {
   completedCount: number;
@@ -65,7 +66,8 @@ export const GoalMilestone: React.FC<GoalMilestoneProps> = ({
     if (percentage >= 25) {
       return {
         label: t.milestoneGoodStart,
-        icon: Sparkles,
+        icon: null,
+        isAraskoMark: true,
         iconColor: 'text-sky-300',
         badgeBg: 'bg-blue-500/20 text-sky-300 border-blue-500/30',
         glowColor: 'from-blue-600/20 to-indigo-500/20',
@@ -176,7 +178,11 @@ export const GoalMilestone: React.FC<GoalMilestoneProps> = ({
           <div
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-bold border backdrop-blur-md shadow-xs ${milestone.badgeBg}`}
           >
-            <IconComponent size={14} className={milestone.iconColor} />
+            {milestone.isAraskoMark ? (
+              <AraskoMark size={14} variant="gradient" className="shrink-0" />
+            ) : (
+              IconComponent && <IconComponent size={14} className={milestone.iconColor} />
+            )}
             <span>{percentage === 100 ? (language === 'ar' ? 'مكتمل بنجاح' : '100% Achieved') : `${percentage}% ${t.completionRate}`}</span>
           </div>
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, User, BookOpen, Layers, CheckCircle2, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { Briefcase, User, BookOpen, Layers, CheckCircle2, SlidersHorizontal } from 'lucide-react';
 import { LanguageCode, TaskCategory, TaskItem } from '../types';
 import { translations } from '../i18n/translations';
+import { AraskoMark } from './Logo';
 
 interface TaskFocusSectionProps {
   tasks: TaskItem[];
@@ -235,7 +236,7 @@ export const TaskFocusSection: React.FC<TaskFocusSectionProps> = ({
 
       {/* Insight Footer */}
       <div className="px-3 py-2 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800/60 flex items-center gap-2">
-        <Sparkles size={13} className="text-sky-500 shrink-0" />
+        <AraskoMark size={14} variant="gradient" className="shrink-0" />
         <span className="text-[11px] text-slate-600 dark:text-slate-300 leading-tight">
           {getBalanceInsight()}
         </span>

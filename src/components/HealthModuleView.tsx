@@ -10,6 +10,9 @@ import {
   Tooltip,
   CartesianGrid,
   ReferenceLine,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
 import {
   Droplet,
@@ -23,7 +26,6 @@ import {
   Flame,
   Star,
   Clock,
-  Sparkles,
   Footprints,
   Utensils,
   Sun,
@@ -32,17 +34,35 @@ import {
   Volume2,
   TrendingUp,
   Activity,
+  Bell,
+  BellRing,
+  Check,
+  ShieldCheck,
+  Sparkles,
+  Trophy,
+  Zap,
+  X,
 } from 'lucide-react';
 import {
+  AppSettings,
   HabitEntry,
   LanguageCode,
+  LocalNotificationAlert,
   SleepLog,
   WaterLog,
   WorkoutRoutine,
 } from '../types';
 import { translations } from '../i18n/translations';
 import { PRESET_WORKOUTS } from '../services/storage';
-import { playAlertSound, playWorkoutBeep, triggerVibration } from '../services/soundEngine';
+import {
+  playAlertSound,
+  playStreakCelebrationSound,
+  playWorkoutBeep,
+  triggerVibration,
+} from '../services/soundEngine';
+import { fireStreakMilestoneCelebration } from '../utils/confetti';
+import { Health7DayChart } from './Health7DayChart';
+import { AraskoMark } from './Logo';
 
 interface HealthModuleViewProps {
   waterLog: WaterLog;
@@ -56,6 +76,9 @@ interface HealthModuleViewProps {
   onAddSleepLog: (log: SleepLog) => void;
   onUpdateHabitLogs: (logs: HabitEntry[]) => void;
   vibrationEnabled: boolean;
+  settings?: AppSettings;
+  onUpdateSettings?: (newSettings: AppSettings) => void;
+  onSendNotification?: (notif: LocalNotificationAlert) => void;
 }
 
 export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
@@ -70,11 +93,22 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
   onAddSleepLog,
   onUpdateHabitLogs,
   vibrationEnabled,
+  settings,
+  onUpdateSettings,
+  onSendNotification,
 }) => {
   const t = translations[language];
 
   // Active subtab: 'water' | 'sleep' | 'workouts' | 'habits'
   const [activeTab, setActiveTab] = useState<'water' | 'sleep' | 'workouts' | 'habits'>('water');
+
+  // Push notification permission state & feedback
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission>(() => {
+    return typeof window !== 'undefined' && 'Notification' in window
+      ? Notification.permission
+      : 'default';
+  });
+  const [hydrationTestFeedback, setHydrationTestFeedback] = useState<string | null>(null);
 
   // Interactive Workout Session State
   const [activeWorkout, setActiveWorkout] = useState<WorkoutRoutine | null>(null);
@@ -99,6 +133,192 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
   // Water calculations
   const currentWaterMl = waterLog?.amountMl || 0;
   const waterPercent = Math.min(100, Math.round((currentWaterMl / waterGoalMl) * 100));
+
+  // Sleep Actions & History
+  const [celebratingMilestone, setCelebratingMilestone] = useState<number | null>(null);
+  const celebratedMilestonesRef = useRef<Set<number>>(new Set());
+
+  // Habit Streak Calculation
+  const habitStreakStats = useMemo(() => {
+    if (!habitLogs || habitLogs.length === 0) {
+      return {
+        currentStreak: 0,
+        bestStreak: 0,
+        waterStreak: 0,
+        sleepStreak: 0,
+        workoutStreak: 0,
+        mindfulnessStreak: 0,
+        is7DayMet: false,
+        is30DayMet: false,
+        nextMilestone: 7,
+        progressToNext: 0,
+      };
+    }
+
+    const logMap = new Map<string, HabitEntry>();
+    habitLogs.forEach((log) => {
+      logMap.set(log.date, log);
+    });
+
+    const isHabitDayMet = (h?: HabitEntry) => {
+      if (!h) return false;
+      return Boolean(
+        h.waterMet ||
+        h.sleepMet ||
+        h.workoutMet ||
+        h.mindfulnessDone ||
+        (h.stepCount && h.stepCount >= (stepGoal || 5000))
+      );
+    };
+
+    const getLocalDateStr = (d: Date) => {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    };
+
+    const now = new Date();
+    const todayStr = getLocalDateStr(now);
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = getLocalDateStr(yesterday);
+
+    let currentStreak = 0;
+    let checkDate = new Date(now);
+
+    // If today's habits haven't been checked yet, check backwards from yesterday so active streak doesn't reset mid-day
+    if (!isHabitDayMet(logMap.get(todayStr))) {
+      checkDate = new Date(yesterday);
+    }
+
+    while (true) {
+      const dStr = getLocalDateStr(checkDate);
+      const entry = logMap.get(dStr);
+      if (entry && isHabitDayMet(entry)) {
+        currentStreak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    // Individual habit streaks
+    const calculateSingleHabitStreak = (field: 'waterMet' | 'sleepMet' | 'workoutMet' | 'mindfulnessDone') => {
+      let s = 0;
+      let cd = new Date(now);
+      const todayEntry = logMap.get(todayStr);
+      if (!todayEntry || !todayEntry[field]) {
+        cd = new Date(yesterday);
+      }
+      while (true) {
+        const dStr = getLocalDateStr(cd);
+        const entry = logMap.get(dStr);
+        if (entry && entry[field]) {
+          s++;
+          cd.setDate(cd.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+      return s;
+    };
+
+    const waterStreak = calculateSingleHabitStreak('waterMet');
+    const sleepStreak = calculateSingleHabitStreak('sleepMet');
+    const workoutStreak = calculateSingleHabitStreak('workoutMet');
+    const mindfulnessStreak = calculateSingleHabitStreak('mindfulnessDone');
+
+    // Best streak calculation across history
+    const sortedDates = Array.from(logMap.keys()).sort();
+    let bestStreak = 0;
+    let runningStreak = 0;
+    let lastDate: Date | null = null;
+
+    for (const dStr of sortedDates) {
+      const entry = logMap.get(dStr);
+      const currentDate = new Date(dStr);
+
+      if (entry && isHabitDayMet(entry)) {
+        if (lastDate) {
+          const diffDays = Math.round((currentDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (diffDays === 1) {
+            runningStreak++;
+          } else {
+            runningStreak = 1;
+          }
+        } else {
+          runningStreak = 1;
+        }
+        lastDate = currentDate;
+        if (runningStreak > bestStreak) {
+          bestStreak = runningStreak;
+        }
+      } else {
+        runningStreak = 0;
+        lastDate = null;
+      }
+    }
+
+    bestStreak = Math.max(bestStreak, currentStreak);
+
+    const nextMilestone = currentStreak < 7 ? 7 : currentStreak < 30 ? 30 : 60;
+    const prevMilestone = currentStreak < 7 ? 0 : 7;
+    const progressToNext = Math.min(100, Math.round(((currentStreak - prevMilestone) / (nextMilestone - prevMilestone)) * 100));
+
+    return {
+      currentStreak,
+      bestStreak,
+      waterStreak,
+      sleepStreak,
+      workoutStreak,
+      mindfulnessStreak,
+      is7DayMet: currentStreak >= 7,
+      is30DayMet: currentStreak >= 30,
+      nextMilestone,
+      progressToNext,
+    };
+  }, [habitLogs, stepGoal]);
+
+  const triggerStreakCelebration = (days: number) => {
+    fireStreakMilestoneCelebration(days);
+    playStreakCelebrationSound(days);
+    triggerVibration(vibrationEnabled, [100, 50, 150, 50, 250, 50, 400]);
+    setCelebratingMilestone(days);
+  };
+
+  // Trigger celebration whenever a streak reaches 7 or 30 days
+  useEffect(() => {
+    const streak = habitStreakStats.currentStreak;
+    if ((streak === 7 || streak === 30) && !celebratedMilestonesRef.current.has(streak)) {
+      celebratedMilestonesRef.current.add(streak);
+      triggerStreakCelebration(streak);
+    }
+  }, [habitStreakStats.currentStreak]);
+
+  // Last 7 days normalized for weekly habit matrix
+  const matrixDays = useMemo(() => {
+    const list: HabitEntry[] = [];
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const existing = habitLogs.find((h) => h.date === dateStr);
+      list.push(
+        existing || {
+          date: dateStr,
+          waterMet: false,
+          sleepMet: false,
+          workoutMet: false,
+          mealsLogged: 0,
+          mindfulnessDone: false,
+          stepCount: 0,
+        }
+      );
+    }
+    return list;
+  }, [habitLogs]);
 
   // Handle Workout Rest Timer
   useEffect(() => {
@@ -210,6 +430,99 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
     triggerVibration(vibrationEnabled, [80, 40, 80]);
   };
 
+  // Hydration Push Notification Handlers
+  const isHydrationPushActive = settings?.hydrationPushEnabled ?? true;
+  const hydrationInterval = settings?.hydrationReminderIntervalMinutes || 60;
+
+  const handleRequestPushPermission = async () => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      try {
+        const res = await Notification.requestPermission();
+        setNotifPermission(res);
+        if (res === 'granted') {
+          playAlertSound('chime');
+          triggerVibration(vibrationEnabled, [60, 30, 60]);
+        }
+      } catch (err) {
+        console.error('Failed to request notification permission:', err);
+      }
+    }
+  };
+
+  const handleToggleHydrationPush = async (enabled: boolean) => {
+    triggerVibration(vibrationEnabled, [40]);
+    if (enabled && notifPermission === 'default') {
+      await handleRequestPushPermission();
+    }
+    if (onUpdateSettings && settings) {
+      onUpdateSettings({
+        ...settings,
+        hydrationPushEnabled: enabled,
+      });
+    }
+  };
+
+  const handleChangeHydrationInterval = (minutes: number) => {
+    triggerVibration(vibrationEnabled, [30]);
+    if (onUpdateSettings && settings) {
+      onUpdateSettings({
+        ...settings,
+        hydrationReminderIntervalMinutes: minutes,
+      });
+    }
+  };
+
+  const handleTestHydrationPush = () => {
+    triggerVibration(vibrationEnabled, [80, 40, 80]);
+    if (currentWaterMl < waterGoalMl) {
+      const remainingMl = waterGoalMl - currentWaterMl;
+      const title = t.hydrationPushReminderTitle;
+      const body = `${t.hydrationPushBelowTargetAlert} (${currentWaterMl} / ${waterGoalMl} ml - ${t.remainingWaterToGoal}: ${remainingMl} ml)`;
+
+      // Fire browser native notification if permitted
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+        try {
+          new Notification(title, {
+            body,
+            icon: '/favicon.ico',
+          });
+        } catch (e) {
+          console.warn('Browser notification trigger:', e);
+        }
+      }
+
+      playAlertSound('water_droplet');
+
+      if (onSendNotification) {
+        onSendNotification({
+          id: `hydration_push_${Date.now()}`,
+          title: `💧 ${title}`,
+          body,
+          timestamp: new Date().toISOString(),
+          isRead: false,
+          type: 'water',
+        });
+      }
+
+      setHydrationTestFeedback(
+        language === 'ar'
+          ? `تم إرسال إشعار تذكير فوري! استهلاكك (${currentWaterMl} مل) أقل من الهدف (${waterGoalMl} مل). ينقصك ${remainingMl} مل.`
+          : `Hydration reminder triggered! Current intake (${currentWaterMl} ml) is below target (${waterGoalMl} ml). ${remainingMl} ml remaining.`
+      );
+    } else {
+      playAlertSound('complete');
+      setHydrationTestFeedback(
+        language === 'ar'
+          ? `رائع جداً! لقد حققت هدفك اليومي بالكامل (${currentWaterMl} / ${waterGoalMl} مل). لا حاجة لتنبيه نقص الشرب.`
+          : `Awesome! You have already met your daily water goal (${currentWaterMl} / ${waterGoalMl} ml).`
+      );
+    }
+
+    setTimeout(() => {
+      setHydrationTestFeedback(null);
+    }, 4500);
+  };
+
   // Workout Controls
   const handleStartWorkout = (routine: WorkoutRoutine) => {
     setActiveWorkout(routine);
@@ -293,6 +606,15 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
         })}
       </div>
 
+      {/* 7-Day Health Overview Chart (Water & Sleep Visualizer) */}
+      <Health7DayChart
+        waterLog={waterLog}
+        sleepLogs={sleepLogs}
+        waterGoalMl={waterGoalMl}
+        sleepGoalHours={sleepGoalHours}
+        language={language}
+      />
+
       {/* 1. WATER INTAKE SECTION */}
       {activeTab === 'water' && (
         <div className="space-y-4">
@@ -312,16 +634,62 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                 </p>
               </div>
 
-              {/* Hydro Wave / Radial Circle */}
-              <div className="relative w-24 h-24 rounded-full border-4 border-cyan-400/30 bg-cyan-950/60 flex items-center justify-center overflow-hidden shadow-inner">
-                {/* Simulated Water Wave Height */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-cyan-500 to-blue-500 transition-all duration-500 opacity-80"
-                  style={{ height: `${waterPercent}%` }}
-                />
-                <span className="relative z-10 text-base font-black text-white drop-shadow-md">
-                  {waterPercent}%
-                </span>
+              {/* Recharts Animated Visual Progress Ring */}
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center shrink-0" id="water-progress-ring-container">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <defs>
+                      <linearGradient id="waterProgressRingGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#38bdf8" />
+                        <stop offset="50%" stopColor="#06b6d4" />
+                        <stop offset="100%" stopColor={waterPercent >= 100 ? '#10b981' : '#2563eb'} />
+                      </linearGradient>
+                      <linearGradient id="waterTrackGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="rgba(6, 182, 212, 0.2)" />
+                        <stop offset="100%" stopColor="rgba(15, 23, 42, 0.4)" />
+                      </linearGradient>
+                    </defs>
+                    <Pie
+                      data={[
+                        { name: 'consumed', value: Math.max(0.01, Math.min(currentWaterMl, waterGoalMl)) },
+                        { name: 'remaining', value: Math.max(0, waterGoalMl - currentWaterMl) },
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius="72%"
+                      outerRadius="92%"
+                      startAngle={90}
+                      endAngle={-270}
+                      paddingAngle={0}
+                      dataKey="value"
+                      stroke="none"
+                      isAnimationActive={true}
+                      animationDuration={850}
+                      animationEasing="ease-out"
+                    >
+                      <Cell key="consumed" fill="url(#waterProgressRingGrad)" />
+                      <Cell key="remaining" fill="url(#waterTrackGrad)" />
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+
+                {/* Center Stats & Glow */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none text-center">
+                  <Droplet
+                    size={18}
+                    className={`transition-all duration-300 ${
+                      waterPercent >= 100
+                        ? 'text-emerald-400 fill-emerald-400 scale-110 animate-bounce'
+                        : 'text-cyan-400 fill-cyan-400 animate-pulse'
+                    }`}
+                  />
+                  <span className="text-base sm:text-lg font-black text-white leading-tight drop-shadow-md">
+                    {waterPercent}%
+                  </span>
+                  <span className="text-[9px] text-cyan-200/90 font-bold uppercase tracking-wider">
+                    {waterPercent >= 100 ? (language === 'ar' ? 'اكتمل 🎉' : 'Done 🎉') : `${currentWaterMl}ml`}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -474,6 +842,125 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                 </p>
               )}
             </div>
+          </div>
+
+          {/* 💧 Push Notifications for Hydration Reminders */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k space-y-4" id="hydration-push-settings-card">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+                  <BellRing size={18} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                    <span>{t.hydrationPushSettingsTitle}</span>
+                    <AraskoMark size={14} variant="gradient" />
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    {t.hydrationPushSettingsDesc}
+                  </p>
+                </div>
+              </div>
+
+              {/* Toggle Switch */}
+              <button
+                type="button"
+                onClick={() => handleToggleHydrationPush(!isHydrationPushActive)}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
+                  isHydrationPushActive ? 'bg-cyan-500' : 'bg-slate-300 dark:bg-slate-700'
+                }`}
+                role="switch"
+                aria-checked={isHydrationPushActive}
+                id="toggle-hydration-push-switch"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                    isHydrationPushActive ? 'translate-x-5 rtl:-translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </div>
+
+            {isHydrationPushActive && (
+              <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800/80 animate-fade-in">
+                {/* Reminder Frequency */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    {t.hydrationReminderInterval}
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { minutes: 30, label: t.every30Min },
+                      { minutes: 60, label: t.every1Hour },
+                      { minutes: 90, label: t.every90Min },
+                      { minutes: 120, label: t.every2Hours },
+                    ].map((opt) => (
+                      <button
+                        key={opt.minutes}
+                        type="button"
+                        onClick={() => handleChangeHydrationInterval(opt.minutes)}
+                        className={`py-2 px-3 rounded-2xl text-xs font-bold transition-all text-center ${
+                          hydrationInterval === opt.minutes
+                            ? 'bg-cyan-500 text-white shadow-md shadow-cyan-500/20'
+                            : 'bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Status & Permission Info */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/30 border border-cyan-100 dark:border-cyan-900/40 text-xs">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck size={16} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
+                    <span className="text-slate-700 dark:text-slate-300">
+                      {notifPermission === 'granted' ? (
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                          ✓ {t.hydrationNotificationStatusGranted}
+                        </span>
+                      ) : (
+                        <span className="text-slate-600 dark:text-slate-400">
+                          {t.hydrationNotificationStatusNeedsPermission}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {notifPermission !== 'granted' && (
+                      <button
+                        type="button"
+                        onClick={handleRequestPushPermission}
+                        className="py-1.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold transition-all active:scale-95 shadow-xs"
+                      >
+                        {t.hydrationNotificationRequestBtn}
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handleTestHydrationPush}
+                      className="py-1.5 px-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold hover:opacity-90 transition-all active:scale-95 shadow-xs flex items-center gap-1.5"
+                      id="test-hydration-push-btn"
+                    >
+                      <Bell size={12} />
+                      <span>{t.testHydrationAlertNow}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Toast Feedback for test alert */}
+                {hydrationTestFeedback && (
+                  <div className="p-3 rounded-2xl bg-slate-900 text-white text-xs font-medium border border-cyan-500/40 shadow-xl flex items-center gap-2 animate-fade-in">
+                    <Droplet size={14} className="text-cyan-400 shrink-0" />
+                    <span>{hydrationTestFeedback}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -797,17 +1284,171 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
         </div>
       )}
 
-      {/* 4. WEEKLY HABIT MATRIX TRACKER */}
+      {/* 4. HABITS TAB & STREAK COUNTER */}
       {activeTab === 'habits' && (
         <div className="space-y-4">
+          {/* Flame Streak Counter Hero Card */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-rose-500/10 dark:from-amber-950/40 dark:via-slate-900 dark:to-orange-950/30 p-6 border border-amber-200/80 dark:border-amber-700/60 shadow-floating-4k card-floating-4k space-y-5">
+            {/* Ambient Background Glow */}
+            <div className="absolute -top-12 -right-12 w-40 h-40 bg-amber-400/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-orange-500/20 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                {/* Animated Flame Icon Container */}
+                <div className="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-400 text-white shadow-lg shadow-orange-500/30 shrink-0">
+                  <Flame size={36} className="fill-current text-white animate-pulse" />
+                  {habitStreakStats.currentStreak > 0 && (
+                    <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-rose-600 text-[10px] font-black text-white border-2 border-white dark:border-slate-900 shadow-xs">
+                      {habitStreakStats.currentStreak}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-black text-xl sm:text-2xl text-slate-900 dark:text-white">
+                      {habitStreakStats.currentStreak} {t.consecutiveDays}
+                    </h3>
+                    {habitStreakStats.currentStreak >= 7 && (
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500 text-white shadow-xs">
+                        🔥 ACTIVE
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5 flex items-center gap-2">
+                    <span className="font-semibold">{t.currentStreak}</span>
+                    <span>•</span>
+                    <span className="text-slate-500 dark:text-slate-400">
+                      {t.bestStreak}: <strong className="text-slate-800 dark:text-slate-200">{habitStreakStats.bestStreak}</strong> {t.days}
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Celebration Trigger / Replay Button */}
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => triggerStreakCelebration(habitStreakStats.currentStreak >= 30 ? 30 : 7)}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition-all active:scale-95"
+                  id="celebrate-streak-btn"
+                  title={t.celebrateStreakMilestone}
+                >
+                  <Sparkles size={14} />
+                  <span>{t.celebrateStreakMilestone}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Streak Milestones (7-Day & 30-Day Badges) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              {/* 7-Day Milestone Card */}
+              <div
+                onClick={() => habitStreakStats.is7DayMet && triggerStreakCelebration(7)}
+                className={`p-3.5 rounded-2xl border transition-all ${
+                  habitStreakStats.is7DayMet
+                    ? 'bg-amber-50/80 dark:bg-amber-950/40 border-amber-300 dark:border-amber-600/80 cursor-pointer hover:scale-[1.01]'
+                    : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-80'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`p-2 rounded-xl ${habitStreakStats.is7DayMet ? 'bg-amber-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'}`}>
+                      <Flame size={18} className={habitStreakStats.is7DayMet ? 'fill-current' : ''} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-black text-slate-900 dark:text-slate-100">
+                        {t.streakBronzeBadge}
+                      </h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        {habitStreakStats.is7DayMet ? '✓ ' + t.streakMilestoneUnlocked : `${Math.min(7, habitStreakStats.currentStreak)} / 7 ${t.days}`}
+                      </p>
+                    </div>
+                  </div>
+
+                  {habitStreakStats.is7DayMet ? (
+                    <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-amber-500 text-white shadow-2xs">
+                      🎉 {t.celebrateStreakMilestone}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-bold text-slate-400">
+                      {Math.round((Math.min(7, habitStreakStats.currentStreak) / 7) * 100)}%
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* 30-Day Milestone Card */}
+              <div
+                onClick={() => habitStreakStats.is30DayMet && triggerStreakCelebration(30)}
+                className={`p-3.5 rounded-2xl border transition-all ${
+                  habitStreakStats.is30DayMet
+                    ? 'bg-gradient-to-r from-amber-100/90 to-yellow-100/90 dark:from-amber-950/60 dark:to-yellow-950/40 border-amber-400 dark:border-amber-500 cursor-pointer hover:scale-[1.01]'
+                    : 'bg-slate-50/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-80'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`p-2 rounded-xl ${habitStreakStats.is30DayMet ? 'bg-amber-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'}`}>
+                      <Trophy size={18} className={habitStreakStats.is30DayMet ? 'fill-current' : ''} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-black text-slate-900 dark:text-slate-100">
+                        {t.streakGoldBadge}
+                      </h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        {habitStreakStats.is30DayMet ? '🏆 ' + t.streakMilestoneUnlocked : `${Math.min(30, habitStreakStats.currentStreak)} / 30 ${t.days}`}
+                      </p>
+                    </div>
+                  </div>
+
+                  {habitStreakStats.is30DayMet ? (
+                    <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-amber-600 text-white shadow-2xs">
+                      🏆 {t.celebrateStreakMilestone}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-bold text-slate-400">
+                      {Math.round((Math.min(30, habitStreakStats.currentStreak) / 30) * 100)}%
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Individual Habit Streaks */}
+            <div className="pt-2 border-t border-amber-200/60 dark:border-amber-800/40 flex flex-wrap gap-2 text-xs">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 font-semibold">
+                <Droplet size={13} className="text-cyan-500" /> {t.habitWater}: <strong>{habitStreakStats.waterStreak} {t.days}</strong>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-semibold">
+                <Moon size={13} className="text-blue-500" /> {t.habitSleep}: <strong>{habitStreakStats.sleepStreak} {t.days}</strong>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 font-semibold">
+                <Dumbbell size={13} className="text-sky-500" /> {t.habitWorkout}: <strong>{habitStreakStats.workoutStreak} {t.days}</strong>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 font-semibold">
+                <Sun size={13} className="text-amber-500" /> {t.habitMindfulness}: <strong>{habitStreakStats.mindfulnessStreak} {t.days}</strong>
+              </span>
+            </div>
+          </div>
+
+          {/* Weekly Habit Matrix Card */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-floating-4k card-floating-4k space-y-4">
-            <div>
-              <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
-                {t.weeklyHabitMatrix}
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                {t.habitTracker}
-              </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                  {t.weeklyHabitMatrix}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  {t.habitTracker}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-1 text-[11px] font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-xl border border-amber-200 dark:border-amber-800">
+                <Flame size={13} />
+                <span>{habitStreakStats.currentStreak} {t.consecutiveDays}</span>
+              </div>
             </div>
 
             {/* Matrix Table */}
@@ -815,15 +1456,22 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
               <table className="w-full text-xs text-start">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-semibold">
-                    <th className="py-2 text-start">{t.category}</th>
-                    {habitLogs.slice(0, 7).map((h) => {
-                      const dayName = new Date(h.date).toLocaleDateString(
+                    <th className="py-2.5 text-start">{t.category}</th>
+                    {matrixDays.map((h) => {
+                      const dateObj = new Date(h.date);
+                      const isToday = h.date === new Date().toISOString().split('T')[0];
+                      const dayName = dateObj.toLocaleDateString(
                         language === 'ar' ? 'ar-EG' : language === 'fr' ? 'fr-FR' : 'en-US',
                         { weekday: 'narrow' }
                       );
+                      const dayNum = dateObj.getDate();
+
                       return (
                         <th key={h.date} className="py-2 text-center">
-                          {dayName}
+                          <span className={`block font-bold ${isToday ? 'text-blue-600 dark:text-sky-400' : 'text-slate-600 dark:text-slate-300'}`}>
+                            {dayName}
+                          </span>
+                          <span className="text-[10px] text-slate-400 block">{dayNum}</span>
                         </th>
                       );
                     })}
@@ -835,15 +1483,15 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                     <td className="py-2.5 font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                       <Droplet size={13} className="text-cyan-500" /> {t.habitWater}
                     </td>
-                    {habitLogs.slice(0, 7).map((h) => (
+                    {matrixDays.map((h) => (
                       <td key={h.date} className="py-2 text-center">
                         <button
                           type="button"
                           onClick={() => handleToggleHabit(h.date, 'waterMet')}
-                          className={`w-6 h-6 rounded-lg inline-flex items-center justify-center transition-all ${
+                          className={`w-7 h-7 rounded-xl inline-flex items-center justify-center transition-all shadow-2xs ${
                             h.waterMet
-                              ? 'bg-cyan-500 text-white font-bold'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                              ? 'bg-cyan-500 text-white font-black scale-105'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                           }`}
                         >
                           {h.waterMet ? '✓' : '·'}
@@ -857,15 +1505,15 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                     <td className="py-2.5 font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                       <Moon size={13} className="text-blue-500" /> {t.habitSleep}
                     </td>
-                    {habitLogs.slice(0, 7).map((h) => (
+                    {matrixDays.map((h) => (
                       <td key={h.date} className="py-2 text-center">
                         <button
                           type="button"
                           onClick={() => handleToggleHabit(h.date, 'sleepMet')}
-                          className={`w-6 h-6 rounded-lg inline-flex items-center justify-center transition-all ${
+                          className={`w-7 h-7 rounded-xl inline-flex items-center justify-center transition-all shadow-2xs ${
                             h.sleepMet
-                              ? 'bg-blue-600 text-white font-bold'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                              ? 'bg-blue-600 text-white font-black scale-105'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                           }`}
                         >
                           {h.sleepMet ? '✓' : '·'}
@@ -879,15 +1527,15 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                     <td className="py-2.5 font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                       <Dumbbell size={13} className="text-sky-500" /> {t.habitWorkout}
                     </td>
-                    {habitLogs.slice(0, 7).map((h) => (
+                    {matrixDays.map((h) => (
                       <td key={h.date} className="py-2 text-center">
                         <button
                           type="button"
                           onClick={() => handleToggleHabit(h.date, 'workoutMet')}
-                          className={`w-6 h-6 rounded-lg inline-flex items-center justify-center transition-all ${
+                          className={`w-7 h-7 rounded-xl inline-flex items-center justify-center transition-all shadow-2xs ${
                             h.workoutMet
-                              ? 'bg-sky-500 text-white font-bold'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                              ? 'bg-sky-500 text-white font-black scale-105'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                           }`}
                         >
                           {h.workoutMet ? '✓' : '·'}
@@ -901,15 +1549,15 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                     <td className="py-2.5 font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                       <Sun size={13} className="text-amber-500" /> {t.habitMindfulness}
                     </td>
-                    {habitLogs.slice(0, 7).map((h) => (
+                    {matrixDays.map((h) => (
                       <td key={h.date} className="py-2 text-center">
                         <button
                           type="button"
                           onClick={() => handleToggleHabit(h.date, 'mindfulnessDone')}
-                          className={`w-6 h-6 rounded-lg inline-flex items-center justify-center transition-all ${
+                          className={`w-7 h-7 rounded-xl inline-flex items-center justify-center transition-all shadow-2xs ${
                             h.mindfulnessDone
-                              ? 'bg-amber-500 text-white font-bold'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                              ? 'bg-amber-500 text-white font-black scale-105'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                           }`}
                         >
                           {h.mindfulnessDone ? '✓' : '·'}
@@ -919,6 +1567,77 @@ export const HealthModuleView: React.FC<HealthModuleViewProps> = ({
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Celebratory Streak Milestone Modal Dialog */}
+      {celebratingMilestone !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fade-in"
+          id="streak-celebration-backdrop"
+          onClick={() => setCelebratingMilestone(null)}
+        >
+          <div
+            className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-amber-300 dark:border-amber-600/80 shadow-2xl space-y-5 text-center overflow-hidden animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+            id="streak-celebration-modal"
+          >
+            {/* Ambient Modal Glow */}
+            <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-400/25 rounded-full blur-3xl pointer-events-none" />
+
+            <button
+              type="button"
+              onClick={() => setCelebratingMilestone(null)}
+              className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              <X size={18} />
+            </button>
+
+            {/* Glowing Flame / Trophy Icon */}
+            <div className="relative mx-auto w-24 h-24 rounded-3xl bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 text-white flex items-center justify-center shadow-xl shadow-amber-500/30 animate-bounce">
+              {celebratingMilestone >= 30 ? (
+                <Trophy size={48} className="fill-current text-white" />
+              ) : (
+                <Flame size={48} className="fill-current text-white" />
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                {celebratingMilestone >= 30 ? t.streakGoldBadge : t.streakBronzeBadge}
+              </span>
+              <h3 className="font-black text-xl sm:text-2xl text-slate-900 dark:text-white leading-tight">
+                {celebratingMilestone >= 30 ? t.streakCelebration30Title : t.streakCelebration7Title}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-sm mx-auto">
+                {celebratingMilestone >= 30 ? t.streakCelebration30Body : t.streakCelebration7Body}
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  fireStreakMilestoneCelebration(celebratingMilestone);
+                  playStreakCelebrationSound(celebratingMilestone);
+                  triggerVibration(vibrationEnabled, [100, 50, 150, 50, 250, 50, 400]);
+                }}
+                className="flex-1 py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/25 transition-all"
+              >
+                <Sparkles size={15} />
+                <span>{t.celebrateStreakMilestone} 🎉</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCelebratingMilestone(null)}
+                className="py-3 px-5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors"
+              >
+                {t.closeCelebration}
+              </button>
             </div>
           </div>
         </div>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="araskoMarkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="50%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1E3A8A" />
+    </linearGradient>
+    <linearGradient id="araskoEmeraldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="50%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#6EE7B7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Main Left Leg 'A' -->
+  <path
+    d="M26 80L44 24C45.2 20.5 48.8 20.5 50 24L58 48"
+    stroke="url(#araskoMarkGrad)"
+    stroke-width="11"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Upward Ascending Progress Checkmark -->
+  <path
+    d="M34 56H64L76 22"
+    stroke="url(#araskoEmeraldGrad)"
+    stroke-width="11"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Golden Goal / Achievement Dot -->
+  <circle
+    cx="76"
+    cy="22"
+    r="5"
+    fill="#F59E0B"
+  />
+</svg>

@@ -1,4 +1,5 @@
 import { SadSoundChoice, SoundChoice } from '../types';
+import { AudioStorageService } from './audioStorage';
 
 let audioCtx: AudioContext | null = null;
 let currentHtmlAudio: HTMLAudioElement | null = null;
@@ -100,13 +101,25 @@ export function playCustomAudioUrl(url: string, soundId = 'custom'): Promise<voi
 /**
  * Play standard task alert / notification sound
  */
-export function playAlertSound(choice: SoundChoice, customAudioUrl?: string) {
+export async function playAlertSound(choice: SoundChoice, customAudioUrl?: string) {
   if (!choice || choice === 'none') return;
   stopAllAudio();
 
   if (choice.startsWith('custom_') || customAudioUrl) {
-    if (customAudioUrl) {
-      playCustomAudioUrl(customAudioUrl, choice);
+    let urlToPlay = customAudioUrl;
+    if (!urlToPlay && choice.startsWith('custom_')) {
+      const toneId = choice.replace('custom_', '');
+      try {
+        const tone = await AudioStorageService.getTone(toneId);
+        if (tone?.dataUrl) {
+          urlToPlay = tone.dataUrl;
+        }
+      } catch (err) {
+        console.warn('Failed to retrieve tone from AudioStorage:', err);
+      }
+    }
+    if (urlToPlay) {
+      playCustomAudioUrl(urlToPlay, choice);
       return;
     }
   }
@@ -727,3 +740,60 @@ export function triggerVibration(patternOrEnabled?: boolean | number | number[],
     // Ignore unsupported browser sandbox errors
   }
 }
+
+/**
+ * Plays triumphant fanfare synthesizer harmony for streak milestones (7 or 30 days)
+ */
+export function playStreakCelebrationSound(streakCount = 7) {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    stopAllAudio();
+
+    const now = ctx.currentTime;
+    notifyAudioState(true, `streak_celebration_${streakCount}`);
+
+    const is30 = streakCount >= 30;
+    // Triumphant rising arpeggio chord progression
+    const notes = is30
+      ? [
+          { f: 523.25, t: 0.0, d: 0.25 }, // C5
+          { f: 659.25, t: 0.12, d: 0.25 }, // E5
+          { f: 783.99, t: 0.24, d: 0.25 }, // G5
+          { f: 1046.5, t: 0.36, d: 0.35 }, // C6
+          { f: 1318.5, t: 0.5, d: 0.8 }, // E6
+          { f: 1567.98, t: 0.65, d: 1.3 }, // G6
+        ]
+      : [
+          { f: 523.25, t: 0.0, d: 0.2 }, // C5
+          { f: 659.25, t: 0.1, d: 0.2 }, // E5
+          { f: 783.99, t: 0.2, d: 0.25 }, // G5
+          { f: 1046.5, t: 0.32, d: 1.1 }, // C6
+        ];
+
+    notes.forEach((n) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      activeOscillators.push(osc);
+
+      osc.type = is30 ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(n.f, now + n.t);
+
+      gain.gain.setValueAtTime(0, now + n.t);
+      gain.gain.linearRampToValueAtTime(0.24, now + n.t + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + n.t);
+      osc.stop(now + n.t + n.d + 0.05);
+    });
+
+    const totalDurMs = (notes[notes.length - 1].t + notes[notes.length - 1].d) * 1000 + 100;
+    setTimeout(() => notifyAudioState(false), totalDurMs);
+  } catch (e) {
+    console.warn('Celebration sound playback error:', e);
+  }
+}
+

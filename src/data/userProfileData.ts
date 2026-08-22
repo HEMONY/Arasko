@@ -564,7 +564,7 @@ export const PROFESSIONS_LIST: ProfessionOption[] = [
       en: 'Freelancing & Independent Business',
       fr: 'Freelance & Activité Indépendante',
     },
-    icon: 'Sparkles',
+    icon: 'AraskoMark',
     titlePrefix: {
       ar: 'الأستاذ',
       en: 'Pro',

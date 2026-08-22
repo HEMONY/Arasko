@@ -61,9 +61,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               >
                 {tab.isLogo ? (
                   <AraskoMark
-                    size={20}
+                    size={22}
                     variant={isSel ? 'gradient' : 'white'}
-                    className={isSel ? '' : 'opacity-60 grayscale'}
+                    className={isSel ? 'drop-shadow-md scale-110' : 'opacity-50 dark:opacity-40'}
                   />
                 ) : (
                   Icon && <Icon size={19} className={isSel ? 'stroke-[2.5]' : 'stroke-2'} />
